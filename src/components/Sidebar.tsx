@@ -2,23 +2,6 @@ export default function Sidebar() {
   return (
     <div className="h-screen w-20 bg-[#302d2a] text-white flex flex-col p-4 space-y-4">
       <nav className="flex flex-col space-y-4">
-        {/* ------------------------- ORACLE LOGO ------------------------- */}
-        <a
-          href="/"
-          className="flex flex-col items-center gap-2 px-4 py-2 rounded"
-        >
-          <svg
-            viewBox="0 0.3 31.4 19.8"
-            className="w-10 h-10"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M9.9 20.1c-5.5 0-9.9-4.4-9.9-9.9S4.4.3 9.9.3h11.6c5.5 0 9.9 4.4 9.9 9.9s-4.4 9.9-9.9 9.9zm11.3-3.5c3.6 0 6.4-2.9 6.4-6.4 0-3.6-2.9-6.4-6.4-6.4h-11c-3.6 0-6.4 2.9-6.4 6.4s2.9 6.4 6.4 6.4z"
-              fill="#c74634"
-            />
-          </svg>
-        </a>
-
         {/* ------------------------- MENU ------------------------- */}
         <a
           href="/menu"

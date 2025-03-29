@@ -9,6 +9,7 @@ function DashboardDev(props: Props) {
 
   return (
     <div className="bg-white min-h-screen min-w-screen">
+      <Navbar pageTitle="Home" />
       <Sidebar />
     </div>
   );
