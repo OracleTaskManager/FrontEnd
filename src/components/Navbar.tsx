@@ -1,3 +1,4 @@
+// Attributes to help the component show thw page title
 export default function Navbar({ pageTitle }: { pageTitle: string }) {
   return (
     <div className="h-20 w-screen bg-[#302d2a] text-white flex items-center p-4">
@@ -13,6 +14,7 @@ export default function Navbar({ pageTitle }: { pageTitle: string }) {
         </a>
 
         {/* ------------------------- RETURN BUTTON ------------------------- */}
+        {/* If we are currently in HOME, we don't need the return button */}
         {pageTitle !== "Home" && (
           <a href="/" className="flex items-center">
             <div className="w-10 h-10 bg-[#c74634] rounded-full flex items-center justify-center">

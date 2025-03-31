@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import Ticket from "../components/Ticket";
 
 interface Props {}
 
@@ -11,6 +12,7 @@ function DashboardDev(props: Props) {
     <div className="bg-white min-h-screen min-w-screen">
       <Navbar pageTitle="Home" />
       <Sidebar />
+      <Ticket />
     </div>
   );
 }
