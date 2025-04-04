@@ -14,7 +14,7 @@ function SignIn({ setShowSignUp }) {
         <AuthContainer title="Sign In">
           <InputField type="email" placeholder="Email" />
           <InputField type="password" placeholder="Password" />
-          <Button text="Sign In" onClick={() => console.log()} />
+          <Button text="Sign In" onClick={() => console.log() } color= "black"/>
         </AuthContainer>
       </div>
 

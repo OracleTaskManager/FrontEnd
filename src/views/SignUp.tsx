@@ -13,7 +13,7 @@ function SignUp() {
         <InputField type="text" placeholder="Name" />
         <InputField type="email" placeholder="Email" />
         <InputField type="password" placeholder="Password" />
-        <Button text="Sign Up" onClick={() => console.log("")} />
+        <Button type text="Sign Up" onClick={() => console.log("")} />
       </AuthContainer>
     </div>
   );
