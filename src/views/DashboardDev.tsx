@@ -36,6 +36,8 @@ function DashboardDev() {
     },
   ];
 
+  const maxTicketsToShow = 3;
+
   return (
     <div className="flex flex-col min-h-screen w-screen bg-white">
       {/* Navbar fijo arriba */}
@@ -44,9 +46,9 @@ function DashboardDev() {
       <div className="flex flex-1">
         {/* Sidebar fijo a la izquierda */}
         <Sidebar />
-
+        {/* bg-[#D0CCD0] */}
         {/* Contenido principal */}
-        <main className="flex-1 p-6 overflow-auto">
+        <main className="flex-1 p-6 overflow-auto bg-white">
           {/* Ticket principal destacado */}
           <Ticket
             title="Fix login bug"
@@ -55,13 +57,13 @@ function DashboardDev() {
             priority="High"
             description="Users are unable to log in with Google authentication."
           />
-
           {/* Sección de Tickets */}
-          <h2 className="mt-6 text-2xl font-semibold text-black">
-            Section Tickets
-          </h2>
-          <div className="mt-4 space-y-4">
-            {tickets.map((ticket, index) => (
+          <div className="max-w-screen mt-4 space-y-4">
+            <h2 className="mt-6 text-2xl font-semibold text-black">
+              Section Tickets
+            </h2>
+            {/* Lista de Tickets */}
+            {tickets.slice(0, maxTicketsToShow).map((ticket, index) => (
               <Ticket
                 key={index}
                 title={ticket.title}

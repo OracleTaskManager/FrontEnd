@@ -54,6 +54,7 @@ export default function Ticket({
 
         {/* Descripción */}
         <p className="text-gray-500">{description}</p>
+        <button className="">Details</button>
       </div>
     </div>
   );

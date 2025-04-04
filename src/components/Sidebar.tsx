@@ -1,6 +1,6 @@
 export default function Sidebar() {
   return (
-    <div className="h-screen w-20 bg-[#302d2a] text-white flex flex-col p-4 space-y-4">
+    <div className="min-h-screen w-20 bg-[#302d2a] text-white flex flex-col p-4 space-y-4">
       <nav className="flex flex-col space-y-4">
         {/* ------------------------- MENU ------------------------- */}
         <a
