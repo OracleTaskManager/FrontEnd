@@ -6,6 +6,7 @@ interface TicketPopUpProps {
   onClose: () => void;
   title: string;
   publishedDate: string;
+  storyPoints: number;
   status: "To-do" | "In Progress" | "Finished";
   priority: "Low" | "Mid" | "High";
   description: string;
@@ -16,6 +17,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
   onClose,
   title,
   publishedDate,
+  storyPoints,
   status,
   priority,
   description,
@@ -45,15 +47,23 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
           ✕
         </button>
 
-        <h2 className="text-xl font-bold mb-2">{title}</h2>
+        <h2 className="text-black text-xl font-bold mb-2">{title}</h2>
         <p className={`${priorityColors[priority]}`}>
-          <strong>Priority:</strong> {priority}
+          <strong>Priority: {priority}</strong>
         </p>
-        <p className="text-sm text-gray-500 mb-2">{publishedDate}</p>
+        <img
+          className={`w-full h-30 object-fill shrink-0 shadow-sm`}
+          src="src/assets/testImage.png"
+          alt="ChitChat Logo"
+        />
+        <p className="text-sm text-black mb-2">{publishedDate}</p>
+        <p className="text-sm text-black mb-2">
+          <strong>Story Points: {storyPoints}</strong>
+        </p>
         <p className={`${statusColors[status]}`}>
-          <strong>Status:</strong> {status}
+          <strong>Status: {status}</strong>
         </p>
-        <p className="mt-2 text-gray-700">{description}</p>
+        <p className="mt-2 text-black">{description}</p>
       </div>
     </div>
   );

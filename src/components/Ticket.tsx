@@ -83,6 +83,7 @@ export default function Ticket({
           onClose={() => setIsModalOpen(false)}
           title={title}
           publishedDate={publishedDate}
+          storyPoints={100}
           status={status}
           priority={priority}
           description={description}
