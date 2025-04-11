@@ -4,7 +4,7 @@ interface TicketProps {
   status: "To-do" | "In Progress" | "Finished";
   priority: "Low" | "Mid" | "High";
   description: string;
-  isMain?: boolean; //Variable to check if its the main ticket
+  isMain?: boolean; //Optional(?) variable to check if its the main ticket
 }
 
 export default function Ticket({
@@ -30,12 +30,19 @@ export default function Ticket({
   };
 
   return (
-    <div className="mx-auto flex max-w items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg border">
+    <div
+      className={`mx-auto flex max-w items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg border ${
+        isMain ? "min-h-70 min-w-70" : ""
+      }`}
+    >
       <img
-        className="size-12 shrink-0 shadow-sm"
-        src="/img/logo.svg"
+        className={`size-12 shrink-0 shadow-sm ${
+          isMain ? "min-h-50 min-w-50" : "min-h-30 min-w-30"
+        }`}
+        src="src/assets/testImage.png"
         alt="ChitChat Logo"
       />
+
       <div className="flex-1">
         {/* Título */}
         <div className="flex justify-between">

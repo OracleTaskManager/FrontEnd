@@ -40,7 +40,7 @@ export default function Sidebar() {
 
         {/* ------------------------- HOME ------------------------- */}
         <a
-          href="/"
+          href="/dashboard"
           className="flex flex-col items-center gap-2 px-4 py-2 rounded "
         >
           <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">

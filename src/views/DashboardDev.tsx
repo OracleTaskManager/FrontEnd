@@ -59,6 +59,7 @@ function DashboardDev() {
             status={mainTicket.status as "To-do" | "In Progress" | "Finished"}
             priority={mainTicket.priority as "Low" | "Mid" | "High"}
             description={mainTicket.description}
+            isMain={true}
           />
           {/* Sección de Tickets */}
           <div className="max-w-screen mt-4 space-y-4">
