@@ -36,7 +36,10 @@ function DashboardDev() {
     },
   ];
 
-  const maxTicketsToShow = 3;
+  const maxTicketsToShow = 5;
+
+  const mainTicket = tickets[0]; // Primer ticket
+  const otherTickets = tickets.slice(1, maxTicketsToShow); // Los demás
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-white">
@@ -51,11 +54,11 @@ function DashboardDev() {
         <main className="flex-1 p-6 overflow-auto bg-white">
           {/* Ticket principal destacado */}
           <Ticket
-            title="Fix login bug"
-            publishedDate="2025-04-01"
-            status="In Progress"
-            priority="High"
-            description="Users are unable to log in with Google authentication."
+            title={mainTicket.title}
+            publishedDate={mainTicket.publishedDate}
+            status={mainTicket.status as "To-do" | "In Progress" | "Finished"}
+            priority={mainTicket.priority as "Low" | "Mid" | "High"}
+            description={mainTicket.description}
           />
           {/* Sección de Tickets */}
           <div className="max-w-screen mt-4 space-y-4">
@@ -63,7 +66,7 @@ function DashboardDev() {
               Section Tickets
             </h2>
             {/* Lista de Tickets */}
-            {tickets.slice(0, maxTicketsToShow).map((ticket, index) => (
+            {otherTickets.map((ticket, index) => (
               <Ticket
                 key={index}
                 title={ticket.title}

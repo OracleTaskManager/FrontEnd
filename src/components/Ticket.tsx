@@ -4,6 +4,7 @@ interface TicketProps {
   status: "To-do" | "In Progress" | "Finished";
   priority: "Low" | "Mid" | "High";
   description: string;
+  isMain?: boolean; //Variable to check if its the main ticket
 }
 
 export default function Ticket({
@@ -12,6 +13,7 @@ export default function Ticket({
   status,
   priority,
   description,
+  isMain,
 }: TicketProps) {
   // Colores condicionales para el estatus
   const statusColors = {
@@ -54,7 +56,16 @@ export default function Ticket({
 
         {/* Descripción */}
         <p className="text-gray-500">{description}</p>
-        <button className="">Details</button>
+        <button
+          style={{
+            backgroundColor: "#64548f",
+            borderRadius: "20px",
+            padding: "8px 16px",
+            fontSize: "14px",
+          }}
+        >
+          Details
+        </button>
       </div>
     </div>
   );
