@@ -4,6 +4,7 @@ import SignIn from "./views/SignIn";
 import SignUp from "./views/SignUp";
 import DashboardDev from "./views/DashboardDev";
 import Calendar from "./views/Calendar";
+import DashboardManager from "./views/DashboardManager";
 
 function App() {
   //const [en la primera posición, el estado, en la segunda posición, la función que actualiza el estado] = useState(valor inicial del estado);
@@ -23,6 +24,7 @@ function App() {
           }
         />
         <Route path="/dashboard" element={<DashboardDev />} />
+        <Route path="/dashboard_manager" element={<DashboardManager />} />
         <Route path="/calendar" element={<Calendar />} />
       </Routes>
     </Router>
