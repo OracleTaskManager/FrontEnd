@@ -1,3 +1,5 @@
+import { useState } from "react";
+import PopUpTicket from "./PopUpTicket";
 interface TicketProps {
   title: string;
   publishedDate: string;
@@ -28,6 +30,8 @@ export default function Ticket({
     Mid: "text-orange-600",
     High: "text-red-600 font-bold",
   };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div
@@ -64,6 +68,7 @@ export default function Ticket({
         {/* Descripción */}
         <p className="text-gray-500">{description}</p>
         <button
+          onClick={() => setIsModalOpen(true)}
           style={{
             backgroundColor: "#64548f",
             borderRadius: "20px",
@@ -73,6 +78,15 @@ export default function Ticket({
         >
           Details
         </button>
+        <PopUpTicket
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title={title}
+          publishedDate={publishedDate}
+          status={status}
+          priority={priority}
+          description={description}
+        />
       </div>
     </div>
   );
