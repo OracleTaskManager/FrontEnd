@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
 import TeamCard from "../components/TeamCard";
+import Notification from "../components/Notification";
 
 function DashboardManager() {
   //Lista simulada de equipos
@@ -93,6 +94,10 @@ function DashboardManager() {
         {/* bg-[#D0CCD0] */}
         {/* Contenido principal */}
         <main className="flex-1 p-6 overflow-auto bg-white">
+          <Notification
+            title="Task1"
+            description="this will be a frontend..."
+          />
           {/* Lista de Equipos */}
           <div className="mt-4">
             <h2 className="text-2xl font-semibold text-black mb-2">Teams</h2>
