@@ -35,7 +35,7 @@ export default function Ticket({
 
   return (
     <div
-      className={`mx-auto flex max-w items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg border ${
+      className={`mx-auto flex max-w items-center gap-x-4 rounded-xl bg-neutral-100 p-6 shadow-lg border ${
         isMain ? "min-h-70 min-w-70" : ""
       }`}
     >
