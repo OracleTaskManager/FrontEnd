@@ -50,7 +50,7 @@ function DashboardDev() {
     },
   ];
 
-  const maxTicketsToShow = 5;
+  const maxTicketsToShow = 4;
 
   const mainTicket = tickets[0]; // Primer ticket
   const otherTickets = tickets.slice(1, maxTicketsToShow); // Los demás
