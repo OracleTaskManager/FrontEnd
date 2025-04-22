@@ -76,8 +76,8 @@ export default function Sidebar() {
 
       {/* --------- POPUP LATERAL --------- */}
       {menuOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-end">
-          <div className="bg-white text-black w-64 h-full p-4 space-y-4 shadow-lg">
+        <div className="fixed inset-0 bg-transparent bg-opacity-40 z-50 flex justify-end">
+          <div className="bg-transparent text-black w-64 h-full p-4 space-y-4 shadow-lg">
             <div className="flex justify-between items-center">
               <h2 className="text-lg font-semibold">Menú</h2>
               <button onClick={() => setMenuOpen(false)}>❌</button>
