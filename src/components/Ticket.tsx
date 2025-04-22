@@ -40,10 +40,10 @@ export default function Ticket({
       }`}
     >
       <img
-        className={`size-12 shrink-0 shadow-sm ${
+        className={`size-12 shrink-0 ${
           isMain ? "min-h-50 min-w-50" : "min-h-30 min-w-30"
         }`}
-        src="src/assets/testImage.png"
+        src="src/assets/rocket.png"
         alt="ChitChat Logo"
       />
 

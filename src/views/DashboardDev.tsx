@@ -34,6 +34,20 @@ function DashboardDev() {
       priority: "Low",
       description: "Implement new security patches for user authentication.",
     },
+    {
+      title: "Improve security measures",
+      publishedDate: "2025-03-15",
+      status: "In Progress",
+      priority: "Low",
+      description: "Implement new security patches for user authentication.",
+    },
+    {
+      title: "Improve security measures",
+      publishedDate: "2025-03-15",
+      status: "In Progress",
+      priority: "Low",
+      description: "Implement new security patches for user authentication.",
+    },
   ];
 
   const maxTicketsToShow = 5;
