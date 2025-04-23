@@ -1,4 +1,3 @@
-// TicketModal.tsx
 import React, { useState } from "react";
 
 interface TicketPopUpProps {
@@ -53,9 +52,14 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
       <div className="bg-[#D0CCD0] rounded-lg shadow-lg p-6 max-w-md w-full relative">
+        {/* Closing button "X" */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-lg"
+          className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-lg"
+          style={{
+            backgroundColor: "transparent",
+            borderRadius: "30px",
+          }}
         >
           ✕
         </button>
