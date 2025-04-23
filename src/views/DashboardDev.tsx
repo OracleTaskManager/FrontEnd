@@ -2,6 +2,8 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
+import CircularProgress from "../components/CircularProgress";
+import { CircularProgressbar } from "react-circular-progressbar";
 
 function DashboardDev() {
   // Lista simulada de tickets
@@ -92,6 +94,7 @@ function DashboardDev() {
               />
             ))}
           </div>
+          <CircularProgress totalTasks={20} completedTasks={14} />
         </main>
       </div>
     </div>
