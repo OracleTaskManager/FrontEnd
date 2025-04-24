@@ -55,10 +55,11 @@ const CreateTeamModal: React.FC<Props> = ({
         <input
           type="text"
           placeholder="Team name"
-          className="w-full p-2 border rounded mb-3 text-neutral-200"
+          className="w-full p-2 border border-gray-300 rounded mb-3 text-black placeholder-gray-500"
           value={teamName}
           onChange={(e) => setTeamName(e.target.value)}
         />
+
         {error && <p className="text-red-600 text-sm mb-2">{error}</p>}
         <div className="flex justify-end gap-2">
           <button
