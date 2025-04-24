@@ -42,6 +42,33 @@ function DashboardManager() {
     fetchTeams();
   }, []);
 
+  // Deletion of teams
+  const handleDeleteTeam = async (id: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this team?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`/teams/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete team");
+      }
+
+      // Elimina el equipo del estado
+      setTeams((prevTeams) => prevTeams.filter((team) => team.team_id !== id));
+    } catch (error) {
+      console.error("Error deleting team:", error);
+    }
+  };
+
   // Lista simulada de tickets
   const tickets = [
     {
@@ -105,6 +132,8 @@ function DashboardManager() {
                   key={team.team_id}
                   team={team.team_name}
                   project="N/A"
+                  teamId={team.team_id}
+                  onDelete={handleDeleteTeam}
                   members={[
                     {
                       icon: "https://randomuser.me/api/portraits/lego/1.jpg",
