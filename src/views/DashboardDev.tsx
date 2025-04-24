@@ -93,8 +93,8 @@ function DashboardDev() {
                 description={ticket.description}
               />
             ))}
+            <CircularProgress totalTasks={20} completedTasks={14} />
           </div>
-          <CircularProgress totalTasks={20} completedTasks={14} />
         </main>
       </div>
     </div>

@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
 import TeamCard from "../components/TeamCard";
 import Notification from "../components/Notification";
+import CreateTeamModal from "../components/CreateTeamModal";
 
 type Team = {
   team_id: number;
@@ -13,6 +14,7 @@ type Team = {
 
 function DashboardManager() {
   const [teams, setTeams] = useState<Team[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const jwtToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjoxMDYsInJvbGUiOiJNYW5hZ2VyIiwidGVsZWdyYW1DaGF0SWQiOm51bGwsImV4cCI6MTc0NTU0NzIyMn0.R8-I7iT_JPdZvDb9D00l9Us7-A32Yj8wpo20sUlUYqE";
 
@@ -91,6 +93,13 @@ function DashboardManager() {
           <div className="mt-4">
             <h2 className="text-2xl font-semibold text-black mb-2">Teams</h2>
             <div className="flex gap-4 overflow-x-auto pb-2">
+              {/* TEAM CONTROLLER */}
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+              >
+                +
+              </button>
               {teams.map((team) => (
                 <TeamCard
                   key={team.team_id}
@@ -124,6 +133,23 @@ function DashboardManager() {
           </div>
         </main>
       </div>
+      {/* Modal para crear equipo */}
+      <CreateTeamModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onTeamCreated={() => {
+          fetch("/teams/myteams", {
+            headers: {
+              Authorization: `${jwtToken}`,
+              "Content-Type": "application/json",
+            },
+          })
+            .then((res) => res.json())
+            .then((data) => setTeams(data))
+            .catch((err) => console.error("Error actualizando equipos:", err));
+        }}
+        token={jwtToken}
+      />
     </div>
   );
 }
