@@ -17,7 +17,7 @@ function App() {
           path="/"
           element={
             showSignUp ? (
-              <SignUp setShowSignUp={setShowSignUp} />
+              <SignUp setShowSignIn={setShowSignUp} />
             ) : (
               <SignIn setShowSignUp={setShowSignUp} />
             )
