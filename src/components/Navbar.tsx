@@ -1,9 +1,10 @@
+// Attributes to help the component show thw page title
 export default function Navbar({ pageTitle }: { pageTitle: string }) {
   return (
     <div className="h-20 w-screen bg-[#302d2a] text-white flex items-center p-4">
       <nav className="flex flex-row items-center space-x-4 w-full">
         {/* ------------------------- ORACLE LOGO ------------------------- */}
-        <a href="/" className="flex items-center px-1 py-2 rounded">
+        <a href="/dashboard" className="flex items-center px-1 py-2 rounded">
           <svg viewBox="0 0.3 31.4 19.8" className="w-10 h-10">
             <path
               d="M9.9 20.1c-5.5 0-9.9-4.4-9.9-9.9S4.4.3 9.9.3h11.6c5.5 0 9.9 4.4 9.9 9.9s-4.4 9.9-9.9 9.9zm11.3-3.5c3.6 0 6.4-2.9 6.4-6.4 0-3.6-2.9-6.4-6.4-6.4h-11c-3.6 0-6.4 2.9-6.4 6.4s2.9 6.4 6.4 6.4z"
@@ -13,8 +14,9 @@ export default function Navbar({ pageTitle }: { pageTitle: string }) {
         </a>
 
         {/* ------------------------- RETURN BUTTON ------------------------- */}
+        {/* If we are currently in HOME, we don't need the return button */}
         {pageTitle !== "Home" && (
-          <a href="/" className="flex items-center">
+          <a href="/dashboard" className="flex items-center">
             <div className="w-10 h-10 bg-[#c74634] rounded-full flex items-center justify-center">
               <svg viewBox="0 0 24 24" className="w-6 h-6 text-white">
                 <path

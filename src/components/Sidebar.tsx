@@ -1,6 +1,6 @@
 export default function Sidebar() {
   return (
-    <div className="h-screen w-20 bg-[#302d2a] text-white flex flex-col p-4 space-y-4">
+    <div className="min-h-screen w-20 bg-[#302d2a] text-white flex flex-col p-4 space-y-4">
       <nav className="flex flex-col space-y-4">
         {/* ------------------------- MENU ------------------------- */}
         <a
@@ -40,7 +40,7 @@ export default function Sidebar() {
 
         {/* ------------------------- HOME ------------------------- */}
         <a
-          href="/"
+          href="/dashboard"
           className="flex flex-col items-center gap-2 px-4 py-2 rounded "
         >
           <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">

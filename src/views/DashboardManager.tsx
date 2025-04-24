@@ -2,8 +2,52 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
+import TeamCard from "../components/TeamCard";
+import Notification from "../components/Notification";
 
-function DashboardDev() {
+function DashboardManager() {
+  //Lista simulada de equipos
+  const teams = [
+    {
+      team: "Frontend Team",
+      project: "UI Redesign",
+      members: [
+        {
+          icon: "https://randomuser.me/api/portraits/men/32.jpg",
+          name: "Carlos",
+        },
+        {
+          icon: "https://randomuser.me/api/portraits/women/45.jpg",
+          name: "Lucía",
+        },
+      ],
+    },
+    {
+      team: "Backend Team",
+      project: "API Refactor",
+      members: [
+        {
+          icon: "https://randomuser.me/api/portraits/men/12.jpg",
+          name: "Eduardo",
+        },
+        {
+          icon: "https://randomuser.me/api/portraits/men/75.jpg",
+          name: "Juan",
+        },
+      ],
+    },
+    {
+      team: "QA Team",
+      project: "Regression Testing",
+      members: [
+        {
+          icon: "https://randomuser.me/api/portraits/women/24.jpg",
+          name: "Marta",
+        },
+      ],
+    },
+  ];
+
   // Lista simulada de tickets
   const tickets = [
     {
@@ -34,26 +78,10 @@ function DashboardDev() {
       priority: "Low",
       description: "Implement new security patches for user authentication.",
     },
-    {
-      title: "Improve security measures",
-      publishedDate: "2025-03-15",
-      status: "In Progress",
-      priority: "Low",
-      description: "Implement new security patches for user authentication.",
-    },
-    {
-      title: "Improve security measures",
-      publishedDate: "2025-03-15",
-      status: "In Progress",
-      priority: "Low",
-      description: "Implement new security patches for user authentication.",
-    },
   ];
 
   const maxTicketsToShow = 5;
-
-  const mainTicket = tickets[0]; // Primer ticket
-  const otherTickets = tickets.slice(1, maxTicketsToShow); // Los demás
+  const otherTickets = tickets.slice(0, maxTicketsToShow); // Los demás
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-white">
@@ -66,15 +94,24 @@ function DashboardDev() {
         {/* bg-[#D0CCD0] */}
         {/* Contenido principal */}
         <main className="flex-1 p-6 overflow-auto bg-white">
-          {/* Ticket principal destacado */}
-          <Ticket
-            title={mainTicket.title}
-            publishedDate={mainTicket.publishedDate}
-            status={mainTicket.status as "To-do" | "In Progress" | "Finished"}
-            priority={mainTicket.priority as "Low" | "Mid" | "High"}
-            description={mainTicket.description}
-            isMain={true}
+          <Notification
+            title="Task1"
+            description="this will be a frontend..."
           />
+          {/* Lista de Equipos */}
+          <div className="mt-4">
+            <h2 className="text-2xl font-semibold text-black mb-2">Teams</h2>
+            <div className="flex gap-4 overflow-x-auto pb-2">
+              {teams.map((team, index) => (
+                <TeamCard
+                  key={index}
+                  team={team.team}
+                  project={team.project}
+                  members={team.members}
+                />
+              ))}
+            </div>
+          </div>
           {/* Sección de Tickets */}
           <div className="max-w-screen mt-4 space-y-4">
             <h2 className="mt-6 text-2xl font-semibold text-black">
@@ -98,4 +135,4 @@ function DashboardDev() {
   );
 }
 
-export default DashboardDev;
+export default DashboardManager;

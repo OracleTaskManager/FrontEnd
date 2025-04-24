@@ -1,28 +1,34 @@
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import DashboardDev from "./views/DashboardDev";
-
-// function App() {
-//   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/" element={<DashboardDev />} />
-//       </Routes>
-//     </Router>
-//   );
-// }
-
-// export default App;
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import SignIn from "./views/SignIn";
 import SignUp from "./views/SignUp";
+import DashboardDev from "./views/DashboardDev";
+import Calendar from "./views/Calendar";
+import DashboardManager from "./views/DashboardManager";
 
 function App() {
   //const [en la primera posición, el estado, en la segunda posición, la función que actualiza el estado] = useState(valor inicial del estado);
   const [showSignUp, setShowSignUp] = useState(false);
 
-  // Si showSignUp es true, muestra el componente SignUp, de lo contrario, muestra el componente SignIn
-  return showSignUp ? <SignUp setShowSignUp={setShowSignUp} /> : <SignIn setShowSignUp={setShowSignUp} />;
+  return (
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            showSignUp ? (
+              <SignUp setShowSignUp={setShowSignUp} />
+            ) : (
+              <SignIn setShowSignUp={setShowSignUp} />
+            )
+          }
+        />
+        <Route path="/dashboard" element={<DashboardDev />} />
+        <Route path="/dashboard_manager" element={<DashboardManager />} />
+        <Route path="/calendar" element={<Calendar />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
