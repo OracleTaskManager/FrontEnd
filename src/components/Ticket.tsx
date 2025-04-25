@@ -33,6 +33,8 @@ export default function Ticket({
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [ticketStatus, setTicketStatus] = useState(status);
+
   return (
     <div
       className={`mx-auto flex max-w items-center gap-x-4 rounded-xl bg-neutral-100 p-6 shadow-lg border ${
@@ -56,9 +58,9 @@ export default function Ticket({
         <div className="mt-2 flex gap-3">
           <span className="text-gray-500 text-sm">{publishedDate}</span>
           <span
-            className={`px-3  text-sm rounded-full ${statusColors[status]}`}
+            className={`px-3 text-sm rounded-full ${statusColors[ticketStatus]}`}
           >
-            {status}
+            {ticketStatus}
           </span>
           <span className={`text-sm ${priorityColors[priority]}`}>
             {priority} Priority
@@ -84,9 +86,10 @@ export default function Ticket({
           title={title}
           publishedDate={publishedDate}
           storyPoints={100}
-          status={status}
+          status={ticketStatus}
           priority={priority}
           description={description}
+          onStatusChange={(newStatus) => setTicketStatus(newStatus)}
         />
       </div>
     </div>

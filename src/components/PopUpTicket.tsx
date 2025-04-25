@@ -8,6 +8,7 @@ interface TicketPopUpProps {
   storyPoints: number;
   status: "To-do" | "In Progress" | "Finished";
   priority: "Low" | "Mid" | "High";
+  onStatusChange: (newStatus: "To-do" | "In Progress" | "Finished") => void;
   description: string;
 }
 
@@ -20,8 +21,11 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
   status,
   priority,
   description,
+  onStatusChange,
 }) => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+
+  const [currentStatus, setCurrentStatus] = useState(status);
 
   if (!isOpen) return null;
 
@@ -124,11 +128,24 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
         <p className="text-sm text-black mb-2">
           <strong>Story Points: {storyPoints}</strong>
         </p>
-        <p
-          className={`${statusColors[status]} inline-block px-2 py-1 rounded text-sm`}
-        >
-          <strong>Status: {status}</strong>
-        </p>
+        <div className="mt-2">
+          <label className="text-sm font-medium text-gray-700">Status:</label>
+          <select
+            value={status}
+            onChange={(e) =>
+              onStatusChange(
+                e.target.value as "To-do" | "In Progress" | "Finished"
+              )
+            }
+            className={`block mt-1 rounded px-2 py-1 text-sm ${statusColors[status]}`}
+            style={{ backgroundColor: "white" }}
+          >
+            <option value="To-do">To-do</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Finished">Finished</option>
+          </select>
+        </div>
+
         <p className="mt-2 text-black whitespace-pre-line">{description}</p>
       </div>
     </div>
