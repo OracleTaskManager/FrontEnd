@@ -1,4 +1,5 @@
-import handleAddUserToTeam from "./AddUserPopUp";
+import React, { useState } from "react";
+import AddUserToTeamModal from "./AddUserPopUp";
 
 interface TeamMember {
   icon: string;
@@ -20,6 +21,8 @@ export default function TeamCard({
   teamId,
   onDelete,
 }: TeamCardProps) {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <div className="p-4 rounded-md shadow-md bg-neutral-100 w-64">
       {/* Encabezado con nombre y botón eliminar */}
@@ -36,12 +39,22 @@ export default function TeamCard({
       </div>
 
       <button
-        onClick={() => handleAddUserToTeam(teamId)}
+        onClick={() => setShowModal(true)}
         style={{ borderRadius: "30px" }}
         className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded"
       >
         Add User
       </button>
+
+      {showModal && (
+        <AddUserToTeamModal
+          teamId={teamId}
+          onClose={() => setShowModal(false)}
+          onSuccess={() => {
+            // Puedes refrescar miembros del equipo si quieres
+          }}
+        />
+      )}
 
       <p className="text-gray-600 mb-4">{project}</p>
 
