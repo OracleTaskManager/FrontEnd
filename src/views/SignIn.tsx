@@ -11,7 +11,6 @@ function SignIn({ setShowSignUp }) {
 
   const handleSignIn = async () => {
     try {
-      
       const response = await fetch("/users/login", {
         method: "POST",
         headers: {
@@ -23,13 +22,13 @@ function SignIn({ setShowSignUp }) {
       //debug
       // console.log("Intentando iniciar sesión:", { email, password });
       // console.log("Respuesta del servidor:", response);
-  
+
       if (response.ok) {
         const data = await response.json();
         // debug
-        // console.log("Datos de respuesta:", data);
+        console.log("Datos de respuesta:", data);
         const token = data.jwtToken;
-  
+
         if (token) {
           localStorage.setItem("token", token);
           navigate("/dashboard_manager"); //Hardcodeado la ruta para el manager

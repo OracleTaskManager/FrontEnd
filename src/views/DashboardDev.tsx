@@ -1,85 +1,86 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
 import CircularProgress from "../components/CircularProgress";
-import { CircularProgressbar } from "react-circular-progressbar";
+
+interface Ticketx {
+  taskId: number;
+  title: string;
+  description: string;
+  priority: "Low" | "Mid" | "High";
+  status: "ToDo" | "InProgress" | "Finished";
+  estimatedDeadline: string;
+  realDeadline: string;
+  estimatedHours: string | null;
+  realHours: string | null;
+  user_points: number;
+}
 
 function DashboardDev() {
-  // Lista simulada de tickets
-  const tickets = [
-    {
-      title: "Fix login bug",
-      publishedDate: "2025-04-01",
-      status: "In Progress",
-      priority: "High",
-      description: "Users are unable to log in with Google authentication.",
-    },
-    {
-      title: "UI improvements on dashboard",
-      publishedDate: "2025-03-28",
-      status: "To-do",
-      priority: "Mid",
-      description: "Redesign the user dashboard for better user experience.",
-    },
-    {
-      title: "Database migration",
-      publishedDate: "2025-03-20",
-      status: "Finished",
-      priority: "High",
-      description: "Migrate the production database to a new server.",
-    },
-    {
-      title: "Improve security measures",
-      publishedDate: "2025-03-15",
-      status: "In Progress",
-      priority: "Low",
-      description: "Implement new security patches for user authentication.",
-    },
-    {
-      title: "Improve security measures",
-      publishedDate: "2025-03-15",
-      status: "In Progress",
-      priority: "Low",
-      description: "Implement new security patches for user authentication.",
-    },
-    {
-      title: "Improve security measures",
-      publishedDate: "2025-03-15",
-      status: "In Progress",
-      priority: "Low",
-      description: "Implement new security patches for user authentication.",
-    },
-  ];
+  const [tickets, setTickets] = useState<Ticketx[]>([]);
+  const jwtToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjoxMDYsInJvbGUiOiJNYW5hZ2VyIiwidGVsZWdyYW1DaGF0SWQiOm51bGwsImV4cCI6MTc0NTYxMDU4M30.kybvK3Y3ST8oN_zyjk-G8xz4FhsEzqlnoqI8LoJmOGY";
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const response = await fetch("/tasks/all", {
+          headers: {
+            Authorization: `${jwtToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch tickets");
+        }
+
+        const data = await response.json();
+        setTickets(data);
+      } catch (error) {
+        console.error("Error fetching tickets:", error);
+      }
+    };
+
+    fetchTickets();
+  }, []);
 
   const maxTicketsToShow = 4;
+  const mainTicket = tickets[0];
+  const otherTickets = tickets.slice(1, maxTicketsToShow);
 
-  const mainTicket = tickets[0]; // Primer ticket
-  const otherTickets = tickets.slice(1, maxTicketsToShow); // Los demás
+  const mapStatus = (status: string): "To-do" | "In Progress" | "Finished" => {
+    switch (status) {
+      case "ToDo":
+        return "To-do";
+      case "InProgress":
+        return "In Progress";
+      case "Finished":
+        return "Finished";
+      default:
+        return "To-do";
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-white">
-      {/* Navbar fijo arriba */}
       <Navbar pageTitle="Home" />
-
       <div className="flex flex-1">
-        {/* Sidebar fijo a la izquierda */}
         <Sidebar />
-        {/* bg-[#D0CCD0] */}
-        {/* Contenido principal */}
         <main className="flex-1 p-6 overflow-auto bg-white">
-          {/* Ticket principal destacado */}
-          <Ticket
-            title={mainTicket.title}
-            publishedDate={mainTicket.publishedDate}
-            status={mainTicket.status as "To-do" | "In Progress" | "Finished"}
-            priority={mainTicket.priority as "Low" | "Mid" | "High"}
-            description={mainTicket.description}
-            isMain={true}
-          />
-          {/* Contenedor de tickets y progreso circular */}
+          {mainTicket && (
+            <Ticket
+              title={mainTicket.title}
+              publishedDate={mainTicket.estimatedDeadline.slice(0, 10)}
+              status={mapStatus(mainTicket.status)}
+              priority={mainTicket.priority}
+              description={mainTicket.description}
+              isMain={true}
+            />
+          )}
+
           <div className="mt-6 flex gap-8">
-            {/* Sección de Tickets */}
             <div className="flex-1 space-y-4">
               <h2 className="text-2xl font-semibold text-black">
                 Section Tickets
@@ -88,16 +89,15 @@ function DashboardDev() {
                 <Ticket
                   key={index}
                   title={ticket.title}
-                  publishedDate={ticket.publishedDate}
-                  status={ticket.status as "To-do" | "In Progress" | "Finished"}
-                  priority={ticket.priority as "Low" | "Mid" | "High"}
+                  publishedDate={ticket.estimatedDeadline.slice(0, 10)}
+                  status={mapStatus(ticket.status)}
+                  priority={ticket.priority}
                   description={ticket.description}
                 />
               ))}
             </div>
 
-            {/* Progreso Circular en el lado derecho */}
-            <div className=" flex items-center justify-center">
+            <div className="flex items-center justify-center">
               <CircularProgress completedTasks={15} totalTasks={40} />
             </div>
           </div>

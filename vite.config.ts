@@ -22,6 +22,37 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      //Apartado de tickets
+      "/sprints": {
+        target: "http://159.54.147.6:8081",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/epics": {
+        target: "http://159.54.147.6:8081",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/tasksprint": {
+        target: "http://159.54.147.6:8081",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/task": {
+        target: "http://159.54.147.6:8081",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/taskassignments": {
+        target: "http://159.54.147.6:8081",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/task_dependencies": {
+        target: "http://159.54.147.6:8081",
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });
