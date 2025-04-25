@@ -7,7 +7,7 @@ const CircularProgress = ({ totalTasks, completedTasks }) => {
     totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
   return (
-    <div style={{ width: 120, height: 120 }}>
+    <div style={{ minWidth: 120, minHeight: 120 }}>
       <CircularProgressbar
         value={percentage}
         text={`${percentage}%`}
@@ -17,6 +17,7 @@ const CircularProgress = ({ totalTasks, completedTasks }) => {
           trailColor: "#d6d6d6",
         })}
       />
+      <h2 className="text-black text-center">Percentage of completed tasks</h2>
     </div>
   );
 };
