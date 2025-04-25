@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface AddUserToTeamModalProps {
   teamId: number;
@@ -8,6 +8,10 @@ interface AddUserToTeamModalProps {
 
 const jwtToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjoxMDYsInJvbGUiOiJNYW5hZ2VyIiwidGVsZWdyYW1DaGF0SWQiOm51bGwsImV4cCI6MTc0NTU0NzIyMn0.R8-I7iT_JPdZvDb9D00l9Us7-A32Yj8wpo20sUlUYqE";
+interface User {
+  userId: number;
+  name: string;
+}
 
 const AddUserToTeamModal: React.FC<AddUserToTeamModalProps> = ({
   teamId,
@@ -15,12 +19,35 @@ const AddUserToTeamModal: React.FC<AddUserToTeamModalProps> = ({
   onSuccess,
 }) => {
   const [userId, setUserId] = useState("");
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Fetch users on component mount
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("/users", {
+          headers: {
+            Authorization: `${jwtToken}`,
+          },
+        });
+        if (!response.ok) throw new Error("Failed to fetch users");
+
+        const data = await response.json();
+        setUsers(data);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        setError("Could not load users.");
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   const handleAddUser = async () => {
     if (!userId) {
-      setError("User ID is required.");
+      setError("Please select a user.");
       return;
     }
 
@@ -31,7 +58,7 @@ const AddUserToTeamModal: React.FC<AddUserToTeamModalProps> = ({
       const response = await fetch("/userteams/add", {
         method: "POST",
         headers: {
-          Authorization: `${jwtToken}`,
+          Authorization: `Bearer ${jwtToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -40,9 +67,7 @@ const AddUserToTeamModal: React.FC<AddUserToTeamModalProps> = ({
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to add user to team");
-      }
+      if (!response.ok) throw new Error("Failed to add user to team");
 
       onSuccess();
       onClose();
@@ -60,13 +85,20 @@ const AddUserToTeamModal: React.FC<AddUserToTeamModalProps> = ({
         <h2 className="text-xl font-semibold mb-4 text-black">
           Add User to Team
         </h2>
-        <input
-          type="number"
-          placeholder="User ID"
+
+        <select
           className="w-full p-2 border border-gray-300 rounded mb-3 text-black"
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
-        />
+        >
+          <option value="">Select a user</option>
+          {users.map((user) => (
+            <option key={user.userId} value={user.userId}>
+              {user.userId} - {user.name}
+            </option>
+          ))}
+        </select>
+
         {error && <p className="text-red-500 mb-3">{error}</p>}
 
         <div className="flex justify-end gap-3">
