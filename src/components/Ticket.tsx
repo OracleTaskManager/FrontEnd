@@ -6,6 +6,9 @@ interface TicketProps {
   status: "To-do" | "In Progress" | "Finished";
   priority: "Low" | "Mid" | "High";
   description: string;
+  user: string;
+  estimatedTime: string;
+  realHours: string;
   isMain?: boolean; //Optional(?) variable to check if its the main ticket
 }
 
