@@ -1,10 +1,49 @@
-import { useNavigate } from "react-router-dom"; // Importa useNavigate
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
 import AuthContainer from "../components/AuthContainer";
 
 function SignIn({ setShowSignUp }) {
-  const navigate = useNavigate(); // Hook para navegación
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignIn = async () => {
+    try {
+      
+      const response = await fetch("/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      //debug
+      // console.log("Intentando iniciar sesión:", { email, password });
+      // console.log("Respuesta del servidor:", response);
+  
+      if (response.ok) {
+        const data = await response.json();
+        // debug
+        // console.log("Datos de respuesta:", data);
+        const token = data.jwtToken;
+  
+        if (token) {
+          localStorage.setItem("token", token);
+          navigate("/dashboard_manager"); //Hardcodeado la ruta para el manager
+        } else {
+          console.error("No se recibió el token");
+        }
+      } else {
+        const errorText = await response.text();
+        console.error("Login fallido:", response.statusText, errorText);
+      }
+    } catch (error) {
+      console.error("Error en la petición:", error);
+    }
+  };
 
   return (
     <div className="flex h-screen w-screen">
@@ -16,12 +55,19 @@ function SignIn({ setShowSignUp }) {
           className="absolute top-0 left-0 w-30 m-4"
         />
         <AuthContainer title="Sign In">
-          <InputField type="email" placeholder="Email" />
-          <InputField type="password" placeholder="Password" />
-          <Button
-            text="Sign In"
-            onClick={() => navigate("/dashboard")} // Redirige al Dashboard
+          <InputField
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
+          <InputField
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button text="Sign In" onClick={handleSignIn} />
         </AuthContainer>
       </div>
 
