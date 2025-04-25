@@ -2,6 +2,8 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
+import CircularProgress from "../components/CircularProgress";
+import { CircularProgressbar } from "react-circular-progressbar";
 
 function DashboardDev() {
   // Lista simulada de tickets
@@ -50,7 +52,7 @@ function DashboardDev() {
     },
   ];
 
-  const maxTicketsToShow = 5;
+  const maxTicketsToShow = 4;
 
   const mainTicket = tickets[0]; // Primer ticket
   const otherTickets = tickets.slice(1, maxTicketsToShow); // Los demás
@@ -75,22 +77,29 @@ function DashboardDev() {
             description={mainTicket.description}
             isMain={true}
           />
-          {/* Sección de Tickets */}
-          <div className="max-w-screen mt-4 space-y-4">
-            <h2 className="mt-6 text-2xl font-semibold text-black">
-              Section Tickets
-            </h2>
-            {/* Lista de Tickets */}
-            {otherTickets.map((ticket, index) => (
-              <Ticket
-                key={index}
-                title={ticket.title}
-                publishedDate={ticket.publishedDate}
-                status={ticket.status as "To-do" | "In Progress" | "Finished"}
-                priority={ticket.priority as "Low" | "Mid" | "High"}
-                description={ticket.description}
-              />
-            ))}
+          {/* Contenedor de tickets y progreso circular */}
+          <div className="mt-6 flex gap-8">
+            {/* Sección de Tickets */}
+            <div className="flex-1 space-y-4">
+              <h2 className="text-2xl font-semibold text-black">
+                Section Tickets
+              </h2>
+              {otherTickets.map((ticket, index) => (
+                <Ticket
+                  key={index}
+                  title={ticket.title}
+                  publishedDate={ticket.publishedDate}
+                  status={ticket.status as "To-do" | "In Progress" | "Finished"}
+                  priority={ticket.priority as "Low" | "Mid" | "High"}
+                  description={ticket.description}
+                />
+              ))}
+            </div>
+
+            {/* Progreso Circular en el lado derecho */}
+            <div className=" flex items-center justify-center">
+              <CircularProgress completedTasks={15} totalTasks={40} />
+            </div>
           </div>
         </main>
       </div>
