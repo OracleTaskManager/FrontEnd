@@ -1,3 +1,5 @@
+import handleAddUserToTeam from "./AddUserPopUp";
+
 interface TeamMember {
   icon: string;
   name: string;
@@ -32,6 +34,14 @@ export default function TeamCard({
           X
         </button>
       </div>
+
+      <button
+        onClick={() => handleAddUserToTeam(teamId)}
+        style={{ borderRadius: "30px" }}
+        className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded"
+      >
+        Add User
+      </button>
 
       <p className="text-gray-600 mb-4">{project}</p>
 

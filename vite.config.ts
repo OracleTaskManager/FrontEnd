@@ -12,6 +12,16 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      "/users": {
+        target: "http://159.54.136.26:8080",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/userteams": {
+        target: "http://159.54.136.26:8080",
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });

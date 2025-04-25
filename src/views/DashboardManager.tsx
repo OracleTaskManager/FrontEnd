@@ -50,10 +50,10 @@ function DashboardManager() {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`/teams/${id}`, {
+      const response = await fetch(`/teams/?teamId=${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${jwtToken}`,
+          Authorization: `${jwtToken}`,
           "Content-Type": "application/json",
         },
       });
@@ -62,7 +62,7 @@ function DashboardManager() {
         throw new Error("Failed to delete team");
       }
 
-      // Elimina el equipo del estado
+      // Elimina el equipo del estado local
       setTeams((prevTeams) => prevTeams.filter((team) => team.team_id !== id));
     } catch (error) {
       console.error("Error deleting team:", error);
@@ -112,10 +112,10 @@ function DashboardManager() {
       <div className="flex flex-1">
         <Sidebar />
         <main className="flex-1 p-6 overflow-auto bg-white">
-          <Notification
+          {/* <Notification
             title="Task1"
             description="this will be a frontend..."
-          />
+          /> */}
 
           <div className="mt-4">
             <h2 className="text-2xl font-semibold text-black mb-2">Teams</h2>
@@ -133,7 +133,7 @@ function DashboardManager() {
                   team={team.team_name}
                   project="N/A"
                   teamId={team.team_id}
-                  onDelete={handleDeleteTeam}
+                  onDelete={() => handleDeleteTeam(team.team_id)}
                   members={[
                     {
                       icon: "https://randomuser.me/api/portraits/lego/1.jpg",
