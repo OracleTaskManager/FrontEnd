@@ -27,7 +27,7 @@ function SignIn({ setShowSignUp }) {
       if (response.ok) {
         const data = await response.json();
         // debug
-        // console.log("Datos de respuesta:", data);
+        console.log("Datos de respuesta:", data);
         const token = data.jwtToken;
   
         if (token) {
@@ -67,7 +67,7 @@ function SignIn({ setShowSignUp }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button text="Sign In" onClick={handleSignIn} />
+          <Button text="Sign In" onClick={handleSignIn} color="black"/>
         </AuthContainer>
       </div>
 

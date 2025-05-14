@@ -7,7 +7,7 @@ interface AddUserToTeamModalProps {
 }
 
 const jwtToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjoxMDYsInJvbGUiOiJNYW5hZ2VyIiwidGVsZWdyYW1DaGF0SWQiOm51bGwsImV4cCI6MTc0NTU0NzIyMn0.R8-I7iT_JPdZvDb9D00l9Us7-A32Yj8wpo20sUlUYqE";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjoxMDYsInJvbGUiOiJNYW5hZ2VyIiwidGVsZWdyYW1DaGF0SWQiOm51bGwsImV4cCI6MTc0NTYxMDU4M30.kybvK3Y3ST8oN_zyjk-G8xz4FhsEzqlnoqI8LoJmOGY";
 interface User {
   userId: number;
   name: string;
