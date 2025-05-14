@@ -25,7 +25,7 @@ function DashboardDev() {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await fetch("/tasks/all", {
+        const response = await fetch("/api/tasks/all", {
           headers: {
             Authorization: `${jwtToken}`,
             "Content-Type": "application/json",

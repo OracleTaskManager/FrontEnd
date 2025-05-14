@@ -34,7 +34,7 @@ function DashboardManager() {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await fetch("/teams/myteams", {
+        const response = await fetch("/api/teams/myteams", {
           headers: {
             Authorization: `${jwtToken}`,
             "Content-Type": "application/json",
@@ -63,7 +63,7 @@ function DashboardManager() {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`/teams/?teamId=${id}`, {
+      const response = await fetch(`/api/teams/?teamId=${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `${jwtToken}`,
@@ -89,7 +89,7 @@ function DashboardManager() {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await fetch("/tasks/all", {
+        const response = await fetch("/api/tasks/all", {
           headers: {
             Authorization: `${jwtToken}`,
             "Content-Type": "application/json",
