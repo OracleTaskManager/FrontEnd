@@ -11,7 +11,7 @@ function SignIn({ setShowSignUp }) {
 
   const handleSignIn = async () => {
     try {
-      const response = await fetch("/api/users/login", {
+      const response = await fetch("/api/auth/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

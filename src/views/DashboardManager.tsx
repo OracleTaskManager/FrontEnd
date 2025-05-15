@@ -29,12 +29,12 @@ function DashboardManager() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const jwtToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjoxMDYsInJvbGUiOiJNYW5hZ2VyIiwidGVsZWdyYW1DaGF0SWQiOm51bGwsImV4cCI6MTc0NTYxMDU4M30.kybvK3Y3ST8oN_zyjk-G8xz4FhsEzqlnoqI8LoJmOGY";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjo2MSwicm9sZSI6Ik1hbmFnZXIiLCJ0ZWxlZ3JhbUNoYXRJZCI6MTg2MDkxMzEyMCwiZXhwIjoxNzQ3MzEwMDQ5fQ.h2ypz6neBUUlx9IhuxWpdjyvXhQO8kPlrTDReBGy30w";
 
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await fetch("/api/teams/myteams", {
+        const response = await fetch("/api/auth/teams/myteams", {
           headers: {
             Authorization: `${jwtToken}`,
             "Content-Type": "application/json",
@@ -63,7 +63,7 @@ function DashboardManager() {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`/api/teams/?teamId=${id}`, {
+      const response = await fetch(`/api/auth/teams/?teamId=${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `${jwtToken}`,
@@ -85,11 +85,10 @@ function DashboardManager() {
   // Endpoint Tickets
   const [tickets, setTickets] = useState<Ticketx[]>([]);
 
-  // Lista simulada de tickets
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await fetch("/api/tasks/all", {
+        const response = await fetch("/api/tasks/tasks/all", {
           headers: {
             Authorization: `${jwtToken}`,
             "Content-Type": "application/json",
