@@ -7,6 +7,7 @@ import Notification from "../components/Notification";
 import CreateTeamModal from "../components/CreateTeamModal";
 import BarChartSprint from "../components/BarChartSprint";
 import BarChartMulti from "../components/BarChartMulti";
+import TaskTable from "../components/TaskTable";
 
 interface Ticketx {
   taskId: number;
@@ -41,6 +42,20 @@ function DashboardManager() {
     { sprint: "Sprint 2", Juan: 12, Mary: 9, Luis: 11, Josie: 10 },
     { sprint: "Sprint 3", Juan: 11, Mary: 10, Luis: 10, Josie: 12 },
     { sprint: "Sprint 4", Juan: 13, Mary: 11, Luis: 12, Josie: 11 },
+  ];
+  const mockTasks = [
+    {
+      name: "Realizar video de demo para Release Version 1",
+      developer: "Cristobal Camarena",
+      estimated: 1,
+      actual: 1,
+    },
+    {
+      name: "Implementar dashboard de KPIs por desarrollador",
+      developer: "Josue Galindo",
+      estimated: 3,
+      actual: 3,
+    },
   ];
 
   const jwtToken = localStorage.getItem("token");
@@ -210,6 +225,9 @@ function DashboardManager() {
                 xAxisKey="sprint"
                 yAxisLabel="Tareas completadas"
               />
+            </div>
+            <div className="pt-2.5">
+              <TaskTable tasks={mockTasks} />
             </div>
           </div>
         </main>
