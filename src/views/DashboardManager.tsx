@@ -30,7 +30,6 @@ type Team = {
 function DashboardManager() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-<<<<<<< HEAD
   const horasData = [
     { sprint: "Sprint 1", Juan: 35, Mary: 30, Luis: 40, Josie: 28 },
     { sprint: "Sprint 2", Juan: 40, Mary: 32, Luis: 38, Josie: 30 },
@@ -43,9 +42,7 @@ function DashboardManager() {
     { sprint: "Sprint 3", Juan: 11, Mary: 10, Luis: 10, Josie: 12 },
     { sprint: "Sprint 4", Juan: 13, Mary: 11, Luis: 12, Josie: 11 },
   ];
-  const jwtToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjo2MSwicm9sZSI6Ik1hbmFnZXIiLCJ0ZWxlZ3JhbUNoYXRJZCI6MTg2MDkxMzEyMCwiZXhwIjoxNzQ3MzEwMDQ5fQ.h2ypz6neBUUlx9IhuxWpdjyvXhQO8kPlrTDReBGy30w";
-=======
+
   const jwtToken = localStorage.getItem("token");
   // Para debuguear
   // if (jwtToken) {
@@ -53,7 +50,6 @@ function DashboardManager() {
   // } else {
   //   console.error("No se encontró el token");
   // }
->>>>>>> origin/sayid
 
   useEffect(() => {
     const fetchTeams = async () => {
