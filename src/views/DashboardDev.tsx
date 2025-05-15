@@ -19,7 +19,7 @@ interface Ticketx {
 
 function DashboardDev() {
   const [tickets, setTickets] = useState<Ticketx[]>([]);
-  const jwtToken = localStorage.getItem("token");
+  const jwtToken = sessionStorage.getItem("token");
   // Para debuguear
   // if (jwtToken) {
   //   console.log("Token disponible:", jwtToken);

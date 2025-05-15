@@ -3,7 +3,7 @@ import InputField from "../components/InputField";
 import Button from "../components/Button";
 import AuthContainer from "../components/AuthContainer";
 
-function SignUp({ setShowSignUp }) {
+function SignUp({ setShowSignUp }: { readonly setShowSignUp: (value: boolean) => void }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,28 +11,39 @@ function SignUp({ setShowSignUp }) {
   const [telegramChatId] = useState(null);
   const [role, setRole] = useState("Developer");
 
+  // Obtener el rol del usuario actual para esto primero tuvo que haber iniciado sesión
+  const userRole = sessionStorage.getItem("role"); 
+
   const handleSignUp = async () => {
     try {
-      //debug
-      // console.log("Intentando registrar usuario:", {
-      //   name,
-      //   email,
-      //   password,
-      //   workMode,
-      //   telegramChatId,
-      //   role,
-      // });
-      const response = await fetch("/api/users/register", {
+      const endpoint =
+        userRole === "Manager"
+          ? "/api/auth/users/register-admin"
+          : "/api/auth/users/register";
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (userRole === "Manager") {
+        const adminToken = sessionStorage.getItem("token"); // Obtener el token del admin
+        if (adminToken) {
+          headers["Authorization"] = `Bearer ${adminToken}`;
+        } else {
+          console.error("No se encontró el token de administrador");
+          return;
+        }
+      }
+
+      const response = await fetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify({
           name,
           email,
           password,
           workMode,
-          role,
+          role: userRole === "Manager" ? role : "Developer", // Rol por defecto Developer
           telegramChatId,
         }),
       });
@@ -41,12 +52,10 @@ function SignUp({ setShowSignUp }) {
         console.log("Usuario registrado con éxito");
         setShowSignUp(false); // Vuelve al login
       } else {
-        // Manejo de errores para el registro fallido
         const errorText = await response.text();
         console.error("Registro fallido:", errorText);
       }
     } catch (error) {
-      // Manejo de errores de red o de otro tipo
       console.error("Error en la petición:", error);
     }
   };
@@ -97,22 +106,27 @@ function SignUp({ setShowSignUp }) {
           <option value="Hybrid">Hybrid</option>
         </select>
 
-        <label
-          htmlFor="role"
-          className="w-full text-left text-sm text-gray-600 mb-1"
-        >
-          Role
-        </label>
-        <select
-          id="role"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          className="w-full p-2 mb-4 border rounded border-gray-300 text-black"
-        >
-          <option value="Developer">Developer</option>
-          <option value="Manager">Manager</option>
-        </select>
-        <Button text="Sign Up" onClick={handleSignUp} color="black"/>
+        {userRole === "Manager" && (
+          <>
+            <label
+              htmlFor="role"
+              className="w-full text-left text-sm text-gray-600 mb-1"
+            >
+              Role
+            </label>
+            <select
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full p-2 mb-4 border rounded border-gray-300 text-black"
+            >
+              <option value="Developer">Developer</option>
+              <option value="Manager">Manager</option>
+            </select>
+          </>
+        )}
+
+        <Button text="Sign Up" onClick={handleSignUp} color="black" />
       </AuthContainer>
     </div>
   );

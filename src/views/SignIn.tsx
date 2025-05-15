@@ -4,7 +4,7 @@ import InputField from "../components/InputField";
 import Button from "../components/Button";
 import AuthContainer from "../components/AuthContainer";
 
-function SignIn({ setShowSignUp }) {
+function SignIn({ setShowSignUp }: { readonly setShowSignUp: (value: boolean) => void }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,8 +27,9 @@ function SignIn({ setShowSignUp }) {
         const role = data.user?.role; // Extraer el rol del usuario
 
         if (token) {
-          // Guardar el token en localStorage
-          localStorage.setItem("token", token);
+          // Guardar el token en sessionStorage que es para la sesión actual
+          sessionStorage.setItem("token", token);
+          sessionStorage.setItem("role", role); // Guardar el rol del usuario
 
           // Redirigir según el rol
           if (role === "Manager") {
