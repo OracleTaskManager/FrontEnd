@@ -28,8 +28,13 @@ type Team = {
 function DashboardManager() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const jwtToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjoxMDYsInJvbGUiOiJNYW5hZ2VyIiwidGVsZWdyYW1DaGF0SWQiOm51bGwsImV4cCI6MTc0NTYxMDU4M30.kybvK3Y3ST8oN_zyjk-G8xz4FhsEzqlnoqI8LoJmOGY";
+  const jwtToken = localStorage.getItem("token");
+  // Para debuguear
+  // if (jwtToken) {
+  //   console.log("Token disponible:", jwtToken);
+  // } else {
+  //   console.error("No se encontró el token");
+  // }
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -113,7 +118,7 @@ function DashboardManager() {
   const maxTicketsToShow = 5;
   const otherTickets = tickets.slice(0, maxTicketsToShow);
 
-  console.log("Teams cargados:", teams);
+  //console.log("Teams cargados:", teams);
   return (
     <div className="flex flex-col min-h-screen w-screen bg-white">
       <Navbar pageTitle="Home" />
