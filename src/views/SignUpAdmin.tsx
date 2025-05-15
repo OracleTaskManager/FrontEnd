@@ -3,39 +3,32 @@ import InputField from "../components/InputField";
 import Button from "../components/Button";
 import AuthContainer from "../components/AuthContainer";
 
-function SignUp({
-  setShowSignUp,
-}: {
+interface SignUpAdminProps {
   readonly setShowSignUp: (value: boolean) => void;
-}) {
+}
+
+function SignUpAdmin({ setShowSignUp }: SignUpAdminProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [workMode, setWorkMode] = useState("On Site");
-  const [telegramChatId] = useState(null);
-
-  // Obtener el rol del usuario actual para esto primero tuvo que haber iniciado sesión
-  const userRole = sessionStorage.getItem("role");
+  const [role] = useState("Manager");
+  const [telegramChatId, setTelegramChatId] = useState<string | null>(null);
 
   const handleSignUp = async () => {
     try {
-      const endpoint =
-        userRole === "Manager"
-          ? "/api/auth/users/register-admin"
-          : "/api/auth/users/register";
+      const endpoint = "/api/auth/users/register-admin";
 
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
       };
 
-      if (userRole === "Manager") {
-        const adminToken = sessionStorage.getItem("token"); // Obtener el token del admin
-        if (adminToken) {
-          headers["Authorization"] = `Bearer ${adminToken}`;
-        } else {
-          console.error("No se encontró el token de administrador");
-          return;
-        }
+      const token = sessionStorage.getItem("token");
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        console.error("No se encontró el token de administrador");
+        return;
       }
 
       const response = await fetch(endpoint, {
@@ -46,14 +39,14 @@ function SignUp({
           email,
           password,
           workMode,
-          role: userRole === "Manager" ? role : "Developer", // Rol por defecto Developer
+          role,
           telegramChatId,
         }),
       });
 
       if (response.ok) {
         console.log("Usuario registrado con éxito");
-        setShowSignUp(false); // Vuelve al login
+        setShowSignUp(false); // Vuelve al popup principal
       } else {
         const errorText = await response.text();
         console.error("Registro fallido:", errorText);
@@ -70,7 +63,7 @@ function SignUp({
         alt="Oracle Logo"
         className="absolute top-0 left-0 w-30 m-4"
       />
-      <AuthContainer title="Sign Up">
+      <AuthContainer title="Add an Admin">
         <InputField
           type="text"
           placeholder="Name"
@@ -109,30 +102,30 @@ function SignUp({
           <option value="Hybrid">Hybrid</option>
         </select>
 
-        {userRole === "Manager" && (
-          <>
-            <label
-              htmlFor="role"
-              className="w-full text-left text-sm text-gray-600 mb-1"
-            >
-              Role
-            </label>
-            <select
-              id="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="w-full p-2 mb-4 border rounded border-gray-300 text-black"
-            >
-              <option value="Developer">Developer</option>
-              <option value="Manager">Manager</option>
-            </select>
-          </>
-        )}
+        <InputField
+          type="text"
+          placeholder="Telegram Chat ID"
+          value={telegramChatId ?? ""}
+          onChange={(e) => setTelegramChatId(e.target.value)}
+        />
 
-        <Button text="Sign Up" onClick={handleSignUp} color="black" />
+        <Button
+          text={
+            <>
+              <img
+                src="/src/assets/register_login_signup_icon_219991.svg"
+                alt="Sign up icon"
+                className="inline-block w-4 h-4 mr-2 filter invert"
+              />
+              <span>Sign Up</span>
+            </>
+          }
+          onClick={handleSignUp}
+          color="black"
+        />
       </AuthContainer>
     </div>
   );
 }
 
-export default SignUp;
+export default SignUpAdmin;

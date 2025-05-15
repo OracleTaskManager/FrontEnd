@@ -29,7 +29,6 @@ type Team = {
 function DashboardManager() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const jwtToken = sessionStorage.getItem("token");
   // Para debuguear
   // if (jwtToken) {
