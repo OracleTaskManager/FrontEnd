@@ -22,3 +22,11 @@
 .button-black:hover {
   background-color: #1a1a1a; /* Negro más claro para hover */
 }
+
+.button-gray {
+  background-color: gray /* gris */
+}
+
+.button-gray:hover {
+  background-color: #bebcbc; /* gris más oscuro para hover */
+}

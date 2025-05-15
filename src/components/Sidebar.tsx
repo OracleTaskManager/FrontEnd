@@ -1,42 +1,36 @@
+import { useState } from "react";
+import SignOutPopup from "./SignOutPopup";
+
 export default function Sidebar() {
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleSignOut = () => {
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("role");
+    window.location.href = "/"; // Redirige al login
+  };
+
   return (
     <div className="min-h-screen w-20 bg-[#302d2a] text-white flex flex-col p-4 space-y-4">
       <nav className="flex flex-col space-y-4">
         {/* ------------------------- MENU ------------------------- */}
-        <a
-          href="/menu"
+        <button
+          onClick={() => setShowPopup(true)}
           className="flex flex-col items-center gap-2 px-4 py-2 rounded mt-2 mb-6"
         >
           <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g
-              id="SVGRepo_tracerCarrier"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></g>
-            <g id="SVGRepo_iconCarrier">
-              {" "}
-              <path
-                d="M4 18L20 18"
-                stroke="#FFFF"
-                stroke-width="2"
-                stroke-linecap="round"
-              ></path>{" "}
-              <path
-                d="M4 12L20 12"
-                stroke="#FFFF"
-                stroke-width="2"
-                stroke-linecap="round"
-              ></path>{" "}
-              <path
-                d="M4 6L20 6"
-                stroke="#FFFF"
-                stroke-width="2"
-                stroke-linecap="round"
-              ></path>{" "}
-            </g>
+            <path d="M4 18L20 18" stroke="#FFFF" strokeWidth="2" strokeLinecap="round"></path>
+            <path d="M4 12L20 12" stroke="#FFFF" strokeWidth="2" strokeLinecap="round"></path>
+            <path d="M4 6L20 6" stroke="#FFFF" strokeWidth="2" strokeLinecap="round"></path>
           </svg>
-        </a>
+        </button>
+
+        {showPopup && (
+          <SignOutPopup
+            onClose={() => setShowPopup(false)}
+            onSignOut={handleSignOut}
+          />
+        )}
 
         {/* ------------------------- HOME ------------------------- */}
         <a

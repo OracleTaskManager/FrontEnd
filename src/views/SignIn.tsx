@@ -73,7 +73,7 @@ function SignIn({ setShowSignUp }: { readonly setShowSignUp: (value: boolean) =>
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button text="Sign In" onClick={handleSignIn} color="black"/>
+          <Button text={<><img src="/src/assets/signin_106368.svg" alt="Sign in icon" className="inline-block w-4 h-4 mr-2 filter invert" />Sign In</>} onClick={handleSignIn} color="black"/>
         </AuthContainer>
       </div>
 
@@ -85,7 +85,7 @@ function SignIn({ setShowSignUp }: { readonly setShowSignUp: (value: boolean) =>
         <div className="mt-24">
           <p className="text-4xl mb-5">Sign up here</p>
           <Button
-            text="Sign Up"
+            text={<><img src="/src/assets/register_login_signup_icon_219991.svg" alt="Sign up icon" className="inline-block w-4 h-4 mr-2 filter invert" />Sign Up</>}
             onClick={() => setShowSignUp(true)}
             color="red"
           />
