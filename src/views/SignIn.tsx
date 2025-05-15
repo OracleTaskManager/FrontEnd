@@ -29,6 +29,7 @@ function SignIn({ setShowSignUp }) {
         if (token) {
           // Guardar el token en localStorage
           localStorage.setItem("token", token);
+          localStorage.setItem("role", role);
 
           // Redirigir según el rol
           if (role === "Manager") {
@@ -72,7 +73,7 @@ function SignIn({ setShowSignUp }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button text="Sign In" onClick={handleSignIn} color="black"/>
+          <Button text="Sign In" onClick={handleSignIn} color="black" />
         </AuthContainer>
       </div>
 
