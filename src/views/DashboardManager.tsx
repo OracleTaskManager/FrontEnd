@@ -30,6 +30,7 @@ type Team = {
 function DashboardManager() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+<<<<<<< HEAD
   const horasData = [
     { sprint: "Sprint 1", Juan: 35, Mary: 30, Luis: 40, Josie: 28 },
     { sprint: "Sprint 2", Juan: 40, Mary: 32, Luis: 38, Josie: 30 },
@@ -44,6 +45,15 @@ function DashboardManager() {
   ];
   const jwtToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjo2MSwicm9sZSI6Ik1hbmFnZXIiLCJ0ZWxlZ3JhbUNoYXRJZCI6MTg2MDkxMzEyMCwiZXhwIjoxNzQ3MzEwMDQ5fQ.h2ypz6neBUUlx9IhuxWpdjyvXhQO8kPlrTDReBGy30w";
+=======
+  const jwtToken = localStorage.getItem("token");
+  // Para debuguear
+  // if (jwtToken) {
+  //   console.log("Token disponible:", jwtToken);
+  // } else {
+  //   console.error("No se encontró el token");
+  // }
+>>>>>>> origin/sayid
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -126,7 +136,7 @@ function DashboardManager() {
   const maxTicketsToShow = 5;
   const otherTickets = tickets.slice(0, maxTicketsToShow);
 
-  console.log("Teams cargados:", teams);
+  //console.log("Teams cargados:", teams);
   return (
     <div className="flex flex-col min-h-screen w-screen bg-white">
       <Navbar pageTitle="Home" />

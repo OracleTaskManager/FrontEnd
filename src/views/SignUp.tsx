@@ -112,7 +112,7 @@ function SignUp({ setShowSignUp }) {
           <option value="Developer">Developer</option>
           <option value="Manager">Manager</option>
         </select>
-        <Button text="Sign Up" onClick={handleSignUp} />
+        <Button text="Sign Up" onClick={handleSignUp} color="black"/>
       </AuthContainer>
     </div>
   );

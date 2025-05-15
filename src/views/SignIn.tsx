@@ -19,19 +19,25 @@ function SignIn({ setShowSignUp }) {
         body: JSON.stringify({ email, password }),
       });
 
-      //debug
-      // console.log("Intentando iniciar sesión:", { email, password });
-      // console.log("Respuesta del servidor:", response);
-
       if (response.ok) {
+        //Para debuguear
         const data = await response.json();
-        // debug
-        console.log("Datos de respuesta:", data);
-        const token = data.jwtToken;
+        //console.log("Datos de respuesta:", data);
+        const token = data.token;
+        const role = data.user?.role; // Extraer el rol del usuario
 
         if (token) {
+          // Guardar el token en localStorage
           localStorage.setItem("token", token);
-          navigate("/dashboard_manager"); //Hardcodeado la ruta para el manager
+
+          // Redirigir según el rol
+          if (role === "Manager") {
+            navigate("/dashboard_manager");
+          } else if (role === "Developer") {
+            navigate("/dashboard");
+          } else {
+            console.error("Rol desconocido:", role);
+          }
         } else {
           console.error("No se recibió el token");
         }
@@ -66,7 +72,7 @@ function SignIn({ setShowSignUp }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button text="Sign In" onClick={handleSignIn} />
+          <Button text="Sign In" onClick={handleSignIn} color="black"/>
         </AuthContainer>
       </div>
 

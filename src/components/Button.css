@@ -1,0 +1,24 @@
+.button {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+}
+
+.button-red {
+  background-color: #dc2626; /* Rojo */
+}
+
+.button-red:hover {
+  background-color: #b91c1c; /* Rojo más oscuro para hover */
+}
+
+.button-black {
+  background-color: #000000; /* Negro */
+}
+
+.button-black:hover {
+  background-color: #1a1a1a; /* Negro más claro para hover */
+}

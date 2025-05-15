@@ -6,8 +6,18 @@ interface AddUserToTeamModalProps {
   onSuccess: () => void;
 }
 
+<<<<<<< HEAD
 const jwtToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjo2MSwicm9sZSI6Ik1hbmFnZXIiLCJ0ZWxlZ3JhbUNoYXRJZCI6MTg2MDkxMzEyMCwiZXhwIjoxNzQ3MzEwMDQ5fQ.h2ypz6neBUUlx9IhuxWpdjyvXhQO8kPlrTDReBGy30w";
+=======
+const jwtToken = localStorage.getItem("token");
+  // Para debuguear
+  // if (jwtToken) {
+  //   console.log("Token disponible:", jwtToken);
+  // } else {
+  //   console.error("No se encontró el token");
+  // }
+>>>>>>> origin/sayid
 interface User {
   userId: number;
   name: string;
