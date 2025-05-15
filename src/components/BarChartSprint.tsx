@@ -24,7 +24,7 @@ const data = [
 
 const BarChartSprint = () => {
   return (
-    <div className="w-full h-[300px] bg-white rounded-xl shadow p-4">
+    <div className="w-[500px] h-[300px] bg-white rounded-xl shadow p-4">
       <h2 className="text-xl font-bold mb-4">Hours Invested Per Sprint</h2>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>

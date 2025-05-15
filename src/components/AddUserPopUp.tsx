@@ -7,7 +7,7 @@ interface AddUserToTeamModalProps {
 }
 
 const jwtToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjoxMDYsInJvbGUiOiJNYW5hZ2VyIiwidGVsZWdyYW1DaGF0SWQiOm51bGwsImV4cCI6MTc0NTYxMDU4M30.kybvK3Y3ST8oN_zyjk-G8xz4FhsEzqlnoqI8LoJmOGY";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJPcmFjbGUgUHJvamVjdCIsImlkIjo2MSwicm9sZSI6Ik1hbmFnZXIiLCJ0ZWxlZ3JhbUNoYXRJZCI6MTg2MDkxMzEyMCwiZXhwIjoxNzQ3MzEwMDQ5fQ.h2ypz6neBUUlx9IhuxWpdjyvXhQO8kPlrTDReBGy30w";
 interface User {
   userId: number;
   name: string;
@@ -27,7 +27,7 @@ const AddUserToTeamModal: React.FC<AddUserToTeamModalProps> = ({
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("/api/users", {
+        const response = await fetch("/api/auth/users", {
           headers: {
             Authorization: `${jwtToken}`,
           },

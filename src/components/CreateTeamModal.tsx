@@ -23,7 +23,7 @@ const CreateTeamModal: React.FC<Props> = ({
     setError("");
 
     try {
-      const res = await fetch("/api/teams/create", {
+      const res = await fetch("/api/auth/teams/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

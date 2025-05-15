@@ -11,8 +11,8 @@ import {
 
 type Props = {
   data: any[];
-  dataKeys: string[]; // ['Juan', 'Mary', ...]
-  xAxisKey: string; // 'sprint' u otra categoría
+  dataKeys: string[];
+  xAxisKey: string;
   yAxisLabel: string;
   colors?: string[];
 };
@@ -25,7 +25,7 @@ export default function BarChartMulti({
   colors = ["#4285F4", "#34A853", "#3367D6", "#76D7EA"],
 }: Props) {
   return (
-    <div style={{ width: "100%", height: 400 }}>
+    <div className="w-[500px] h-[300px]">
       <ResponsiveContainer>
         <BarChart
           data={data}
