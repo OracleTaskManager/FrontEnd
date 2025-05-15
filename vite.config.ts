@@ -7,18 +7,49 @@ export default defineConfig({
   plugins: [tailwindcss(), react()],
   server: {
     proxy: {
-      "/teams": {
-        target: "http://159.54.136.26:8080",
+      "/api/teams": {
+        target: "http://140.84.189.81:8080",
         changeOrigin: true,
         secure: false,
       },
-      "/users": {
-        target: "http://159.54.136.26:8080",
+      "/api/users": {
+        target: "http://140.84.189.81:8080",
         changeOrigin: true,
         secure: false,
       },
-      "/userteams": {
-        target: "http://159.54.136.26:8080",
+      "/api/userteams": {
+        target: "http://140.84.189.81:8080",
+        changeOrigin: true,
+        secure: false,
+      },
+      //Apartado de tickets
+      "/api/sprints": {
+        target: "http://140.84.189.81:8081",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/api/epics": {
+        target: "http://140.84.189.81:8081",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/api/tasksprint": {
+        target: "http://140.84.189.81:8081",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/api/task": {
+        target: "http://140.84.189.81:8081",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/api/taskassignments": {
+        target: "http://140.84.189.81:8081",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/api/task_dependencies": {
+        target: "http://140.84.189.81:8081",
         changeOrigin: true,
         secure: false,
       },

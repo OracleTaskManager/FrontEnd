@@ -22,17 +22,19 @@ function SignUp({ setShowSignUp }) {
       //   telegramChatId,
       //   role,
       // });
-      const response = await fetch("/users/register", {
+      const response = await fetch("/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name,
+        body: JSON.stringify({
+          name,
           email,
           password,
           workMode,
           role,
-          telegramChatId,}),
+          telegramChatId,
+        }),
       });
 
       if (response.ok) {
@@ -57,7 +59,6 @@ function SignUp({ setShowSignUp }) {
         className="absolute top-0 left-0 w-30 m-4"
       />
       <AuthContainer title="Sign Up">
-
         <InputField
           type="text"
           placeholder="Name"
@@ -79,7 +80,12 @@ function SignUp({ setShowSignUp }) {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <label htmlFor="workMode" className="w-full text-left text-sm text-gray-600 mb-1">Work Mode</label>
+        <label
+          htmlFor="workMode"
+          className="w-full text-left text-sm text-gray-600 mb-1"
+        >
+          Work Mode
+        </label>
         <select
           id="workMode"
           value={workMode}
@@ -91,7 +97,12 @@ function SignUp({ setShowSignUp }) {
           <option value="Hybrid">Hybrid</option>
         </select>
 
-        <label htmlFor="role" className="w-full text-left text-sm text-gray-600 mb-1">Role</label>
+        <label
+          htmlFor="role"
+          className="w-full text-left text-sm text-gray-600 mb-1"
+        >
+          Role
+        </label>
         <select
           id="role"
           value={role}

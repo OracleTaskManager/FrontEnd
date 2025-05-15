@@ -6,6 +6,19 @@ import TeamCard from "../components/TeamCard";
 import Notification from "../components/Notification";
 import CreateTeamModal from "../components/CreateTeamModal";
 
+interface Ticketx {
+  taskId: number;
+  title: string;
+  description: string;
+  priority: "Low" | "Mid" | "High";
+  status: "ToDo" | "InProgress" | "Finished";
+  estimatedDeadline: string;
+  realDeadline: string;
+  estimatedHours: string | null;
+  realHours: string | null;
+  user_points: number;
+}
+
 type Team = {
   team_id: number;
   team_name: string;
@@ -21,7 +34,7 @@ function DashboardManager() {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await fetch("/teams/myteams", {
+        const response = await fetch("/api/teams/myteams", {
           headers: {
             Authorization: `${jwtToken}`,
             "Content-Type": "application/json",
@@ -50,7 +63,7 @@ function DashboardManager() {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`/teams/?teamId=${id}`, {
+      const response = await fetch(`/api/teams/?teamId=${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `${jwtToken}`,
@@ -69,37 +82,33 @@ function DashboardManager() {
     }
   };
 
+  // Endpoint Tickets
+  const [tickets, setTickets] = useState<Ticketx[]>([]);
+
   // Lista simulada de tickets
-  const tickets = [
-    {
-      title: "Fix login bug",
-      publishedDate: "2025-04-01",
-      status: "In Progress",
-      priority: "High",
-      description: "Users are unable to log in with Google authentication.",
-    },
-    {
-      title: "UI improvements on dashboard",
-      publishedDate: "2025-03-28",
-      status: "To-do",
-      priority: "Mid",
-      description: "Redesign the user dashboard for better user experience.",
-    },
-    {
-      title: "Database migration",
-      publishedDate: "2025-03-20",
-      status: "Finished",
-      priority: "High",
-      description: "Migrate the production database to a new server.",
-    },
-    {
-      title: "Improve security measures",
-      publishedDate: "2025-03-15",
-      status: "In Progress",
-      priority: "Low",
-      description: "Implement new security patches for user authentication.",
-    },
-  ];
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const response = await fetch("/api/tasks/all", {
+          headers: {
+            Authorization: `${jwtToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch tickets");
+        }
+
+        const data = await response.json();
+        setTickets(data);
+      } catch (error) {
+        console.error("Error fetching tickets:", error);
+      }
+    };
+
+    fetchTickets();
+  }, []);
 
   const maxTicketsToShow = 5;
   const otherTickets = tickets.slice(0, maxTicketsToShow);
