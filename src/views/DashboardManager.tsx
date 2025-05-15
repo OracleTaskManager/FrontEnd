@@ -58,7 +58,7 @@ function DashboardManager() {
     },
   ];
 
-  const jwtToken = localStorage.getItem("token");
+  const jwtToken = sessionStorage.getItem("token");
   // Para debuguear
   // if (jwtToken) {
   //   console.log("Token disponible:", jwtToken);
