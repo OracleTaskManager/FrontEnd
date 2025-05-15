@@ -94,7 +94,7 @@ function DashboardManager() {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await fetch("/api/tasks/tasks/all", {
+        const response = await fetch("/api/tasks/tasks/my-tasks", {
           headers: {
             Authorization: `${jwtToken}`,
             "Content-Type": "application/json",

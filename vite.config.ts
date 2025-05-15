@@ -44,7 +44,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      "/api/taskassignments": {
+      "/api/tasks/taskassignments": {
         target: "http://140.84.189.81",
         changeOrigin: true,
         secure: false,
