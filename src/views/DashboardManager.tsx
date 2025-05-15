@@ -5,6 +5,7 @@ import Ticket from "../components/Ticket";
 import TeamCard from "../components/TeamCard";
 import Notification from "../components/Notification";
 import CreateTeamModal from "../components/CreateTeamModal";
+import CreateTicketForm from "../components/CreateTicket";
 
 interface Ticketx {
   taskId: number;
@@ -115,7 +116,7 @@ function DashboardManager() {
     fetchTickets();
   }, []);
 
-  const maxTicketsToShow = 5;
+  const maxTicketsToShow = 4;
   const otherTickets = tickets.slice(0, maxTicketsToShow);
 
   //console.log("Teams cargados:", teams);
@@ -163,6 +164,7 @@ function DashboardManager() {
             <h2 className="mt-6 text-2xl font-semibold text-black">
               Section Tickets
             </h2>
+            <CreateTicketForm />
             {otherTickets.map((ticket, index) => (
               <Ticket
                 key={index}
