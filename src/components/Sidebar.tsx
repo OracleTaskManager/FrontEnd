@@ -1,6 +1,29 @@
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 export default function Sidebar() {
-  const role = localStorage.getItem("role");
-  console.log(role);
+  const navigate = useNavigate();
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedRole = sessionStorage.getItem("role");
+    console.log("storedRole raw:", storedRole);
+    if (storedRole) {
+      setRole(storedRole.trim().toLowerCase());
+    } else {
+      setRole(null);
+    }
+  }, []);
+
+  const handleHomeClick = () => {
+    if (role === "manager") {
+      navigate("/dashboard_manager");
+    } else {
+      navigate("/dashboard");
+    }
+  };
+
+  console.log("role state:", role);
   return (
     <div className="min-h-screen w-20 bg-[#302d2a] text-white flex flex-col p-4 space-y-4">
       <nav className="flex flex-col space-y-4">
@@ -41,9 +64,21 @@ export default function Sidebar() {
         </a>
 
         {/* ------------------------- HOME ------------------------- */}
-        <a
-          href="/dashboard"
-          className="flex flex-col items-center gap-2 px-4 py-2 rounded "
+        <button
+          onClick={handleHomeClick}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "0.5rem",
+            padding: "0.5rem 1rem",
+            borderRadius: "0.375rem",
+            color: "#c74634",
+            background: "transparent",
+            border: "none",
+            outline: "none",
+            cursor: "pointer",
+          }}
         >
           <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">
             <path
@@ -54,7 +89,7 @@ export default function Sidebar() {
             />
           </svg>
           <span className="text-[#c74634]">Home</span>
-        </a>
+        </button>
 
         {/* ------------------------- Calendar ------------------------- */}
         <a
@@ -74,7 +109,7 @@ export default function Sidebar() {
         </a>
 
         {/* ------------------------- KPIs ------------------------- */}
-        {role === "Manager" && (
+        {role === "manager" && (
           <a
             href="/kpi"
             className="flex flex-col items-center gap-2 px-4 py-2 rounded"
