@@ -50,7 +50,7 @@ function SignUp({
   return (
     <div className="flex items-center justify-center h-screen w-screen bg-[#D0CCD0]">
       <img
-        src="/src/assets/oracle_logo.webp"
+        src="/oracle_logo.webp"
         alt="Oracle Logo"
         className="absolute top-0 left-0 w-30 m-4"
       />
@@ -98,7 +98,7 @@ function SignUp({
         text={
           <>
             <img
-              src="/src/assets/1904654-cancel-close-cross-delete-reject-remove-stop_122504.svg"
+              src="/1904654-cancel-close-cross-delete-reject-remove-stop_122504.svg"
               alt="Log out icon"
               className="inline-block w-4 h-4 mr-2 filter invert"
             />
