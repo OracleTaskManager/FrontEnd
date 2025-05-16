@@ -1,6 +1,13 @@
+import { MouseEventHandler, ReactNode } from "react";
 import "./Button.css";
 
-function Button({ text, onClick, color }) {
+type ButtonProps = {
+  text: ReactNode; // <-- changed from string to ReactNode
+  onClick: MouseEventHandler<HTMLButtonElement>;
+  color?: "red" | "black" | "gray";
+};
+
+function Button({ text, onClick, color }: ButtonProps) {
   let buttonClass;
 
   switch (color) {

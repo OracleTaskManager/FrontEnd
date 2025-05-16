@@ -10,7 +10,7 @@ interface TicketPopUpProps {
   priority: "Low" | "Mid" | "High";
   onStatusChange: (newStatus: "To-do" | "In Progress" | "Finished") => void;
   description: string;
-  taskId: number;
+  taskId?: number;
 }
 
 interface FetchedFile {
@@ -29,11 +29,12 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
   priority,
   description,
   onStatusChange,
-  taskId,
+  // taskId,
 }) => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [fetchedFiles, setFetchedFiles] = useState<FetchedFile[]>([]);
-  const [uploading, setUploading] = useState(false);
+  // const [uploading, setUploading] = useState(false);
+  const [uploading] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(status);
 
   useEffect(() => {
@@ -96,9 +97,9 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
     if (event.target.files) {
       const filesArray = Array.from(event.target.files);
       setAttachedFiles(filesArray);
-      if (filesArray.length > 0) {
-        handleUpload(filesArray);
-      }
+      // if (filesArray.length > 0) {
+      //   handleUpload(filesArray);
+      // }
     }
   };
 

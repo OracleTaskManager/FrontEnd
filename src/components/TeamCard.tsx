@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import AddUserToTeamModal from "./AddUserPopUp";
-import LeaveTeamButton from "./LeaveTeam";
+// import LeaveTeamButton from "./LeaveTeam";
 
 interface TeamMember {
   icon: string;

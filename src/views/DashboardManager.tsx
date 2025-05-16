@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
 import TeamCard from "../components/TeamCard";
-import Notification from "../components/Notification";
+// import Notification from "../components/Notification";
 import CreateTeamModal from "../components/CreateTeamModal";
 import CreateTicketForm from "../components/CreateTicket";
 import AssignTaskToUser from "../components/AssignTaskToUser";
@@ -19,6 +19,7 @@ interface Ticketx {
   estimatedHours: string | null;
   realHours: string | null;
   user_points: number;
+  publishedDate: string; // ✅ Agregar esta línea
 }
 
 type Team = {
@@ -201,7 +202,7 @@ function DashboardManager() {
             .then((data) => setTeams(data))
             .catch((err) => console.error("Error actualizando equipos:", err));
         }}
-        token={jwtToken}
+        token={jwtToken ?? ""}
       />
     </div>
   );
