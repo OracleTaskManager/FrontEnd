@@ -53,7 +53,7 @@ export default function Ticket({
         className={`size-12 shrink-0 ${
           isMain ? "min-h-50 min-w-50" : "min-h-30 min-w-30"
         }`}
-        src="src/assets/rocket.png"
+        src="/rocket.png"
         alt="ChitChat Logo"
       />
 
