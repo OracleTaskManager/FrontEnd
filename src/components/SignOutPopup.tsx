@@ -55,7 +55,7 @@ const SignOutPopup: React.FC<SignOutPopupProps> = ({ onClose, onSignOut }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center w-screen h-screen z-[9999]">
       <div className="bg-white p-6 rounded shadow-md text-black">
         {(() => {
           if (showUpdateUserForm) {
@@ -84,7 +84,7 @@ const SignOutPopup: React.FC<SignOutPopupProps> = ({ onClose, onSignOut }) => {
               )}
               <div className="mt-4">
                 <Button
-                  text={<span>Update data</span>}
+                  text={<span>Edit User</span>}
                   onClick={() => setShowUpdateUserForm(true)}
                   color="black"
                 />
