@@ -123,6 +123,20 @@ function SignUpAdmin({ setShowSignUp }: SignUpAdminProps) {
           onClick={handleSignUp}
           color="black"
         />
+        <Button
+          text={
+          <>
+            <img
+              src="/src/assets/1904654-cancel-close-cross-delete-reject-remove-stop_122504.svg"
+              alt="Log out icon"
+              className="inline-block w-4 h-4 mr-2 filter invert"
+            />
+            <span>Cancel</span>
+          </>
+        }
+          onClick={() => setShowSignUp(false)}
+          color="gray"
+        />
       </AuthContainer>
     </div>
   );

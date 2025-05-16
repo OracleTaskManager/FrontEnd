@@ -85,7 +85,7 @@ function SignIn({
                   alt="Sign in icon"
                   className="inline-block w-4 h-4 mr-2 filter invert"
                 />
-                Sign In
+                <span>Sign In</span>
               </>
             }
             onClick={handleSignIn}
@@ -109,7 +109,7 @@ function SignIn({
                   alt="Sign up icon"
                   className="inline-block w-4 h-4 mr-2 filter invert"
                 />
-                Sign Up
+                <span>Sign Up</span>
               </>
             }
             onClick={() => setShowSignUp(true)}

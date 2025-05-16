@@ -14,29 +14,13 @@ function SignUp({
   const [workMode, setWorkMode] = useState("On Site");
   const [telegramChatId] = useState(null);
 
-  // Obtener el rol del usuario actual para esto primero tuvo que haber iniciado sesión
-  const userRole = sessionStorage.getItem("role");
-
   const handleSignUp = async () => {
     try {
-      const endpoint =
-        userRole === "Manager"
-          ? "/api/auth/users/register-admin"
-          : "/api/auth/users/register";
+      const endpoint = "/api/auth/users/register";
 
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
       };
-
-      if (userRole === "Manager") {
-        const adminToken = sessionStorage.getItem("token"); // Obtener el token del admin
-        if (adminToken) {
-          headers["Authorization"] = `Bearer ${adminToken}`;
-        } else {
-          console.error("No se encontró el token de administrador");
-          return;
-        }
-      }
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -46,7 +30,7 @@ function SignUp({
           email,
           password,
           workMode,
-          role: userRole === "Manager" ? role : "Developer", // Rol por defecto Developer
+          role: "Developer", // Rol fijo como Developer
           telegramChatId,
         }),
       });
@@ -109,27 +93,19 @@ function SignUp({
           <option value="Hybrid">Hybrid</option>
         </select>
 
-        {userRole === "Manager" && (
-          <>
-            <label
-              htmlFor="role"
-              className="w-full text-left text-sm text-gray-600 mb-1"
-            >
-              Role
-            </label>
-            <select
-              id="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="w-full p-2 mb-4 border rounded border-gray-300 text-black"
-            >
-              <option value="Developer">Developer</option>
-              <option value="Manager">Manager</option>
-            </select>
-          </>
-        )}
-
         <Button text="Sign Up" onClick={handleSignUp} color="black" />
+        <Button 
+        text={
+          <>
+            <img
+              src="/src/assets/1904654-cancel-close-cross-delete-reject-remove-stop_122504.svg"
+              alt="Log out icon"
+              className="inline-block w-4 h-4 mr-2 filter invert"
+            />
+            <span>Cancel</span>
+          </>
+        }
+        onClick={() => setShowSignUp(false)} color="gray" />
       </AuthContainer>
     </div>
   );
