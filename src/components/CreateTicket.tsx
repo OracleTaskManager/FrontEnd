@@ -4,15 +4,14 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    epic_id: 61,
-    priority: "Priority",
-    status: "status",
+    epicId: 61,
+    priority: "Low",
     type: "Ticket",
-    estimated_deadline: "2025-03-04",
-    real_deadline: "2025-03-04",
-    realHours: null,
-    estimatedHours: 2,
-    user_points: 2,
+    estimatedDeadline: "2025-04-25",
+    realDeadline: "2025-04-25",
+    userPoints: 100,
+    estimatedHours: 24,
+    realHours: 20,
   });
 
   const handleChange = (
@@ -23,7 +22,10 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "realHours" ? Number(value) : value,
+      [name]:
+        name.includes("Hours") || name === "userPoints" || name === "epicId"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -34,8 +36,8 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
 
     const payload = {
       ...formData,
-      estimated_deadline: new Date(formData.estimated_deadline).toISOString(),
-      real_deadline: new Date(formData.real_deadline).toISOString(),
+      estimatedDeadline: new Date(formData.estimatedDeadline).toISOString(),
+      realDeadline: new Date(formData.realDeadline).toISOString(),
     };
 
     try {
@@ -96,6 +98,15 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
             required
           />
 
+          <input
+            type="number"
+            name="epicId"
+            value={formData.epicId}
+            onChange={handleChange}
+            placeholder="Epic ID"
+            className="w-full p-2 border rounded-lg"
+          />
+
           <select
             name="priority"
             value={formData.priority}
@@ -108,28 +119,28 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
           </select>
 
           <select
-            name="status"
-            value={formData.status}
+            name="type"
+            value={formData.type}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
           >
-            <option value="ToDo">To Do</option>
-            <option value="InProgress">In Progress</option>
-            <option value="Done">Done</option>
+            <option value="Ticket">Ticket</option>
+            <option value="Bug">Bug</option>
+            <option value="Feature">Feature</option>
           </select>
 
           <input
             type="date"
-            name="estimated_deadline"
-            value={formData.estimated_deadline}
+            name="estimatedDeadline"
+            value={formData.estimatedDeadline}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
           />
 
           <input
             type="date"
-            name="real_deadline"
-            value={formData.real_deadline}
+            name="realDeadline"
+            value={formData.realDeadline}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
           />
@@ -137,10 +148,28 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
           <input
             type="number"
             name="estimatedHours"
-            value={formData.user_points}
+            value={formData.estimatedHours}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
             placeholder="Estimated Hours"
+          />
+
+          <input
+            type="number"
+            name="realHours"
+            value={formData.realHours}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-lg"
+            placeholder="Real Hours"
+          />
+
+          <input
+            type="number"
+            name="userPoints"
+            value={formData.userPoints}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-lg"
+            placeholder="User Points"
           />
 
           <button

@@ -6,6 +6,7 @@ import TeamCard from "../components/TeamCard";
 import Notification from "../components/Notification";
 import CreateTeamModal from "../components/CreateTeamModal";
 import CreateTicketForm from "../components/CreateTicket";
+import AssignTaskToUser from "../components/AssignTaskToUser";
 
 interface Ticketx {
   taskId: number;
@@ -91,27 +92,27 @@ function DashboardManager() {
   // Endpoint Tickets
   const [tickets, setTickets] = useState<Ticketx[]>([]);
 
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const response = await fetch("/api/tasks/tasks/my-tasks", {
-          headers: {
-            Authorization: `${jwtToken}`,
-            "Content-Type": "application/json",
-          },
-        });
+  const fetchTickets = async () => {
+    try {
+      const response = await fetch("/api/tasks/tasks/my-tasks", {
+        headers: {
+          Authorization: `${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch tickets");
-        }
-
-        const data = await response.json();
-        setTickets(data);
-      } catch (error) {
-        console.error("Error fetching tickets:", error);
+      if (!response.ok) {
+        throw new Error("Failed to fetch tickets");
       }
-    };
 
+      const data = await response.json();
+      setTickets(data);
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchTickets();
   }, []);
 
@@ -163,7 +164,15 @@ function DashboardManager() {
             <h2 className="mt-6 text-2xl font-semibold text-black">
               Section Tickets
             </h2>
-            <CreateTicketForm />
+            <div className="flex space-x-4">
+              {/* Create Ticket */}
+              <CreateTicketForm />
+
+              {/* Assign Ticket to User */}
+              <AssignTaskToUser onTaskAssigned={fetchTickets} />
+            </div>
+
+            {/* Display Tickets of User */}
             {otherTickets.map((ticket, index) => (
               <Ticket
                 key={index}
