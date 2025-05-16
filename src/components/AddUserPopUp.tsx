@@ -64,7 +64,7 @@ const AddUserToTeamModal: React.FC<AddUserToTeamModalProps> = ({
       const response = await fetch("/api/auth/userteams/add", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${jwtToken}`,
+          Authorization: `${jwtToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
