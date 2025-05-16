@@ -210,7 +210,7 @@ function KPI() {
 
       <div className="flex flex-1">
         {/* Sidebar fijo a la izquierda */}
-        <Sidebar />
+      <Sidebar />
 
         <main className="flex-1">
           <h2 className="text-2xl font-semibold text-black p-5">KPIs</h2>

@@ -77,7 +77,7 @@ function DashboardDev() {
           {mainTicket && (
             <Ticket
               title={mainTicket.title}
-              publishedDate={mainTicket.estimatedDeadline.slice(0, 10)}
+              publishedDate={mainTicket.estimatedDeadline}
               status={mapStatus(mainTicket.status)}
               priority={mainTicket.priority}
               description={mainTicket.description}
