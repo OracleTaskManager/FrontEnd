@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface TicketPopUpProps {
   isOpen: boolean;
@@ -10,6 +10,13 @@ interface TicketPopUpProps {
   priority: "Low" | "Mid" | "High";
   onStatusChange: (newStatus: "To-do" | "In Progress" | "Finished") => void;
   description: string;
+  taskId: number;
+}
+
+interface FetchedFile {
+  name: string;
+  url: string;
+  type: string;
 }
 
 const PopUpTicket: React.FC<TicketPopUpProps> = ({
@@ -22,10 +29,25 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
   priority,
   description,
   onStatusChange,
+  taskId,
 }) => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
-
+  const [fetchedFiles, setFetchedFiles] = useState<FetchedFile[]>([]);
+  const [uploading, setUploading] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(status);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetch("/api/files/attachments/")
+        .then((res) => res.json())
+        .then((data) => {
+          setFetchedFiles(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching attachments:", error);
+        });
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -41,29 +63,52 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
     Finished: "bg-green-200 text-green-800",
   };
 
+  // Aquí el método para subir archivos automáticamente
+  // const handleUpload = async (files: File[]) => {
+  //   setUploading(true);
+  //   try {
+  //     for (const file of files) {
+  //       const formData = new FormData();
+  //       formData.append("fileUrl", file);
+  //       formData.append("taskId", taskId.toString());
+
+  //       const response = await fetch("/api/files/attachments/upload", {
+  //         method: "POST",
+  //         body: formData,
+  //       });
+
+  //       if (!response.ok) {
+  //         throw new Error("Error al subir el archivo");
+  //       }
+  //     }
+
+  //     alert("Archivos subidos correctamente.");
+  //     setAttachedFiles([]);
+  //   } catch (error) {
+  //     console.error("Error al subir archivos:", error);
+  //     alert("Hubo un error al subir los archivos.");
+  //   } finally {
+  //     setUploading(false);
+  //   }
+  // };
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const filesArray = Array.from(event.target.files);
-      setAttachedFiles((prevFiles) => {
-        const newFiles = filesArray.filter(
-          (file) => !prevFiles.some((prev) => prev.name === file.name)
-        );
-        return [...prevFiles, ...newFiles];
-      });
+      setAttachedFiles(filesArray);
+      if (filesArray.length > 0) {
+        handleUpload(filesArray);
+      }
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
-      <div className="bg-[#D0CCD0] rounded-lg shadow-lg p-6 max-w-md w-full relative">
-        {/* Closing button "X" */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-40 bg-transparent">
+      <div className="bg-neutral-100 rounded-lg shadow-lg p-6 max-w-md w-full relative">
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-lg"
-          style={{
-            backgroundColor: "transparent",
-            borderRadius: "30px",
-          }}
+          style={{ backgroundColor: "transparent", borderRadius: "30px" }}
         >
           ✕
         </button>
@@ -73,7 +118,6 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
           <strong>Priority: {priority}</strong>
         </p>
 
-        {/* Input para adjuntar archivos */}
         <div className="mt-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Attach images or videos:
@@ -84,20 +128,54 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
             multiple
             onChange={handleFileChange}
             className="text-sm text-gray-600 file:mr-4 file:py-1 file:px-4 file:border file:rounded-md file:bg-[#64548f] file:text-white"
+            disabled={uploading}
           />
         </div>
 
-        {/* Preview de archivos adjuntados */}
-        {attachedFiles.length > 0 && (
+        {(fetchedFiles.length > 0 || attachedFiles.length > 0) && (
           <div className="mt-4 space-y-3">
-            <p className="font-medium text-gray-700">Preview:</p>
+            <p className="font-medium text-gray-700">Attachments:</p>
             <div className="flex gap-3 flex-wrap">
+              {fetchedFiles.map((file, idx) => {
+                if (file.type.startsWith("image/")) {
+                  return (
+                    <img
+                      key={`fetched-${idx}`}
+                      src={file.url}
+                      alt={file.name}
+                      className="w-28 h-28 object-cover rounded-md border"
+                    />
+                  );
+                } else if (file.type.startsWith("video/")) {
+                  return (
+                    <video
+                      key={`fetched-${idx}`}
+                      src={file.url}
+                      controls
+                      className="w-40 h-28 rounded-md border"
+                    />
+                  );
+                } else {
+                  return (
+                    <a
+                      key={`fetched-${idx}`}
+                      href={file.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-700 underline"
+                    >
+                      📄 {file.name}
+                    </a>
+                  );
+                }
+              })}
+
               {attachedFiles.map((file, idx) => {
                 const url = URL.createObjectURL(file);
                 if (file.type.startsWith("image/")) {
                   return (
                     <img
-                      key={idx}
+                      key={`local-${idx}`}
                       src={url}
                       alt={`preview ${idx}`}
                       className="w-28 h-28 object-cover rounded-md border"
@@ -106,7 +184,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
                 } else if (file.type.startsWith("video/")) {
                   return (
                     <video
-                      key={idx}
+                      key={`local-${idx}`}
                       src={url}
                       controls
                       className="w-40 h-28 rounded-md border"
@@ -114,7 +192,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
                   );
                 } else {
                   return (
-                    <p key={idx} className="text-sm text-gray-700">
+                    <p key={`local-${idx}`} className="text-sm text-gray-700">
                       📄 {file.name}
                     </p>
                   );
@@ -131,14 +209,17 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
         <div className="mt-2">
           <label className="text-sm font-medium text-gray-700">Status:</label>
           <select
-            value={status}
-            onChange={(e) =>
-              onStatusChange(
-                e.target.value as "To-do" | "In Progress" | "Finished"
-              )
-            }
-            className={`block mt-1 rounded px-2 py-1 text-sm ${statusColors[status]}`}
-            style={{ backgroundColor: "white" }}
+            value={currentStatus}
+            onChange={(e) => {
+              const newStatus = e.target.value as
+                | "To-do"
+                | "In Progress"
+                | "Finished";
+              setCurrentStatus(newStatus);
+              onStatusChange(newStatus);
+            }}
+            className={`block mt-1 rounded px-2 py-1 text-sm ${statusColors[currentStatus]}`}
+            style={{ backgroundColor: "white", color: "black" }}
           >
             <option value="To-do">To-do</option>
             <option value="In Progress">In Progress</option>

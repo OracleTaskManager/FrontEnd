@@ -61,7 +61,7 @@ const AddUserToTeamModal: React.FC<AddUserToTeamModalProps> = ({
     setError("");
 
     try {
-      const response = await fetch("/api/userteams/add", {
+      const response = await fetch("/api/auth/userteams/add", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${jwtToken}`,

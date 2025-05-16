@@ -7,29 +7,199 @@ import TaskTable from "../components/TaskTable";
 
 function KPI() {
   const horasData = [
-    { sprint: "Sprint 1", Juan: 35, Mary: 30, Luis: 40, Josie: 28 },
-    { sprint: "Sprint 2", Juan: 40, Mary: 32, Luis: 38, Josie: 30 },
-    { sprint: "Sprint 3", Juan: 38, Mary: 35, Luis: 36, Josie: 33 },
-    { sprint: "Sprint 4", Juan: 42, Mary: 34, Luis: 39, Josie: 31 },
+    {
+      sprint: "Sprint 1",
+      Rafael: 35,
+      Sayid: 30,
+      Cesar: 40,
+      Iñaki: 28,
+      Ernesto: 25,
+    },
+    {
+      sprint: "Sprint 2",
+      Rafael: 40,
+      Sayid: 32,
+      Cesar: 38,
+      Iñaki: 30,
+      Ernesto: 25,
+    },
+    {
+      sprint: "Sprint 3",
+      Rafael: 38,
+      Sayid: 35,
+      Cesar: 36,
+      Iñaki: 33,
+      Ernesto: 25,
+    },
+    {
+      sprint: "Sprint 4",
+      Rafael: 42,
+      Sayid: 34,
+      Cesar: 39,
+      Iñaki: 31,
+      Ernesto: 25,
+    },
+    {
+      sprint: "Sprint 5",
+      Rafael: 35,
+      Sayid: 30,
+      Cesar: 40,
+      Iñaki: 28,
+      Ernesto: 25,
+    },
+    {
+      sprint: "Sprint 6",
+      Rafael: 40,
+      Sayid: 32,
+      Cesar: 38,
+      Iñaki: 30,
+      Ernesto: 25,
+    },
+    {
+      sprint: "Sprint 7",
+      Rafael: 38,
+      Sayid: 35,
+      Cesar: 36,
+      Iñaki: 33,
+      Ernesto: 25,
+    },
+    {
+      sprint: "Sprint 8",
+      Rafael: 42,
+      Sayid: 34,
+      Cesar: 39,
+      Iñaki: 31,
+      Ernesto: 25,
+    },
+    {
+      sprint: "Sprint 9",
+      Rafael: 38,
+      Sayid: 35,
+      Cesar: 36,
+      Iñaki: 33,
+      Ernesto: 25,
+    },
+    {
+      sprint: "Sprint 10",
+      Rafael: 42,
+      Sayid: 34,
+      Cesar: 39,
+      Iñaki: 31,
+      Ernesto: 25,
+    },
   ];
   const tareasData = [
-    { sprint: "Sprint 1", Juan: 10, Mary: 8, Luis: 12, Josie: 9 },
-    { sprint: "Sprint 2", Juan: 12, Mary: 9, Luis: 11, Josie: 10 },
-    { sprint: "Sprint 3", Juan: 11, Mary: 10, Luis: 10, Josie: 12 },
-    { sprint: "Sprint 4", Juan: 13, Mary: 11, Luis: 12, Josie: 11 },
+    {
+      sprint: "Sprint 1",
+      Rafael: 6,
+      Sayid: 7,
+      Cesar: 10,
+      Iñaki: 9,
+      Ernesto: 5,
+    },
+    {
+      sprint: "Sprint 2",
+      Rafael: 6,
+      Sayid: 7,
+      Cesar: 10,
+      Iñaki: 9,
+      Ernesto: 5,
+    },
+    {
+      sprint: "Sprint 3",
+      Rafael: 6,
+      Sayid: 7,
+      Cesar: 10,
+      Iñaki: 9,
+      Ernesto: 5,
+    },
+    {
+      sprint: "Sprint 4",
+      Rafael: 6,
+      Sayid: 7,
+      Cesar: 10,
+      Iñaki: 9,
+      Ernesto: 5,
+    },
+    {
+      sprint: "Sprint 5",
+      Rafael: 6,
+      Sayid: 7,
+      Cesar: 10,
+      Iñaki: 9,
+      Ernesto: 5,
+    },
+    {
+      sprint: "Sprint 6",
+      Rafael: 6,
+      Sayid: 7,
+      Cesar: 10,
+      Iñaki: 9,
+      Ernesto: 5,
+    },
+    {
+      sprint: "Sprint 7",
+      Rafael: 6,
+      Sayid: 7,
+      Cesar: 10,
+      Iñaki: 9,
+      Ernesto: 5,
+    },
+    {
+      sprint: "Sprint 8",
+      Rafael: 6,
+      Sayid: 7,
+      Cesar: 10,
+      Iñaki: 9,
+      Ernesto: 5,
+    },
+    {
+      sprint: "Sprint 9",
+      Rafael: 6,
+      Sayid: 7,
+      Cesar: 10,
+      Iñaki: 9,
+      Ernesto: 5,
+    },
+    {
+      sprint: "Sprint 10",
+      Rafael: 6,
+      Sayid: 7,
+      Cesar: 10,
+      Iñaki: 9,
+      Ernesto: 5,
+    },
   ];
   const mockTasks = [
     {
-      name: "Realizar video de demo para Release Version 1",
-      developer: "Cristobal Camarena",
+      name: "Realizar video de demo para Sprint",
+      developer: "Ernesto Puga",
+      estimated: 1,
+      actual: 1,
+    },
+    {
+      name: "Login de Telegram",
+      developer: "Sayid Valdivia",
       estimated: 1,
       actual: 1,
     },
     {
       name: "Implementar dashboard de KPIs por desarrollador",
-      developer: "Josue Galindo",
+      developer: "Rafael Romo",
       estimated: 3,
-      actual: 3,
+      actual: 2,
+    },
+    {
+      name: "Desarrollo de API",
+      developer: "Iñaki González",
+      estimated: 3,
+      actual: 2,
+    },
+    {
+      name: "Deployment del Back y Front",
+      developer: "Cesar Mecinas",
+      estimated: 3,
+      actual: 2,
     },
   ];
 
@@ -51,7 +221,7 @@ function KPI() {
             <div>
               <BarChartMulti
                 data={horasData}
-                dataKeys={["Juan", "Mary", "Luis", "Josie"]}
+                dataKeys={["Rafael", "Sayid", "Cesar", "Iñaki", "Ernesto"]}
                 xAxisKey="sprint"
                 yAxisLabel="Horas trabajadas"
               />
@@ -59,7 +229,7 @@ function KPI() {
             <div>
               <BarChartMulti
                 data={tareasData}
-                dataKeys={["Juan", "Mary", "Luis", "Josie"]}
+                dataKeys={["Rafael", "Sayid", "Cesar", "Iñaki", "Ernesto"]}
                 xAxisKey="sprint"
                 yAxisLabel="Tareas completadas"
               />

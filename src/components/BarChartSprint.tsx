@@ -11,10 +11,10 @@ import {
 
 const data = [
   { sprint: "Sprint 1", hours: 4 },
-  { sprint: "Sprint 2", hours: 0 },
+  { sprint: "Sprint 2", hours: 3 },
   { sprint: "Sprint 3", hours: 8 },
-  { sprint: "Sprint 4", hours: 0 },
-  { sprint: "Sprint 5", hours: 0 },
+  { sprint: "Sprint 4", hours: 2 },
+  { sprint: "Sprint 5", hours: 20 },
   { sprint: "Sprint 6", hours: 12 },
   { sprint: "Sprint 7", hours: 9 },
   { sprint: "Sprint 8", hours: 14 },

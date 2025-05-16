@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PopUpTicket from "./PopUpTicket";
 interface TicketProps {
+  taskId: number;
   title: string;
   publishedDate: string;
   status: "To-do" | "In Progress" | "Finished";
@@ -9,10 +10,11 @@ interface TicketProps {
   user: string;
   estimatedTime: string;
   realHours: string;
-  isMain?: boolean; //Optional(?) variable to check if its the main ticket
+  isMain?: boolean;
 }
 
 export default function Ticket({
+  taskId,
   title,
   publishedDate,
   status,
@@ -92,6 +94,7 @@ export default function Ticket({
           status={ticketStatus}
           priority={priority}
           description={description}
+          taskId={taskId} // 👈 Aquí
           onStatusChange={(newStatus) => setTicketStatus(newStatus)}
         />
       </div>
