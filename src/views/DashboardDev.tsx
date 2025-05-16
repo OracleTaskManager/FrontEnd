@@ -94,7 +94,7 @@ function DashboardDev() {
                 <Ticket
                   key={index}
                   title={ticket.title}
-                  publishedDate={ticket.estimatedDeadline.slice(0, 10)}
+                  publishedDate={ticket.estimatedDeadline}
                   status={mapStatus(ticket.status)}
                   priority={ticket.priority}
                   description={ticket.description}
