@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AddUserToTeamModal from "./AddUserPopUp";
+import LeaveTeamButton from "./LeaveTeam";
 
 interface TeamMember {
   icon: string;
@@ -38,6 +39,7 @@ export default function TeamCard({
         </button>
       </div>
 
+      {/* Botón para agregar usuario */}
       <button
         onClick={() => setShowModal(true)}
         style={{ borderRadius: "30px" }}
@@ -46,6 +48,7 @@ export default function TeamCard({
         Add User
       </button>
 
+      {/* Modal para agregar usuario */}
       {showModal && (
         <AddUserToTeamModal
           teamId={teamId}
@@ -56,9 +59,10 @@ export default function TeamCard({
         />
       )}
 
-      <p className="text-gray-600 mb-4">{project}</p>
+      <p className="text-gray-600 my-4">{project}</p>
 
-      <ul className="space-y-2">
+      {/* Lista de miembros */}
+      <ul className="space-y-2 mb-4">
         {members.map((member, index) => (
           <li
             key={index}
@@ -73,6 +77,14 @@ export default function TeamCard({
           </li>
         ))}
       </ul>
+
+      {/* Botón para salir del equipo
+      <LeaveTeamButton
+        teamId={teamId}
+        onLeave={() => {
+          console.log(`Saliste del equipo ${teamId}`);
+        }}
+      /> */}
     </div>
   );
 }

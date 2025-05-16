@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [tailwindcss(), react()],
   server: {
@@ -65,6 +64,11 @@ export default defineConfig({
         secure: false,
       },
       "/api/files/attachments/upload": {
+        target: "http://140.84.189.81",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/api/auth/userteams/remove": {
         target: "http://140.84.189.81",
         changeOrigin: true,
         secure: false,
