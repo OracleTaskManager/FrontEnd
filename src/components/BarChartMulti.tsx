@@ -1,48 +1,97 @@
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
-  Bar,
+  CartesianGrid,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   Legend,
+  Bar,
   ResponsiveContainer,
 } from "recharts";
 
-type Props = {
-  data: any[];
-  dataKeys: string[];
-  xAxisKey: string;
-  yAxisLabel: string;
-  colors?: string[];
+type ChartDatum = {
+  userName: string;
+  sprintName: string;
+  total: number;
 };
 
-export default function BarChartMulti({
-  data,
-  dataKeys,
-  xAxisKey,
-  yAxisLabel,
-  colors = ["#4285F4", "#34A853", "#3367D6", "#76D7EA"],
-}: Props) {
+type GroupedData = {
+  [sprintName: string]: {
+    [userName: string]: number;
+  };
+};
+
+type FormattedData = {
+  sprintName: string;
+  [userName: string]: number | string;
+};
+
+type Props = {
+  title: string;
+  fetchData: () => Promise<ChartDatum[]>;
+};
+
+const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f50", "#8dd1e1"];
+
+export const BarChartMulti: React.FC<Props> = ({ title, fetchData }) => {
+  const [data, setData] = useState<FormattedData[]>([]);
+  const [userNames, setUserNames] = useState<string[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const rawData = await fetchData();
+
+        // Agrupar datos por sprint
+        const grouped: GroupedData = {};
+        const usersSet = new Set<string>();
+
+        rawData.forEach(({ userName, sprintName, total }) => {
+          usersSet.add(userName);
+          if (!grouped[sprintName]) grouped[sprintName] = {};
+          grouped[sprintName][userName] = total;
+        });
+
+        const formatted: FormattedData[] = Object.entries(grouped).map(
+          ([sprintName, users]) => ({
+            sprintName,
+            ...users,
+          })
+        );
+
+        setData(formatted);
+        setUserNames(Array.from(usersSet));
+      } catch (error) {
+        console.error("Error loading chart data:", error);
+      }
+    };
+
+    loadData();
+  }, [fetchData]);
+
   return (
-    <div className="w-[500px] h-[300px]">
-      <ResponsiveContainer>
-        <BarChart
-          data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
+    <div style={{ width: "100%", height: 400 }}>
+      <h3 className="text-center text-black">{title}</h3>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey={xAxisKey} />
-          <YAxis
-            label={{ value: yAxisLabel, angle: -90, position: "insideLeft" }}
-          />
+          <XAxis dataKey="sprintName" />
+          <YAxis />
           <Tooltip />
           <Legend />
-          {dataKeys.map((key, index) => (
-            <Bar key={key} dataKey={key} fill={colors[index % colors.length]} />
+          {userNames.map((name, index) => (
+            <Bar
+              key={name}
+              dataKey={name}
+              fill={COLORS[index % COLORS.length]}
+              name={name}
+            />
           ))}
         </BarChart>
       </ResponsiveContainer>
     </div>
   );
-}
+};
+
+export default BarChartMulti;

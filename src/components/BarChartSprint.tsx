@@ -1,3 +1,4 @@
+import React from "react";
 import {
   BarChart,
   Bar,
@@ -9,23 +10,19 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { sprint: "Sprint 1", hours: 4 },
-  { sprint: "Sprint 2", hours: 3 },
-  { sprint: "Sprint 3", hours: 8 },
-  { sprint: "Sprint 4", hours: 2 },
-  { sprint: "Sprint 5", hours: 20 },
-  { sprint: "Sprint 6", hours: 12 },
-  { sprint: "Sprint 7", hours: 9 },
-  { sprint: "Sprint 8", hours: 14 },
-  { sprint: "Sprint 9", hours: 9 },
-  { sprint: "Sprint 10", hours: 12 },
-];
+type DataItem = {
+  sprint: string;
+  hours: number;
+};
 
-const BarChartSprint = () => {
+type Props = {
+  data: DataItem[];
+};
+
+const BarChartSprint: React.FC<Props> = ({ data }) => {
   return (
-    <div className="w-[500px] h-[300px] bg-white rounded-xl shadow p-4">
-      <h2 className="text-xl font-bold mb-4">Hours Invested Per Sprint</h2>
+    <div className="w-[500px] h-[300px] bg-white rounded-xl shadow p-4 text-black">
+      <h2 className="text-xl font-bold mb-4 ">Hours Invested Per Sprint</h2>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />

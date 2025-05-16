@@ -1,205 +1,110 @@
 // import React from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import BarChartMulti from "../components/BarChartMulti";
 import BarChartSprint from "../components/BarChartSprint";
 import TaskTable from "../components/TaskTable";
 
+const fetchAndFormatHoursBySprint = async (token: string) => {
+  const res = await fetch("/api/tasks/reports/hours/sprints/users", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Failed to fetch hours data");
+
+  const data = await res.json();
+
+  const hoursPerSprintMap: Record<string, number> = {};
+
+  data.forEach(
+    ({ sprintName, total }: { sprintName: string; total: number }) => {
+      if (!hoursPerSprintMap[sprintName]) {
+        hoursPerSprintMap[sprintName] = 0;
+      }
+      hoursPerSprintMap[sprintName] += total;
+    }
+  );
+
+  return Object.entries(hoursPerSprintMap).map(([sprint, hours]) => ({
+    sprint,
+    hours,
+  }));
+};
+
 function KPI() {
-  const horasData = [
-    {
-      sprint: "Sprint 1",
-      Rafael: 35,
-      Sayid: 30,
-      Cesar: 40,
-      Iñaki: 28,
-      Ernesto: 25,
-    },
-    {
-      sprint: "Sprint 2",
-      Rafael: 40,
-      Sayid: 32,
-      Cesar: 38,
-      Iñaki: 30,
-      Ernesto: 25,
-    },
-    {
-      sprint: "Sprint 3",
-      Rafael: 38,
-      Sayid: 35,
-      Cesar: 36,
-      Iñaki: 33,
-      Ernesto: 25,
-    },
-    {
-      sprint: "Sprint 4",
-      Rafael: 42,
-      Sayid: 34,
-      Cesar: 39,
-      Iñaki: 31,
-      Ernesto: 25,
-    },
-    {
-      sprint: "Sprint 5",
-      Rafael: 35,
-      Sayid: 30,
-      Cesar: 40,
-      Iñaki: 28,
-      Ernesto: 25,
-    },
-    {
-      sprint: "Sprint 6",
-      Rafael: 40,
-      Sayid: 32,
-      Cesar: 38,
-      Iñaki: 30,
-      Ernesto: 25,
-    },
-    {
-      sprint: "Sprint 7",
-      Rafael: 38,
-      Sayid: 35,
-      Cesar: 36,
-      Iñaki: 33,
-      Ernesto: 25,
-    },
-    {
-      sprint: "Sprint 8",
-      Rafael: 42,
-      Sayid: 34,
-      Cesar: 39,
-      Iñaki: 31,
-      Ernesto: 25,
-    },
-    {
-      sprint: "Sprint 9",
-      Rafael: 38,
-      Sayid: 35,
-      Cesar: 36,
-      Iñaki: 33,
-      Ernesto: 25,
-    },
-    {
-      sprint: "Sprint 10",
-      Rafael: 42,
-      Sayid: 34,
-      Cesar: 39,
-      Iñaki: 31,
-      Ernesto: 25,
-    },
-  ];
-  const tareasData = [
-    {
-      sprint: "Sprint 1",
-      Rafael: 6,
-      Sayid: 7,
-      Cesar: 10,
-      Iñaki: 9,
-      Ernesto: 5,
-    },
-    {
-      sprint: "Sprint 2",
-      Rafael: 6,
-      Sayid: 7,
-      Cesar: 10,
-      Iñaki: 9,
-      Ernesto: 5,
-    },
-    {
-      sprint: "Sprint 3",
-      Rafael: 6,
-      Sayid: 7,
-      Cesar: 10,
-      Iñaki: 9,
-      Ernesto: 5,
-    },
-    {
-      sprint: "Sprint 4",
-      Rafael: 6,
-      Sayid: 7,
-      Cesar: 10,
-      Iñaki: 9,
-      Ernesto: 5,
-    },
-    {
-      sprint: "Sprint 5",
-      Rafael: 6,
-      Sayid: 7,
-      Cesar: 10,
-      Iñaki: 9,
-      Ernesto: 5,
-    },
-    {
-      sprint: "Sprint 6",
-      Rafael: 6,
-      Sayid: 7,
-      Cesar: 10,
-      Iñaki: 9,
-      Ernesto: 5,
-    },
-    {
-      sprint: "Sprint 7",
-      Rafael: 6,
-      Sayid: 7,
-      Cesar: 10,
-      Iñaki: 9,
-      Ernesto: 5,
-    },
-    {
-      sprint: "Sprint 8",
-      Rafael: 6,
-      Sayid: 7,
-      Cesar: 10,
-      Iñaki: 9,
-      Ernesto: 5,
-    },
-    {
-      sprint: "Sprint 9",
-      Rafael: 6,
-      Sayid: 7,
-      Cesar: 10,
-      Iñaki: 9,
-      Ernesto: 5,
-    },
-    {
-      sprint: "Sprint 10",
-      Rafael: 6,
-      Sayid: 7,
-      Cesar: 10,
-      Iñaki: 9,
-      Ernesto: 5,
-    },
-  ];
+  const [hoursData, setHoursData] = useState<
+    { sprint: string; hours: number }[]
+  >([]);
+  const jwtToken = sessionStorage.getItem("token");
+  const fetchTasksCompletedByUserPerSprint = async () => {
+    const res = await fetch(
+      "/api/tasks/reports/tasks/completed/sprints/users",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    return data.map((entry) => ({
+      userName: entry.userName,
+      sprintName: entry.sprintName,
+      total: entry.totalTasksCompleted,
+    }));
+  };
+
+  const fetchHoursByUserPerSprint = async () => {
+    const res = await fetch("/api/tasks/reports/hours/sprints/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
+
+    const data = await res.json();
+
+    return data.map((entry) => ({
+      userName: entry.userName,
+      sprintName: entry.sprintName,
+      total: entry.totalHours,
+    }));
+  };
+
+  useEffect(() => {
+    const loadHours = async () => {
+      try {
+        const formatted = await fetchAndFormatHoursBySprint(jwtToken);
+        setHoursData(formatted);
+      } catch (err) {
+        console.error("Error loading hours data", err);
+      }
+    };
+    loadHours();
+  }, [jwtToken]);
+
   const mockTasks = [
     {
-      name: "Realizar video de demo para Sprint",
-      developer: "Ernesto Puga",
-      estimated: 1,
-      actual: 1,
+      id: 1,
+      name: "Diseñar login",
+      assignedTo: "Carlos",
+      sprint: "Sprint 1",
+      status: "Completado",
     },
     {
-      name: "Login de Telegram",
-      developer: "Sayid Valdivia",
-      estimated: 1,
-      actual: 1,
-    },
-    {
-      name: "Implementar dashboard de KPIs por desarrollador",
-      developer: "Rafael Romo",
-      estimated: 3,
-      actual: 2,
-    },
-    {
-      name: "Desarrollo de API",
-      developer: "Iñaki González",
-      estimated: 3,
-      actual: 2,
-    },
-    {
-      name: "Deployment del Back y Front",
-      developer: "Cesar Mecinas",
-      estimated: 3,
-      actual: 2,
+      id: 2,
+      name: "Implementar dashboard",
+      assignedTo: "María",
+      sprint: "Sprint 2",
+      status: "En progreso",
     },
   ];
 
@@ -216,22 +121,18 @@ function KPI() {
           <h2 className="text-2xl font-semibold text-black p-5">KPIs</h2>
           <div className="flex flex-wrap items-center justify-center p-4 gap-4">
             <div>
-              <BarChartSprint />
+              <BarChartSprint data={hoursData} />
             </div>
             <div>
               <BarChartMulti
-                data={horasData}
-                dataKeys={["Rafael", "Sayid", "Cesar", "Iñaki", "Ernesto"]}
-                xAxisKey="sprint"
-                yAxisLabel="Horas trabajadas"
+                title="Horas trabajadas por miembro"
+                fetchData={fetchHoursByUserPerSprint}
               />
             </div>
             <div>
               <BarChartMulti
-                data={tareasData}
-                dataKeys={["Rafael", "Sayid", "Cesar", "Iñaki", "Ernesto"]}
-                xAxisKey="sprint"
-                yAxisLabel="Tareas completadas"
+                title="Tareas completadas por miembro"
+                fetchData={fetchTasksCompletedByUserPerSprint}
               />
             </div>
             <div className="w-full">

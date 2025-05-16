@@ -1,4 +1,4 @@
-FROM node:18 AS build
+FROM --platform=linux/amd64 node:18 AS build
 
 WORKDIR /FrontEnd-Oracle
 
@@ -8,7 +8,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine
+FROM --platform=linux/amd64 nginx:alpine
 
 COPY --from=build /FrontEnd-Oracle/dist /usr/share/nginx/html
 
