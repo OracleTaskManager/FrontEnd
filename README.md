@@ -95,16 +95,16 @@ A continuación se muestran capturas de pantalla que evidencian que el proyecto 
 
 ### 2. Estructura del proyecto en VS Code
 
-![Estructura del proyecto](./assets/ReadmeScreenShots/folder-structure.png)
+![Estructura del proyecto](src/assets/ReadmeScreenShots/folder-structure.png)
 
 ### 3. Proyecto ejecutándose localmente (`npm start`)
 
-![Servidor local corriendo](./assets/ReadmeScreenShots/ServerRunning.png)
+![Servidor local corriendo](src/assets/ReadmeScreenShots/ServerRunning.png)
 
 ### 4. Interfaz gráfica cargada en el navegador
 
-![App en navegador](./assets/ReadmeScreenShots/InterfazLoginSignup.png)
-![App en navegador](./assets/ReadmeScreenShots/InterfazSignUp.png)
-![App en navegador](./assets/ReadmeScreenShots/InterfazDashboardManager.png)
+![App en navegador](src/assets/ReadmeScreenShots/InterfazLoginSignup.png)
+![App en navegador](src/assets/ReadmeScreenShots/InterfazSignUp.png)
+![App en navegador](src/assets/ReadmeScreenShots/InterfazDashboardManager.png)
 
 ---
