@@ -97,7 +97,7 @@ A continuación se muestran capturas de pantalla que evidencian que el proyecto 
 
 ![Estructura del proyecto](src/assets/ReadmeScreenShots/folder-structure.png)
 
-### 3. Proyecto ejecutándose localmente (`npm start`)
+### 3. Proyecto ejecutándose localmente (`npm run dev`)
 
 ![Servidor local corriendo](src/assets/ReadmeScreenShots/ServerRunning.png)
 
