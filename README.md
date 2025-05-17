@@ -1,13 +1,12 @@
-
 # Oracle Task Manager - FrontEnd
 
 Este repositorio contiene la interfaz gráfica de usuario (Frontend) del sistema **Oracle Task Manager**.
 
 ## Requisitos previos
 
-* Node.js (versión 18 o superior recomendada)
-* npm o yarn
-* Git
+- Node.js (versión 18 o superior recomendada)
+- npm o yarn
+- Git
 
 ## Clonar el repositorio
 
@@ -59,10 +58,10 @@ FrontEnd/
 ├── public/
 ├── src/
 │   ├── components/
-│   ├── pages/
+│   ├── views/
 │   ├── services/
-│   ├── App.js
-│   └── index.js
+│   ├── App.tsx
+│   └── main.tsx
 ├── package.json
 └── README.md
 ```
@@ -83,8 +82,29 @@ Esto generará una carpeta `/build` lista para desplegar en un servidor estátic
 
 ## Notas adicionales
 
-* No se requiere ninguna clave o configuración especial para correr el frontend.
-* Si necesitas conectarte a APIs en otro dominio (como producción), asegúrate de actualizar las URLs base en el archivo de configuración o servicios (`src/services/api.js`, `src/constants.js`, etc.).
+- No se requiere ninguna clave o configuración especial para correr el frontend.
+- Si necesitas conectarte a APIs en otro dominio (como producción), asegúrate de actualizar las URLs base en el archivo de configuración o servicios (`src/services/api.js`, `src/constants.js`, etc.).
+
+## Evidencia del entorno local
+
+A continuación se muestran capturas de pantalla que evidencian que el proyecto puede ejecutarse correctamente en un entorno local.
+
+### 1. Instalación de dependencias sin errores
+
+![Instalación de dependencias](./assets/ReadmeScreenShots/install.png)
+
+### 2. Estructura del proyecto en VS Code
+
+![Estructura del proyecto](./assets/ReadmeScreenShots/folder-structure.png)
+
+### 3. Proyecto ejecutándose localmente (`npm start`)
+
+![Servidor local corriendo](./assets/ReadmeScreenShots/ServerRunning.png)
+
+### 4. Interfaz gráfica cargada en el navegador
+
+![App en navegador](./assets/ReadmeScreenShots/InterfazLoginSignup.png)
+![App en navegador](./assets/ReadmeScreenShots/InterfazSignUp.png)
+![App en navegador](./assets/ReadmeScreenShots/InterfazDashboardManager.png)
 
 ---
-
