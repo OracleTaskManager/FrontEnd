@@ -91,7 +91,7 @@ A continuación se muestran capturas de pantalla que evidencian que el proyecto 
 
 ### 1. Instalación de dependencias sin errores
 
-![Instalación de dependencias](./assets/ReadmeScreenShots/install.png)
+![Instalación de dependencias](src/assets/ReadmeScreenShots/install.png)
 
 ### 2. Estructura del proyecto en VS Code
 
