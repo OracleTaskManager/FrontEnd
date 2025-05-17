@@ -1,54 +1,90 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Oracle Task Manager - FrontEnd
 
-Currently, two official plugins are available:
+Este repositorio contiene la interfaz gráfica de usuario (Frontend) del sistema **Oracle Task Manager**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Requisitos previos
 
-## Expanding the ESLint configuration
+* Node.js (versión 18 o superior recomendada)
+* npm o yarn
+* Git
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Clonar el repositorio
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+git clone https://github.com/OracleTaskManager/FrontEnd.git
+cd FrontEnd
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Instalación de dependencias
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Usa el gestor de paquetes de tu preferencia:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### Con npm:
+
+```bash
+npm install
 ```
+
+### Con yarn:
+
+```bash
+yarn install
+```
+
+## Ejecutar el proyecto en local
+
+```bash
+npm start
+```
+
+o
+
+```bash
+yarn start
+```
+
+La aplicación se ejecutará por defecto en:
+
+```
+http://localhost:3000
+```
+
+> ⚠️ Asegúrate de que los microservicios (`AuthService`, `TaskService`, `FileService`, etc.) estén corriendo o accesibles para que las funcionalidades estén disponibles.
+
+## Estructura básica del proyecto
+
+```
+FrontEnd/
+├── public/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   ├── App.js
+│   └── index.js
+├── package.json
+└── README.md
+```
+
+## Construir para producción
+
+```bash
+npm run build
+```
+
+o
+
+```bash
+yarn build
+```
+
+Esto generará una carpeta `/build` lista para desplegar en un servidor estático.
+
+## Notas adicionales
+
+* No se requiere ninguna clave o configuración especial para correr el frontend.
+* Si necesitas conectarte a APIs en otro dominio (como producción), asegúrate de actualizar las URLs base en el archivo de configuración o servicios (`src/services/api.js`, `src/constants.js`, etc.).
+
+---
+
