@@ -13,7 +13,7 @@ interface TicketProps {
   realHours?: string | null; // Optional, not used in current component
   user?: {
     points: number;
-  }; // Optional, not currently used
+  };
 }
 
 export default function Ticket({
@@ -97,7 +97,7 @@ export default function Ticket({
           status={ticketStatus}
           priority={priority}
           description={description}
-          taskId={taskId} // 👈 Aquí
+          taskId={taskId}
           onStatusChange={(newStatus) => setTicketStatus(newStatus)}
         />
       </div>

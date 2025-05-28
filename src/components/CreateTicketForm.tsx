@@ -4,14 +4,14 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    epicId: 61,
-    priority: "Low",
-    type: "Ticket",
-    estimatedDeadline: "2025-04-25",
-    realDeadline: "2025-04-25",
-    userPoints: 100,
-    estimatedHours: 24,
-    realHours: 20,
+    epicId: "",
+    priority: "",
+    type: "",
+    estimatedDeadline: "",
+    realDeadline: "",
+    userPoints: "",
+    estimatedHours: "",
+    realHours: "",
   });
 
   const handleChange = (
@@ -188,7 +188,7 @@ const TicketPopup = () => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="mt-4 mb-5">
+    <div className="">
       <button
         onClick={() => setShowModal(true)}
         className=" text-white px-6 py-2 rounded-lg transition"

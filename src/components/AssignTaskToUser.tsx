@@ -85,10 +85,10 @@ const AssignTaskToUser: React.FC<AssignTaskToUserProps> = ({
 
   return (
     <>
-      <div className="mt-4 mb-5">
+      <div className="">
         <button
           onClick={() => setShowModal(true)}
-          className="text-white px-6 py-2 rounded-lg transition"
+          className="text-white px-4 py-2 rounded-lg transition h-12"
         >
           Asignar tarea
         </button>
