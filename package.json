@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fullcalendar/react": "^6.1.17",
+    "@fullcalendar/resource-timeline": "^6.1.17",
     "@tailwindcss/vite": "^4.0.15",
     "@types/react-router-dom": "^5.3.3",
     "react": "^19.0.0",

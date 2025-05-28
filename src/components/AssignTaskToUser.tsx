@@ -101,7 +101,7 @@ const AssignTaskToUser: React.FC<AssignTaskToUserProps> = ({
               onClick={() => setShowModal(false)}
               className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl"
             >
-              ×
+              ✕
             </button>
 
             <h2 className="text-xl font-bold text-gray-800 mb-4">
