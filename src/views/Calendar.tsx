@@ -1,10 +1,8 @@
 // import React from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import FullCalendar from "@fullcalendar/react";
-import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
-import "@fullcalendar/core/main.css";
-import "@fullcalendar/resource-timeline/main.css";
+// import FullCalendar from "@fullcalendar/react";
+// import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 
 function Calendar() {
   return (
@@ -16,7 +14,7 @@ function Calendar() {
         {/* Sidebar fijo a la izquierda */}
         <Sidebar />
         {/* bg-[#D0CCD0] */}
-        <div style={{ padding: "2rem" }}>
+        {/* <div style={{ padding: "2rem" }}>
           <h2>Calendario de Tickets</h2>
           <FullCalendar
             plugins={[resourceTimelinePlugin]}
@@ -88,7 +86,7 @@ function Calendar() {
               },
             ]}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
