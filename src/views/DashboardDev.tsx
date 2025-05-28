@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
-import CircularProgress from "../components/CircularProgress";
+//import CircularProgress from "../components/CircularProgress";
 
 interface Ticketx {
   taskId: number;
