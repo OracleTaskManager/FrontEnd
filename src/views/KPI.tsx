@@ -54,11 +54,17 @@ function KPI() {
 
     const data = await res.json();
 
-    return data.map((entry) => ({
-      userName: entry.userName,
-      sprintName: entry.sprintName,
-      total: entry.totalTasksCompleted,
-    }));
+    return data.map(
+      (entry: {
+        userName: string;
+        sprintName: string;
+        totalTasksCompleted: number;
+      }) => ({
+        userName: entry.userName,
+        sprintName: entry.sprintName,
+        total: entry.totalTasksCompleted,
+      })
+    );
   };
 
   const fetchHoursByUserPerSprint = async () => {
@@ -72,15 +78,25 @@ function KPI() {
 
     const data = await res.json();
 
-    return data.map((entry) => ({
-      userName: entry.userName,
-      sprintName: entry.sprintName,
-      total: entry.totalHours,
-    }));
+    return data.map(
+      (entry: {
+        userName: string;
+        sprintName: string;
+        totalHours: number;
+      }) => ({
+        userName: entry.userName,
+        sprintName: entry.sprintName,
+        total: entry.totalHours,
+      })
+    );
   };
 
   useEffect(() => {
     const loadHours = async () => {
+      if (!jwtToken) {
+        console.error("JWT token is null");
+        return;
+      }
       try {
         const formatted = await fetchAndFormatHoursBySprint(jwtToken);
         setHoursData(formatted);
@@ -98,6 +114,9 @@ function KPI() {
       assignedTo: "Carlos",
       sprint: "Sprint 1",
       status: "Completado",
+      developer: "Carlos",
+      estimated: 5,
+      actual: 4,
     },
     {
       id: 2,
@@ -105,6 +124,9 @@ function KPI() {
       assignedTo: "María",
       sprint: "Sprint 2",
       status: "En progreso",
+      developer: "María",
+      estimated: 8,
+      actual: 3,
     },
   ];
 
