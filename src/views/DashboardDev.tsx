@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
-<<<<<<< HEAD
 // import CircularProgress from "../components/CircularProgress";
-=======
-//import CircularProgress from "../components/CircularProgress";
->>>>>>> origin/sayid
 
 interface Ticketx {
   taskId: number;
