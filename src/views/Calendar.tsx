@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import { Gantt, Task, ViewMode } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
+=======
+import Navbar from "../components/Navbar";
+>>>>>>> origin/sayid
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";

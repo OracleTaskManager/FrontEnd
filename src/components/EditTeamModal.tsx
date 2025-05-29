@@ -4,7 +4,7 @@ interface EditTeamModalProps {
   teamId: number;
   currentTeamName: string;
   onClose: () => void;
-  onTeamUpdated: () => void;
+  onTeamUpdated: (teamName: string) => void; // Acepta el nuevo nombre del equipo
 }
 
 const EditTeamModal: React.FC<EditTeamModalProps> = ({
@@ -37,9 +37,8 @@ const EditTeamModal: React.FC<EditTeamModalProps> = ({
 
       if (response.ok) {
         alert("Equipo actualizado con éxito");
-        onTeamUpdated();
+        onTeamUpdated(teamName); // Pasa el nuevo nombre editado
         onClose();
-        window.location.reload();
       } else {
         const errorText = await response.text();
         console.error("Error al actualizar el equipo:", errorText);

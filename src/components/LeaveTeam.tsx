@@ -59,7 +59,7 @@ const LeaveTeamButton: React.FC<LeaveTeamButtonProps> = ({
           ? "Saliendo..."
           : success
           ? "Has salido del equipo"
-          : "Salir del equipo"}
+          : "Salir"}
       </button>
 
       {error && <p className="text-red-600 mt-2">{error}</p>}
