@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
 import TeamCard from "../components/TeamCard";
-import Notification from "../components/Notification";
+//import Notification from "../components/Notification";
 import CreateTeamModal from "../components/CreateTeamModal";
 import CreateTicketForm from "../components/CreateTicket";
 import AssignTaskToUser from "../components/AssignTaskToUser";

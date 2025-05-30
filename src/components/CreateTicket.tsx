@@ -44,7 +44,7 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
       const response = await fetch("/api/tasks/tasks/", {
         method: "POST",
         headers: {
-          Authorization: `${jwtToken}`,
+          Authorization: `Bearer ${jwtToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
