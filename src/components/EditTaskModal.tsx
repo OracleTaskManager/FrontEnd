@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type TaskUpdateContent = {
   title?: string;
   description?: string;
   epicId?: number;
   priority?: string;
+  status?: string;
   type?: string;
   estimated_deadline?: string;
   real_deadline?: string;
@@ -28,10 +29,14 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
   const [formData, setFormData] = useState<TaskUpdateContent>({});
   const [loaded, setLoaded] = useState(false);
 
-  // 1) Buscar la tarea por ID
+  // Ya no se llama a fetchTasks, ya que no se usa el <select>
+  useEffect(() => {
+    // Aquí puedes dejar vacío el useEffect o eliminarlo
+  }, []);
+
   const handleSearch = async () => {
     if (!taskId) {
-      alert("Ingresa un Task ID válido");
+      alert("Selecciona una tarea válida");
       return;
     }
     try {
@@ -43,12 +48,12 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
       });
       if (!res.ok) throw new Error("Tarea no encontrada");
       const data = await res.json();
-      // adaptamos la respuesta a nuestro formData (usando los nombres que devuelve el backend)
       setFormData({
         title: data.title,
         description: data.description,
         epicId: typeof data.epic_id === "number" ? data.epic_id : null,
         priority: typeof data.priority === "string" ? data.priority : "Low",
+        status: data.status ?? "",
         type: data.type,
         estimated_deadline:
           (data.estimated_deadline ?? data.estimatedDeadline)?.split("T")[0] ??
@@ -84,7 +89,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     }));
   };
 
-  // 2) Enviar el PUT para actualizar
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!loaded) {
@@ -92,7 +96,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
       return;
     }
     try {
-      // Preparamos el payload en snake_case para el backend
       const payload = {
         ...formData,
         estimated_deadline: formData.estimated_deadline ?? null,
@@ -100,6 +103,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         epic_id: formData.epicId ?? null,
         user_points: formData.user_points ?? null,
         priority: formData.priority ?? "Low",
+        status: formData.status ?? "Open",
       };
       delete payload.epicId;
 
@@ -122,7 +126,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50  ">
+    <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-lg relative">
         <button
           onClick={onClose}
@@ -132,8 +136,8 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         </button>
         <h2 className="text-xl font-bold mb-4 text-black">Editar Tarea</h2>
 
-        {/* Paso 1: Buscar por ID */}
-        <div className="flex gap-2 mb-4 ">
+        {/* Solo campo para ingresar ID manualmente */}
+        <div className="flex gap-2 mb-4">
           <input
             type="number"
             value={taskId}
@@ -148,7 +152,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
           </button>
         </div>
 
-        {/* Paso 2: Formulario de edición */}
+        {/* Formulario solo si la tarea fue cargada */}
         {loaded && (
           <form onSubmit={handleSubmit} className="space-y-3 text-black ">
             <div>
@@ -176,7 +180,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             </div>
             <div>
               <label>EpicId</label>
-
               <input
                 name="epicId"
                 type="number"
@@ -192,7 +195,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             </div>
             <div>
               <label>Priority</label>
-
               <select
                 name="priority"
                 value={formData.priority ?? ""}
@@ -208,6 +210,24 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                 <option value="High">High</option>
               </select>
             </div>
+            {/* <div>
+              <label>Status</label>
+              <select
+                name="status"
+                value={formData.status ?? ""}
+                onChange={handleChange}
+                className="select select-bordered rounded border-1 w-full"
+                required
+              >
+                <option value="" disabled>
+                  Select Status
+                </option>
+                <option value="ToDo">To-do</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Finished">Finished</option>
+              </select>
+            </div> */}
+
             <div>
               <label>Type</label>
               <select
