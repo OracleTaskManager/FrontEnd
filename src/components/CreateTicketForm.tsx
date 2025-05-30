@@ -13,8 +13,32 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
     estimatedHours: 0,
     realHours: 0,
   });
+  const [epics, setEpics] = useState<{ epicId: number; title: string }[]>([]);
 
-  const [epics, setEpics] = useState<{ epic_id: number; title: string }[]>([]);
+  useEffect(() => {
+    const fetchEpics = async () => {
+      const jwtToken = sessionStorage.getItem("token");
+      try {
+        const response = await fetch("/api/tasks/epics/all", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
+        if (!response.ok) throw new Error("Error al obtener epics");
+        const data = await response.json();
+        // Mapear epic_id a epicId para compatibilidad con el frontend
+        type EpicApiResponse = { epic_id: number; title: string };
+        const mappedEpics = data.map((epic: EpicApiResponse) => ({
+          epicId: epic.epic_id,
+          title: epic.title,
+        }));
+        setEpics(mappedEpics);
+      } catch (error) {
+        console.error("Error al obtener epics:", error);
+      }
+    };
+    fetchEpics();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -70,31 +94,6 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchEpics = async () => {
-      const jwtToken = sessionStorage.getItem("token");
-
-      try {
-        const response = await fetch("/api/tasks/epics/all", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok)
-          throw new Error(`Error al obtener epics: ${response.status}`);
-        const data = await response.json();
-        setEpics(data);
-      } catch (error) {
-        console.error("Error al cargar los epics:", error);
-      }
-    };
-
-    fetchEpics();
-  }, []);
-
   return (
     <div className="fixed inset-0 bg-transparent flex items-center justify-center z-50 h-screen">
       <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-xl relative h-[90vh] overflow-y-auto">
@@ -139,11 +138,13 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
               required
             >
               <option value={0} disabled hidden>
-                Select Epic
+                Selecciona un Epic
               </option>
               {epics.map((epic) => (
-                <option key={epic.epic_id} value={epic.epic_id}>
-                  {epic.title}
+                <option key={epic.epicId} value={epic.epicId}>
+                  {`${epic.epicId ?? "Sin ID"} - ${
+                    epic.title?.trim() || "Sin nombre"
+                  }`}
                 </option>
               ))}
             </select>
@@ -248,10 +249,10 @@ const TicketPopup = () => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="">
+    <div>
       <button
         onClick={() => setShowModal(true)}
-        className=" text-white px-6 py-2 rounded-lg transition"
+        className="text-white px-6 py-2 rounded-lg transition"
       >
         Create Ticket
       </button>

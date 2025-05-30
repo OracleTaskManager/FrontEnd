@@ -156,7 +156,7 @@ export default function TeamCard({
                 <img
                   src={
                     member.icon ??
-                    "https://randomuser.me/api/portraits/lego/1.jpg"
+                    `https://randomuser.me/api/portraits/lego/${member.userId % 10}.jpg`
                   }
                   alt={member.name}
                   className="w-10 h-10 rounded-full object-cover"
