@@ -6,8 +6,8 @@ type TaskUpdateContent = {
   epicId?: number;
   priority?: string;
   type?: string;
-  estimatedDeadline?: string;
-  realDeadline?: string;
+  estimated_deadline?: string;
+  real_deadline?: string;
   userPoints?: number;
   estimatedHours?: number;
   realHours?: number;
@@ -43,16 +43,16 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
       });
       if (!res.ok) throw new Error("Tarea no encontrada");
       const data = await res.json();
-      // adaptamos la respuesta a nuestro formData
+      // adaptamos la respuesta a nuestro formData (usando los nombres que devuelve el backend)
       setFormData({
         title: data.title,
         description: data.description,
-        epicId: data.epic_id,
+        epicId: data.epic_id, // o data.epicId si el backend lo devuelve así
         priority: data.priority,
         type: data.type,
-        estimatedDeadline: data.estimatedDeadline.split("T")[0],
-        realDeadline: data.realDeadline.split("T")[0],
-        userPoints: data.user_points,
+        estimated_deadline: (data.estimated_deadline ?? data.estimatedDeadline)?.split("T")[0] ?? "",
+        real_deadline: (data.real_deadline ?? data.realDeadline)?.split("T")[0] ?? "",
+        userPoints: data.user_points ?? data.userPoints,
         estimatedHours: data.estimatedHours,
         realHours: data.realHours,
       });
@@ -88,13 +88,19 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
       return;
     }
     try {
+      // Preparamos el payload en snake_case para el backend
+      const payload = {
+        ...formData,
+        estimated_deadline: formData.estimated_deadline ?? null,
+        real_deadline: formData.real_deadline ?? null,
+      };
       const res = await fetch(`/api/tasks/tasks/update-task/${taskId}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Error al actualizar");
       alert("Tarea actualizada!");
@@ -138,7 +144,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
           <form onSubmit={handleSubmit} className="space-y-3 text-black ">
             <input
               name="title"
-              value={formData.title || ""}
+              value={formData.title ?? ""}
               onChange={handleChange}
               placeholder="Título"
               className="input input-bordered rounded border-1 w-full"
@@ -146,7 +152,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             />
             <textarea
               name="description"
-              value={formData.description || ""}
+              value={formData.description ?? ""}
               onChange={handleChange}
               placeholder="Descripción"
               className="textarea textarea-bordered rounded border-1 w-full"
@@ -156,14 +162,14 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             <input
               name="epicId"
               type="number"
-              value={formData.epicId || ""}
+              value={formData.epicId ?? ""}
               onChange={handleChange}
               placeholder="Epic ID"
               className="input input-bordered rounded border-1 w-full"
             />
             <select
               name="priority"
-              value={formData.priority || ""}
+              value={formData.priority ?? ""}
               onChange={handleChange}
               className="select select-bordered rounded border-1 w-full"
               required
@@ -177,7 +183,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             </select>
             <select
               name="type"
-              value={formData.type || ""}
+              value={formData.type ?? ""}
               onChange={handleChange}
               className="select select-bordered rounded border-1 w-full"
               required
@@ -190,23 +196,23 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
               <option value="Feature">Feature</option>
             </select>
             <input
-              name="estimatedDeadline"
+              name="estimated_deadline"
               type="date"
-              value={formData.estimatedDeadline || ""}
+              value={formData.estimated_deadline ?? ""}
               onChange={handleChange}
               className="input input-bordered rounded border-1 w-full"
             />
             <input
-              name="realDeadline"
+              name="real_deadline"
               type="date"
-              value={formData.realDeadline || ""}
+              value={formData.real_deadline ?? ""}
               onChange={handleChange}
               className="input input-bordered rounded border-1 w-full"
             />
             <input
               name="userPoints"
               type="number"
-              value={formData.userPoints || ""}
+              value={formData.userPoints ?? ""}
               onChange={handleChange}
               placeholder="User Points"
               className="input input-bordered rounded border-1 w-full"
@@ -214,7 +220,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             <input
               name="estimatedHours"
               type="number"
-              value={formData.estimatedHours || ""}
+              value={formData.estimatedHours ?? ""}
               onChange={handleChange}
               placeholder="Estimated Hours"
               className="input input-bordered rounded border-1 w-full"
@@ -222,7 +228,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             <input
               name="realHours"
               type="number"
-              value={formData.realHours || ""}
+              value={formData.realHours ?? ""}
               onChange={handleChange}
               placeholder="Real Hours"
               className="input input-bordered rounded border-1 w-full"

@@ -3,11 +3,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
 import TeamCard from "../components/TeamCard";
-<<<<<<< HEAD
-//import Notification from "../components/Notification";
-=======
 // import Notification from "../components/Notification";
->>>>>>> origin/main
 import CreateTeamModal from "../components/CreateTeamModal";
 import CreateTicketForm from "../components/CreateTicketForm";
 import AssignTaskToUser from "../components/AssignTaskToUser";
