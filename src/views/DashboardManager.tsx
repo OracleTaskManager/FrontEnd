@@ -8,6 +8,7 @@ import CreateTeamModal from "../components/CreateTeamModal";
 import CreateTicketForm from "../components/CreateTicketForm";
 import AssignTaskToUser from "../components/AssignTaskToUser";
 import EditTaskModal from "../components/EditTaskModal";
+import CreateEpicForm from "../components/CreateEpicForm";
 
 interface Ticketx {
   taskId: number;
@@ -162,15 +163,15 @@ function DashboardManager() {
               Section Tickets
             </h2>
             <div className="flex space-x-4">
+              <CreateEpicForm/>
               <CreateTicketForm />
-
               <AssignTaskToUser onTaskAssigned={fetchTickets} />
 
               <button
                 className=" h-12 bg-blue-600 text-white rounded hover:bg-blue-700"
                 onClick={() => setIsEditModalOpen(true)}
               >
-                Editar Tareas
+                Edit Tasks
               </button>
             </div>
 

@@ -95,7 +95,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         priority: formData.priority ?? "Low",
       };
       delete payload.epicId;
-      delete payload.user_points;
       const res = await fetch(`/api/tasks/tasks/update-task/${taskId}`, {
         method: "PUT",
         headers: {
