@@ -14,6 +14,8 @@ const EpicPopup: React.FC = () => {
     title: "",
     description: "",
   });
+  const [editEpicId, setEditEpicId] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState({ title: "", description: "", status: "ToDo" });
   const jwtToken = sessionStorage.getItem("token");
 
   const fetchEpics = React.useCallback(async () => {
@@ -150,6 +152,73 @@ const EpicPopup: React.FC = () => {
                       >
                         Eliminar
                       </button>
+                      {editEpicId === epic.epicId ? (
+                        <form
+                          className="flex flex-col gap-2 w-full max-w-md"
+                          onSubmit={async (e) => {
+                            e.preventDefault();
+                            try {
+                              const token = sessionStorage.getItem("token");
+                              const res = await fetch(`/api/tasks/epics/`, {
+                                method: "PUT",
+                                headers: {
+                                  Authorization: `Bearer ${token}`,
+                                  "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                  epicId: epic.epicId,
+                                  title: editForm.title,
+                                  description: editForm.description,
+                                  status: editForm.status,
+                                }),
+                              });
+                              if (!res.ok) throw new Error("No se pudo editar el epic");
+                              setEditEpicId(null);
+                              fetchEpics();
+                              alert("Epic editado");
+                            } catch {
+                              alert("Error al editar el epic");
+                            }
+                          }}
+                        >
+                          <input
+                            className="border rounded p-1 text-black"
+                            value={editForm.title}
+                            onChange={e => setEditForm(f => ({ ...f, title: e.target.value }))}
+                            required
+                          />
+                          <textarea
+                            className="border rounded p-1 text-black"
+                            value={editForm.description}
+                            onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))}
+                            required
+                          />
+                          <select
+                            className="border rounded p-1 text-black"
+                            value={editForm.status}
+                            onChange={e => setEditForm(f => ({ ...f, status: e.target.value }))}
+                            required
+                          >
+                            <option value="ToDo">ToDo</option>
+                            <option value="InProgress">InProgress</option>
+                            <option value="Done">Done</option>
+                          </select>
+                          <div className="flex gap-2">
+                            <button type="submit" className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-800">Guardar</button>
+                            <button type="button" className="bg-gray-400 text-white px-2 py-1 rounded hover:bg-gray-600" onClick={() => setEditEpicId(null)}>Cancelar</button>
+                          </div>
+                        </form>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            setEditEpicId(epic.epicId);
+                            setEditForm({ title: epic.title, description: epic.description, status: epic.status });
+                          }}
+                          className="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600 font-semibold"
+                        >
+                          Editar
+                        </button>
+                      )}
                     </div>
                   </li>
                 ))}
