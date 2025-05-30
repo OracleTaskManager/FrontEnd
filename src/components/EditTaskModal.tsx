@@ -55,7 +55,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
           "",
         real_deadline:
           (data.real_deadline ?? data.realDeadline)?.split("T")[0] ?? "",
-        userPoints: data.user_points ?? data.userPoints,
+        user_points: data.user_points ?? data.userPoints,
         estimatedHours: data.estimatedHours,
         realHours: data.realHours,
       });
@@ -102,7 +102,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         priority: formData.priority ?? "Low",
       };
       delete payload.epicId;
-      delete payload.user_points;
+
       const res = await fetch(`/api/tasks/tasks/update-task/${taskId}`, {
         method: "PUT",
         headers: {
@@ -151,101 +151,133 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         {/* Paso 2: Formulario de edición */}
         {loaded && (
           <form onSubmit={handleSubmit} className="space-y-3 text-black ">
-            <input
-              name="title"
-              value={formData.title ?? ""}
-              onChange={handleChange}
-              placeholder="Título"
-              className="input input-bordered rounded border-1 w-full"
-              required
-            />
-            <textarea
-              name="description"
-              value={formData.description ?? ""}
-              onChange={handleChange}
-              placeholder="Descripción"
-              className="textarea textarea-bordered rounded border-1 w-full"
-              rows={3}
-              required
-            />
-            <input
-              name="epicId"
-              type="number"
-              value={
-                formData.epicId !== undefined && formData.epicId !== null
-                  ? formData.epicId
-                  : ""
-              }
-              onChange={handleChange}
-              placeholder="Epic ID"
-              className="input input-bordered rounded border-1 w-full"
-            />
-            <select
-              name="priority"
-              value={formData.priority ?? ""}
-              onChange={handleChange}
-              className="select select-bordered rounded border-1 w-full"
-              required
-            >
-              <option value="" disabled>
-                Select Priority
-              </option>
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select>
-            <select
-              name="type"
-              value={formData.type ?? ""}
-              onChange={handleChange}
-              className="select select-bordered rounded border-1 w-full"
-              required
-            >
-              <option value="" disabled>
-                Select Type
-              </option>
-              <option value="Ticket">Ticket</option>
-              <option value="Bug">Bug</option>
-              <option value="Feature">Feature</option>
-            </select>
-            <input
-              name="estimated_deadline"
-              type="date"
-              value={formData.estimated_deadline ?? ""}
-              onChange={handleChange}
-              className="input input-bordered rounded border-1 w-full"
-            />
-            <input
-              name="real_deadline"
-              type="date"
-              value={formData.real_deadline ?? ""}
-              onChange={handleChange}
-              className="input input-bordered rounded border-1 w-full"
-            />
-            <input
-              name="user_points"
-              type="number"
-              value={formData.user_points ?? ""}
-              onChange={handleChange}
-              placeholder="User Points"
-              className="input input-bordered rounded border-1 w-full"
-            />
-            <input
-              name="estimatedHours"
-              type="number"
-              value={formData.estimatedHours ?? ""}
-              onChange={handleChange}
-              placeholder="Estimated Hours"
-              className="input input-bordered rounded border-1 w-full"
-            />
-            <input
-              name="realHours"
-              type="number"
-              value={formData.realHours ?? ""}
-              onChange={handleChange}
-              placeholder="Real Hours"
-              className="input input-bordered rounded border-1 w-full"
-            />
+            <div>
+              <label>Title</label>
+              <input
+                name="title"
+                value={formData.title ?? ""}
+                onChange={handleChange}
+                placeholder="Título"
+                className="input input-bordered rounded border-1 w-full"
+                required
+              />
+            </div>
+            <div>
+              <label>Description</label>
+              <textarea
+                name="description"
+                value={formData.description ?? ""}
+                onChange={handleChange}
+                placeholder="Descripción"
+                className="textarea textarea-bordered rounded border-1 w-full"
+                rows={3}
+                required
+              />
+            </div>
+            <div>
+              <label>EpicId</label>
+
+              <input
+                name="epicId"
+                type="number"
+                value={
+                  formData.epicId !== undefined && formData.epicId !== null
+                    ? formData.epicId
+                    : ""
+                }
+                onChange={handleChange}
+                placeholder="Epic ID"
+                className="input input-bordered rounded border-1 w-full"
+              />
+            </div>
+            <div>
+              <label>Priority</label>
+
+              <select
+                name="priority"
+                value={formData.priority ?? ""}
+                onChange={handleChange}
+                className="select select-bordered rounded border-1 w-full"
+                required
+              >
+                <option value="" disabled>
+                  Select Priority
+                </option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+            <div>
+              <label>Type</label>
+              <select
+                name="type"
+                value={formData.type ?? ""}
+                onChange={handleChange}
+                className="select select-bordered rounded border-1 w-full"
+                required
+              >
+                <option value="" disabled>
+                  Select Type
+                </option>
+                <option value="Ticket">Ticket</option>
+                <option value="Bug">Bug</option>
+                <option value="Feature">Feature</option>
+              </select>
+            </div>
+            <div>
+              <label>Estimated Deadline</label>
+              <input
+                name="estimated_deadline"
+                type="date"
+                value={formData.estimated_deadline ?? ""}
+                onChange={handleChange}
+                className="input input-bordered rounded border-1 w-full"
+              />
+            </div>
+            <div>
+              <label>Real Deadline</label>
+              <input
+                name="real_deadline"
+                type="date"
+                value={formData.real_deadline ?? ""}
+                onChange={handleChange}
+                className="input input-bordered rounded border-1 w-full"
+              />
+            </div>
+            <div>
+              <label>UserPoints</label>
+              <input
+                name="user_points"
+                type="number"
+                value={formData.user_points ?? ""}
+                onChange={handleChange}
+                placeholder="User Points"
+                className="input input-bordered rounded border-1 w-full"
+              />
+            </div>
+            <div>
+              <label>Estimated Hours</label>
+              <input
+                name="estimatedHours"
+                type="number"
+                value={formData.estimatedHours ?? ""}
+                onChange={handleChange}
+                placeholder="Estimated Hours"
+                className="input input-bordered rounded border-1 w-full"
+              />
+            </div>
+            <div>
+              <label>Real Hours</label>
+              <input
+                name="realHours"
+                type="number"
+                value={formData.realHours ?? ""}
+                onChange={handleChange}
+                placeholder="Real Hours"
+                className="input input-bordered rounded border-1 w-full"
+              />
+            </div>
             <button type="submit" className="btn btn-primary w-full text-white">
               Save changes
             </button>

@@ -9,16 +9,21 @@ export default function SprintModal() {
   });
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const jwtToken = sessionStorage.getItem("token");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  type CustomInput = { name: string; value: string };
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | CustomInput
+    >
+  ) => {
+    const { name, value } = "target" in e ? e.target : e;
     setSprintData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -47,7 +52,11 @@ export default function SprintModal() {
       setResponse(data);
       setIsOpen(false); // Cierra el modal
     } catch (err) {
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Unknown error");
+      }
     } finally {
       setLoading(false);
     }
@@ -93,14 +102,7 @@ export default function SprintModal() {
                   type="datetime-local"
                   name="start_date"
                   value={sprintData.start_date.slice(0, 16)}
-                  onChange={(e) =>
-                    handleChange({
-                      target: {
-                        name: "start_date",
-                        value: new Date(e.target.value).toISOString(),
-                      },
-                    })
-                  }
+                  onChange={handleChange}
                   className="mt-1 block w-full p-2 border-2 text-black rounded-xl"
                 />
               </div>
@@ -112,14 +114,7 @@ export default function SprintModal() {
                   type="datetime-local"
                   name="end_date"
                   value={sprintData.end_date.slice(0, 16)}
-                  onChange={(e) =>
-                    handleChange({
-                      target: {
-                        name: "end_date",
-                        value: new Date(e.target.value).toISOString(),
-                      },
-                    })
-                  }
+                  onChange={handleChange}
                   className="mt-1 block w-full p-2 border-2 text-black rounded-xl"
                 />
               </div>
