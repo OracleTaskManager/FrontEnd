@@ -21,11 +21,27 @@ const fetchAndFormatHoursBySprint = async (token: string) => {
   const hoursPerSprintMap: Record<string, number> = {};
 
   data.forEach(
-    ({ sprintName, total }: { sprintName: string; total: number }) => {
+    ({
+      sprintName,
+      totalHours,
+    }: {
+      sprintName: string;
+      totalHours: number;
+    }) => {
+      const validTotal = Number(totalHours);
+      if (isNaN(validTotal)) {
+        console.warn(
+          `Invalid total value for sprint "${sprintName}":`,
+          totalHours
+        );
+        return; // salta esta entrada
+      }
+
       if (!hoursPerSprintMap[sprintName]) {
         hoursPerSprintMap[sprintName] = 0;
       }
-      hoursPerSprintMap[sprintName] += total;
+
+      hoursPerSprintMap[sprintName] += validTotal;
     }
   );
 
@@ -94,7 +110,6 @@ function KPI() {
   useEffect(() => {
     const loadHours = async () => {
       if (!jwtToken) {
-        console.error("JWT token is null");
         return;
       }
       try {

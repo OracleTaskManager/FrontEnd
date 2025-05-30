@@ -103,7 +103,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         epic_id: formData.epicId ?? null,
         user_points: formData.user_points ?? null,
         priority: formData.priority ?? "Low",
-        status: formData.status ?? "Open",
+        status: formData.status ?? "ToDo",
       };
       delete payload.epicId;
 
@@ -210,7 +210,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                 <option value="High">High</option>
               </select>
             </div>
-            {/* <div>
+            <div>
               <label>Status</label>
               <select
                 name="status"
@@ -223,10 +223,10 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                   Select Status
                 </option>
                 <option value="ToDo">To-do</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Finished">Finished</option>
+                <option value="InProgress">In Progress</option>
+                <option value="Done">Finished</option>
               </select>
-            </div> */}
+            </div>
 
             <div>
               <label>Type</label>
