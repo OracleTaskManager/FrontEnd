@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
   const [formData, setFormData] = useState({
@@ -13,6 +13,32 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
     estimatedHours: 0,
     realHours: 0,
   });
+  const [epics, setEpics] = useState<{ epicId: number; title: string }[]>([]);
+
+  useEffect(() => {
+    const fetchEpics = async () => {
+      const jwtToken = sessionStorage.getItem("token");
+      try {
+        const response = await fetch("/api/tasks/epics/all", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
+        if (!response.ok) throw new Error("Error al obtener epics");
+        const data = await response.json();
+        // Mapear epic_id a epicId para compatibilidad con el frontend
+        type EpicApiResponse = { epic_id: number; title: string };
+        const mappedEpics = data.map((epic: EpicApiResponse) => ({
+          epicId: epic.epic_id,
+          title: epic.title,
+        }));
+        setEpics(mappedEpics);
+      } catch (error) {
+        console.error("Error al obtener epics:", error);
+      }
+    };
+    fetchEpics();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -103,14 +129,23 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
           />
 
           <label className="block">
-            Epic ID
-            <input
-              type="number"
+            Epic
+            <select
               name="epicId"
               value={formData.epicId}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg mt-1"
-            />
+              required
+            >
+              <option value={0} disabled hidden>
+                Selecciona un Epic
+              </option>
+              {epics.map((epic) => (
+                <option key={epic.epicId} value={epic.epicId}>
+                  {`${epic.epicId ?? 'Sin ID'} - ${epic.title?.trim() || 'Sin nombre'}`}
+                </option>
+              ))}
+            </select>
           </label>
 
           <select
@@ -210,10 +245,10 @@ const TicketPopup = () => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="mt-4 mb-5">
+    <div>
       <button
         onClick={() => setShowModal(true)}
-        className=" text-white px-6 py-2 rounded-lg transition"
+        className="text-white px-6 py-2 rounded-lg transition"
       >
         Create Ticket
       </button>

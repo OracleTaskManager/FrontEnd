@@ -28,12 +28,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      "/api/epics": {
+      "/api/tasks/epics/": {
         target: "http://140.84.189.81",
         changeOrigin: true,
         secure: false,
       },
-      "/api/tasksprint": {
+      "/api/tasks/tasksprint/": {
         target: "http://140.84.189.81",
         changeOrigin: true,
         secure: false,
@@ -53,7 +53,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      "/api/task_dependencies": {
+      "/api/tasks/task_dependencies": {
         target: "http://140.84.189.81",
         changeOrigin: true,
         secure: false,

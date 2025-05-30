@@ -8,7 +8,7 @@ type TaskUpdateContent = {
   type?: string;
   estimated_deadline?: string;
   real_deadline?: string;
-  userPoints?: number;
+  user_points?: number;
   estimatedHours?: number;
   realHours?: number;
 };
@@ -47,14 +47,14 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
       setFormData({
         title: data.title,
         description: data.description,
-        epicId: data.epic_id, // o data.epicId si el backend lo devuelve así
-        priority: data.priority,
+        epicId: typeof data.epic_id === "number" ? data.epic_id : null,
+        priority: typeof data.priority === "string" ? data.priority : "Low",
         type: data.type,
         estimated_deadline: (data.estimated_deadline ?? data.estimatedDeadline)?.split("T")[0] ?? "",
         real_deadline: (data.real_deadline ?? data.realDeadline)?.split("T")[0] ?? "",
-        userPoints: data.user_points ?? data.userPoints,
-        estimatedHours: data.estimatedHours,
-        realHours: data.realHours,
+        user_points: Number(data.user_points) || 0,
+        estimatedHours: Number(data.estimatedHours) || 0,
+        realHours: Number(data.realHours) || 0,
       });
       setLoaded(true);
     } catch (err) {
@@ -71,12 +71,9 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        ["estimatedHours", "realHours", "userPoints", "epicId"].includes(
-          name
-        ) && value !== ""
-          ? Number(value)
-          : value,
+      [name]: ["estimatedHours", "realHours", "user_points", "epicId"].includes(name)
+        ? value === "" ? null : Number(value)
+        : value,
     }));
   };
 
@@ -93,7 +90,12 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         ...formData,
         estimated_deadline: formData.estimated_deadline ?? null,
         real_deadline: formData.real_deadline ?? null,
+        epic_id: formData.epicId ?? null,
+        user_points: formData.user_points ?? null,
+        priority: formData.priority ?? "Low",
       };
+      delete payload.epicId;
+      delete payload.user_points;
       const res = await fetch(`/api/tasks/tasks/update-task/${taskId}`, {
         method: "PUT",
         headers: {
@@ -162,7 +164,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             <input
               name="epicId"
               type="number"
-              value={formData.epicId ?? ""}
+              value={formData.epicId !== undefined && formData.epicId !== null ? formData.epicId : ""}
               onChange={handleChange}
               placeholder="Epic ID"
               className="input input-bordered rounded border-1 w-full"
@@ -178,7 +180,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                 Select Priority
               </option>
               <option value="Low">Low</option>
-              <option value="Mid">Mid</option>
+              <option value="Medium">Medium</option>
               <option value="High">High</option>
             </select>
             <select
@@ -210,9 +212,9 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
               className="input input-bordered rounded border-1 w-full"
             />
             <input
-              name="userPoints"
+              name="user_points"
               type="number"
-              value={formData.userPoints ?? ""}
+              value={formData.user_points ?? ""}
               onChange={handleChange}
               placeholder="User Points"
               className="input input-bordered rounded border-1 w-full"
