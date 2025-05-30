@@ -152,12 +152,6 @@ function DashboardManager() {
                   project="N/A"
                   teamId={team.team_id}
                   onDelete={() => handleDeleteTeam(team.team_id)}
-                  members={[
-                    {
-                      icon: "https://randomuser.me/api/portraits/lego/1.jpg",
-                      name: "Member 1",
-                    },
-                  ]}
                 />
               ))}
             </div>
