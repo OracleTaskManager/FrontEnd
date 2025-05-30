@@ -4,14 +4,14 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    epicId: "",
+    epicId: 0,
     priority: "",
     type: "",
     estimatedDeadline: "",
     realDeadline: "",
-    userPoints: "",
-    estimatedHours: "",
-    realHours: "",
+    userPoints: 0,
+    estimatedHours: 0,
+    realHours: 0,
   });
 
   const handleChange = (
@@ -36,15 +36,19 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
 
     const payload = {
       ...formData,
-      estimatedDeadline: new Date(formData.estimatedDeadline).toISOString(),
-      realDeadline: new Date(formData.realDeadline).toISOString(),
+      estimatedDeadline: formData.estimatedDeadline
+        ? new Date(formData.estimatedDeadline).toISOString()
+        : null,
+      realDeadline: formData.realDeadline
+        ? new Date(formData.realDeadline).toISOString()
+        : null,
     };
 
     try {
       const response = await fetch("/api/tasks/tasks/", {
         method: "POST",
         headers: {
-          Authorization: `${jwtToken}`,
+          Authorization: `Bearer ${jwtToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
@@ -69,7 +73,7 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
       <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-xl relative h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-red-600"
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
         >
           ✕
         </button>
@@ -98,21 +102,28 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
             required
           />
 
-          <input
-            type="number"
-            name="epicId"
-            value={formData.epicId}
-            onChange={handleChange}
-            placeholder="Epic ID"
-            className="w-full p-2 border rounded-lg"
-          />
+          <label className="block">
+            Epic ID
+            <input
+              type="number"
+              name="epicId"
+              value={formData.epicId}
+              onChange={handleChange}
+              className="w-full p-2 border rounded-lg mt-1"
+            />
+          </label>
 
           <select
             name="priority"
             value={formData.priority}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
+            required
           >
+            +{" "}
+            <option value="" disabled hidden>
+              Select priority{" "}
+            </option>
             <option value="High">High</option>
             <option value="Medium">Medium</option>
             <option value="Low">Low</option>
@@ -123,7 +134,12 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
             value={formData.type}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
+            required
           >
+            +{" "}
+            <option value="" disabled hidden>
+              Select type{" "}
+            </option>
             <option value="Ticket">Ticket</option>
             <option value="Bug">Bug</option>
             <option value="Feature">Feature</option>
@@ -145,32 +161,38 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
             className="w-full p-2 border rounded-lg"
           />
 
-          <input
-            type="number"
-            name="estimatedHours"
-            value={formData.estimatedHours}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            placeholder="Estimated Hours"
-          />
+          <label className="block">
+            Estimated Hours
+            <input
+              type="number"
+              name="estimatedHours"
+              value={formData.estimatedHours}
+              onChange={handleChange}
+              className="w-full p-2 border rounded-lg mt-1"
+            />
+          </label>
 
-          <input
-            type="number"
-            name="realHours"
-            value={formData.realHours}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            placeholder="Real Hours"
-          />
+          <label className="block">
+            Real Hours
+            <input
+              type="number"
+              name="realHours"
+              value={formData.realHours}
+              onChange={handleChange}
+              className="w-full p-2 border rounded-lg mt-1"
+            />
+          </label>
 
-          <input
-            type="number"
-            name="userPoints"
-            value={formData.userPoints}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            placeholder="User Points"
-          />
+          <label className="block">
+            User Points
+            <input
+              type="number"
+              name="userPoints"
+              value={formData.userPoints}
+              onChange={handleChange}
+              className="w-full p-2 border rounded-lg mt-1"
+            />
+          </label>
 
           <button
             type="submit"
@@ -188,7 +210,7 @@ const TicketPopup = () => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="">
+    <div className="mt-4 mb-5">
       <button
         onClick={() => setShowModal(true)}
         className=" text-white px-6 py-2 rounded-lg transition"

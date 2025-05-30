@@ -7,7 +7,6 @@ export default function Navbar({ pageTitle }: { pageTitle: string }) {
 
   useEffect(() => {
     const storedRole = sessionStorage.getItem("role");
-    console.log("storedRole raw:", storedRole);
     if (storedRole) {
       setRole(storedRole.trim().toLowerCase());
     } else {

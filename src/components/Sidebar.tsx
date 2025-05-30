@@ -8,7 +8,6 @@ export default function Sidebar() {
 
   useEffect(() => {
     const storedRole = sessionStorage.getItem("role");
-    console.log("storedRole raw:", storedRole);
     if (storedRole) {
       setRole(storedRole.trim().toLowerCase());
     } else {
@@ -24,7 +23,6 @@ export default function Sidebar() {
     }
   };
 
-  console.log("role state:", role);
   const [showPopup, setShowPopup] = useState(false);
 
   const handleSignOut = () => {
