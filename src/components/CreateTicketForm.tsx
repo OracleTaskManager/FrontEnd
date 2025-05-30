@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
   const [formData, setFormData] = useState({
@@ -13,6 +13,8 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
     estimatedHours: 0,
     realHours: 0,
   });
+
+  const [epics, setEpics] = useState<{ epic_id: number; title: string }[]>([]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -68,6 +70,31 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
     }
   };
 
+  useEffect(() => {
+    const fetchEpics = async () => {
+      const jwtToken = sessionStorage.getItem("token");
+
+      try {
+        const response = await fetch("/api/tasks/epics/all", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok)
+          throw new Error(`Error al obtener epics: ${response.status}`);
+        const data = await response.json();
+        setEpics(data);
+      } catch (error) {
+        console.error("Error al cargar los epics:", error);
+      }
+    };
+
+    fetchEpics();
+  }, []);
+
   return (
     <div className="fixed inset-0 bg-transparent flex items-center justify-center z-50 h-screen">
       <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-xl relative h-[90vh] overflow-y-auto">
@@ -103,14 +130,23 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
           />
 
           <label className="block">
-            Epic ID
-            <input
-              type="number"
+            Epic
+            <select
               name="epicId"
               value={formData.epicId}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg mt-1"
-            />
+              required
+            >
+              <option value={0} disabled hidden>
+                Select Epic
+              </option>
+              {epics.map((epic) => (
+                <option key={epic.epic_id} value={epic.epic_id}>
+                  {epic.title}
+                </option>
+              ))}
+            </select>
           </label>
 
           <select
@@ -145,6 +181,7 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
             <option value="Feature">Feature</option>
           </select>
 
+          <label>Estimated Deadline</label>
           <input
             type="date"
             name="estimatedDeadline"
@@ -153,6 +190,7 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
             className="w-full p-2 border rounded-lg"
           />
 
+          <label>Real Deadline</label>
           <input
             type="date"
             name="realDeadline"

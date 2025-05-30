@@ -50,8 +50,11 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         epicId: data.epic_id, // o data.epicId si el backend lo devuelve así
         priority: data.priority,
         type: data.type,
-        estimated_deadline: (data.estimated_deadline ?? data.estimatedDeadline)?.split("T")[0] ?? "",
-        real_deadline: (data.real_deadline ?? data.realDeadline)?.split("T")[0] ?? "",
+        estimated_deadline:
+          (data.estimated_deadline ?? data.estimatedDeadline)?.split("T")[0] ??
+          "",
+        real_deadline:
+          (data.real_deadline ?? data.realDeadline)?.split("T")[0] ?? "",
         userPoints: data.user_points ?? data.userPoints,
         estimatedHours: data.estimatedHours,
         realHours: data.realHours,
@@ -135,7 +138,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
             className="input input-bordered border-2 rounded flex-1 text-black"
           />
           <button onClick={handleSearch} className="btn btn-secondary">
-            Buscar
+            Search
           </button>
         </div>
 
@@ -234,7 +237,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
               className="input input-bordered rounded border-1 w-full"
             />
             <button type="submit" className="btn btn-primary w-full text-white">
-              Guardar Cambios
+              Save changes
             </button>
           </form>
         )}

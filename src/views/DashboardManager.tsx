@@ -8,6 +8,7 @@ import CreateTeamModal from "../components/CreateTeamModal";
 import CreateTicketForm from "../components/CreateTicketForm";
 import AssignTaskToUser from "../components/AssignTaskToUser";
 import EditTaskModal from "../components/EditTaskModal";
+import SprintPoster from "../components/CreateSprintModal";
 
 interface Ticketx {
   taskId: number;
@@ -152,12 +153,6 @@ function DashboardManager() {
                   project="N/A"
                   teamId={team.team_id}
                   onDelete={() => handleDeleteTeam(team.team_id)}
-                  members={[
-                    {
-                      icon: "https://randomuser.me/api/portraits/lego/1.jpg",
-                      name: "Member 1",
-                    },
-                  ]}
                 />
               ))}
             </div>
@@ -176,8 +171,10 @@ function DashboardManager() {
                 className=" h-12 bg-blue-600 text-white rounded hover:bg-blue-700"
                 onClick={() => setIsEditModalOpen(true)}
               >
-                Editar Tareas
+                Edit Ticket
               </button>
+
+              <SprintPoster />
             </div>
 
             {isEditModalOpen && (
