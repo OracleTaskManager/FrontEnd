@@ -71,7 +71,7 @@ const SignOutPopup: React.FC<SignOutPopupProps> = ({ onClose, onSignOut }) => {
                   text={
                     <>
                       <img
-                        src="/src/assets/add_user_icon_184116.svg"
+                        src="/add_user_icon_184116.svg"
                         alt="Add User Icon"
                         className="inline-block w-4 h-4 mr-2 filter invert"
                       />
@@ -94,7 +94,7 @@ const SignOutPopup: React.FC<SignOutPopupProps> = ({ onClose, onSignOut }) => {
                   text={
                     <>
                       <img
-                        src="/src/assets/log_out_icon_128821.svg"
+                        src="/log_out_icon_128821.svg"
                         alt="Log out icon"
                         className="inline-block w-4 h-4 mr-2 filter invert"
                       />
@@ -110,7 +110,7 @@ const SignOutPopup: React.FC<SignOutPopupProps> = ({ onClose, onSignOut }) => {
                   text={
                     <>
                       <img
-                        src="/src/assets/biggarbagebin_121980.svg"
+                        src="/biggarbagebin_121980.svg"
                         alt="Delete account icon"
                         className="inline-block w-4 h-4 mr-2 filter invert"
                       />

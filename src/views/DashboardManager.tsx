@@ -3,10 +3,15 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
 import TeamCard from "../components/TeamCard";
+<<<<<<< HEAD
 //import Notification from "../components/Notification";
+=======
+// import Notification from "../components/Notification";
+>>>>>>> origin/main
 import CreateTeamModal from "../components/CreateTeamModal";
-import CreateTicketForm from "../components/CreateTicket";
+import CreateTicketForm from "../components/CreateTicketForm";
 import AssignTaskToUser from "../components/AssignTaskToUser";
+import EditTaskModal from "../components/EditTaskModal";
 
 interface Ticketx {
   taskId: number;
@@ -19,6 +24,7 @@ interface Ticketx {
   estimatedHours: string | null;
   realHours: string | null;
   user_points: number;
+  publishedDate: string;
 }
 
 type Team = {
@@ -30,6 +36,7 @@ type Team = {
 function DashboardManager() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const jwtToken = sessionStorage.getItem("token");
   // Para debuguear
   // if (jwtToken) {
@@ -165,12 +172,25 @@ function DashboardManager() {
               Section Tickets
             </h2>
             <div className="flex space-x-4">
-              {/* Create Ticket */}
               <CreateTicketForm />
 
-              {/* Assign Ticket to User */}
               <AssignTaskToUser onTaskAssigned={fetchTickets} />
+
+              <button
+                className=" h-12 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={() => setIsEditModalOpen(true)}
+              >
+                Editar Tareas
+              </button>
             </div>
+
+            {isEditModalOpen && (
+              <EditTaskModal
+                onClose={() => setIsEditModalOpen(false)}
+                onUpdated={fetchTickets}
+                token={jwtToken ?? ""}
+              />
+            )}
 
             {/* Display Tickets of User */}
             {otherTickets.map((ticket, index) => (
@@ -201,7 +221,7 @@ function DashboardManager() {
             .then((data) => setTeams(data))
             .catch((err) => console.error("Error actualizando equipos:", err));
         }}
-        token={jwtToken}
+        token={jwtToken ?? ""}
       />
     </div>
   );

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
-//import CircularProgress from "../components/CircularProgress";
+// import CircularProgress from "../components/CircularProgress";
 
 interface Ticketx {
   taskId: number;
@@ -94,7 +94,7 @@ function DashboardDev() {
                 <Ticket
                   key={index}
                   title={ticket.title}
-                  publishedDate={ticket.estimatedDeadline.slice(0, 10)}
+                  publishedDate={ticket.estimatedDeadline}
                   status={mapStatus(ticket.status)}
                   priority={ticket.priority}
                   description={ticket.description}

@@ -88,7 +88,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({ setShowUpdateForm }) =>
       text={
           <>
             <img
-              src="/src/assets/1904654-cancel-close-cross-delete-reject-remove-stop_122504.svg"
+              src="/1904654-cancel-close-cross-delete-reject-remove-stop_122504.svg"
               alt="Cancel icon"
               className="inline-block w-4 h-4 mr-2 filter invert"
             />

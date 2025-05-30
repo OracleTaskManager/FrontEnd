@@ -86,7 +86,9 @@ export default function TeamCard({
     <div className="p-4 rounded-md shadow-md bg-neutral-100 w-64">
       {/* Encabezado con nombre y botones de editar/eliminar */}
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-black text-xl font-semibold truncate">{teamName}</h2>
+        <h2 className="text-black text-xl font-semibold truncate">
+          {teamName}
+        </h2>
         <div className="flex gap-2">
           <button
             onClick={() => setShowEditModal(true)}
@@ -138,7 +140,10 @@ export default function TeamCard({
       <p className="text-gray-600 my-4">{project}</p>
 
       {/* Lista de miembros */}
-      <ul className="space-y-2 mb-4" style={{ maxHeight: '140px', overflowY: 'auto' }}>
+      <ul
+        className="space-y-2 mb-4"
+        style={{ maxHeight: "140px", overflowY: "auto" }}
+      >
         {members.length === 0 ? (
           <li className="text-gray-500">No hay miembros en este equipo</li>
         ) : (

@@ -1,16 +1,19 @@
 import { useState } from "react";
 import PopUpTicket from "./PopUpTicket";
+
 interface TicketProps {
-  taskId: number;
+  taskId?: number; // Optional, not currently used
   title: string;
   publishedDate: string;
   status: "To-do" | "In Progress" | "Finished";
   priority: "Low" | "Mid" | "High";
   description: string;
-  user: string;
-  estimatedTime: string;
-  realHours: string;
-  isMain?: boolean;
+  isMain?: boolean; // Optional, only used in one place
+  estimatedTime?: string | null; // Optional, not used in current component
+  realHours?: string | null; // Optional, not used in current component
+  user?: {
+    points: number;
+  };
 }
 
 export default function Ticket({
@@ -50,7 +53,7 @@ export default function Ticket({
         className={`size-12 shrink-0 ${
           isMain ? "min-h-50 min-w-50" : "min-h-30 min-w-30"
         }`}
-        src="src/assets/rocket.png"
+        src="/rocket.png"
         alt="ChitChat Logo"
       />
 
@@ -94,7 +97,7 @@ export default function Ticket({
           status={ticketStatus}
           priority={priority}
           description={description}
-          taskId={taskId} // 👈 Aquí
+          taskId={taskId}
           onStatusChange={(newStatus) => setTicketStatus(newStatus)}
         />
       </div>

@@ -6,7 +6,6 @@ interface AddUserToTeamModalProps {
   onSuccess: () => void;
 }
 
-const jwtToken = sessionStorage.getItem("token");
 // Para debuguear
 // if (jwtToken) {
 //   console.log("Token disponible:", jwtToken);
@@ -27,6 +26,7 @@ const AddUserToTeamModal: React.FC<AddUserToTeamModalProps> = ({
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const jwtToken = sessionStorage.getItem("token");
 
   // Fetch users on component mount
   useEffect(() => {
