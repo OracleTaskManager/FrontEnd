@@ -9,7 +9,8 @@ import CreateTicketForm from "../components/CreateTicketForm";
 import AssignTaskToUser from "../components/AssignTaskToUser";
 import EditTaskModal from "../components/EditTaskModal";
 import CreateEpicForm from "../components/CreateEpicForm";
-import SprintPoster from "../components/CreateSprintModal";
+import SprintModal from "../components/CreateSprintModal";
+import ShowAllSprints from "../components/ShowAllSprints";
 
 interface Ticketx {
   taskId: number;
@@ -175,7 +176,7 @@ function DashboardManager() {
                 Edit Tasks
               </button>
 
-              <SprintPoster />
+              <SprintModal />
             </div>
 
             {isEditModalOpen && (

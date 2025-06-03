@@ -4,8 +4,8 @@ export default function SprintModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [sprintData, setSprintData] = useState({
     name: "",
-    start_date: "2025-07-12T00:00:00.000+00:00",
-    end_date: "2025-08-12T00:00:00.000+00:00",
+    startDate: "",
+    endDate: "",
   });
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
@@ -30,11 +30,15 @@ export default function SprintModal() {
     setResponse(null);
 
     const payload = {
-      name: sprintData.name,
-      startDate: sprintData.start_date.slice(0, 10),
-      endDate: sprintData.end_date.slice(0, 10),
+      ...sprintData,
+      startDate: sprintData.startDate
+        ? new Date(sprintData.startDate).toISOString()
+        : null,
+      endDate: sprintData.endDate
+        ? new Date(sprintData.endDate).toISOString()
+        : null,
     };
-
+    console.log(JSON.stringify(payload));
     try {
       const res = await fetch("/api/tasks/sprints/", {
         method: "POST",
@@ -50,6 +54,7 @@ export default function SprintModal() {
       if (!res.ok) throw new Error(data.message || "Error al crear el sprint");
 
       setResponse(data);
+      alert("Sprint creado exitosamente");
       setIsOpen(false); // Cierra el modal
     } catch (err) {
       if (err instanceof Error) {
@@ -99,9 +104,9 @@ export default function SprintModal() {
                   Start Date
                 </label>
                 <input
-                  type="datetime-local"
-                  name="start_date"
-                  value={sprintData.start_date.slice(0, 16)}
+                  type="date"
+                  name="startDate"
+                  value={sprintData.startDate.slice(0, 16)}
                   onChange={handleChange}
                   className="mt-1 block w-full p-2 border-2 text-black rounded-xl"
                 />
@@ -111,9 +116,9 @@ export default function SprintModal() {
                   End Date
                 </label>
                 <input
-                  type="datetime-local"
-                  name="end_date"
-                  value={sprintData.end_date.slice(0, 16)}
+                  type="date"
+                  name="endDate"
+                  value={sprintData.endDate.slice(0, 16)}
                   onChange={handleChange}
                   className="mt-1 block w-full p-2 border-2 text-black rounded-xl"
                 />
@@ -132,12 +137,6 @@ export default function SprintModal() {
               </div>
             )}
           </div>
-        </div>
-      )}
-
-      {response && (
-        <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-xl max-w-md">
-          <p>Sprint created succesfully</p>
         </div>
       )}
     </>
