@@ -8,10 +8,10 @@ interface Ticketx {
   taskId: number;
   title: string;
   description: string;
-  priority: "Low" | "Mid" | "High";
-  status: "ToDo" | "InProgress" | "Finished";
-  estimatedDeadline: string;
-  realDeadline: string;
+  priority: "Low" | "Medium" | "High";
+  status: "ToDo" | "InProgress" | "Don";
+  estimated_deadline?: string;
+  real_deadline?: string;
   estimatedHours: string | null;
   realHours: string | null;
   user_points: number;
@@ -55,16 +55,16 @@ function DashboardDev() {
   const mainTicket = tickets[0];
   const otherTickets = tickets.slice(1, maxTicketsToShow);
 
-  const mapStatus = (status: string): "To-do" | "In Progress" | "Finished" => {
+  const mapStatus = (status: string): "ToDo" | "In Progress" | "Done" => {
     switch (status) {
       case "ToDo":
-        return "To-do";
+        return "ToDo";
       case "InProgress":
         return "In Progress";
       case "Finished":
-        return "Finished";
+        return "Done";
       default:
-        return "To-do";
+        return "Done";
     }
   };
 
@@ -76,8 +76,9 @@ function DashboardDev() {
         <main className="flex-1 p-6 overflow-auto bg-white">
           {mainTicket && (
             <Ticket
+              taskId={mainTicket.taskId}
               title={mainTicket.title}
-              publishedDate={mainTicket.estimatedDeadline}
+              estimated_deadline={mainTicket.estimated_deadline}
               status={mapStatus(mainTicket.status)}
               priority={mainTicket.priority}
               description={mainTicket.description}
@@ -92,9 +93,10 @@ function DashboardDev() {
               </h2>
               {otherTickets.map((ticket, index) => (
                 <Ticket
+                  taskId={ticket.taskId}
                   key={index}
                   title={ticket.title}
-                  publishedDate={ticket.estimatedDeadline}
+                  estimated_deadline={ticket.estimated_deadline}
                   status={mapStatus(ticket.status)}
                   priority={ticket.priority}
                   description={ticket.description}

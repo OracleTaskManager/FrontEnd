@@ -10,9 +10,9 @@ interface TicketPopUpProps {
   real_deadline?: string;
   estimatedHours?: number;
   user_points?: number;
-  status: "To-do" | "In Progress" | "Finished";
-  priority: "Low" | "Mid" | "High";
-  onStatusChange: (newStatus: "To-do" | "In Progress" | "Finished") => void;
+  status: "ToDo" | "In Progress" | "Done";
+  priority: "Low" | "Medium" | "High";
+  onStatusChange: (newStatus: "ToDo" | "In Progress" | "Done") => void;
   description: string;
   taskId?: number;
   realHours?: number;
@@ -58,14 +58,14 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
 
   const priorityColors = {
     Low: "text-green-600",
-    Mid: "text-orange-600",
+    Medium: "text-orange-600",
     High: "text-red-600 font-bold",
   };
 
   const statusColors = {
-    "To-do": "bg-gray-200 text-gray-800",
+    ToDo: "bg-gray-200 text-gray-800",
     "In Progress": "bg-yellow-200 text-yellow-800",
-    Finished: "bg-green-200 text-green-800",
+    Done: "bg-green-200 text-green-800",
   };
 
   // Aquí el método para subir archivos automáticamente
@@ -216,18 +216,18 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
             value={currentStatus}
             onChange={(e) => {
               const newStatus = e.target.value as
-                | "To-do"
+                | "ToDo"
                 | "In Progress"
-                | "Finished";
+                | "Done";
               setCurrentStatus(newStatus);
               onStatusChange(newStatus);
             }}
             className={`block mt-1 rounded px-2 py-1 text-sm ${statusColors[currentStatus]}`}
             style={{ backgroundColor: "white", color: "black" }}
           >
-            <option value="To-do">To-do</option>
+            <option value="ToDo">ToDo</option>
             <option value="In Progress">In Progress</option>
-            <option value="Finished">Finished</option>
+            <option value="Done">Done</option>
           </select>
         </div>
 

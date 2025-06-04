@@ -11,12 +11,12 @@ import EditTaskModal from "../components/EditTaskModal";
 import CreateEpicForm from "../components/CreateEpicForm";
 import SprintModal from "../components/CreateSprintModal";
 
-interface Ticketx {
+export interface Ticketx {
   id: number;
   title: string;
   description: string;
-  priority: "Low" | "Mid" | "High";
-  status: "ToDo" | "InProgress" | "Finished";
+  priority: "Low" | "Medium" | "High";
+  status: "ToDo" | "InProgress" | "Done";
   estimated_deadline: string;
   real_deadline: string;
   estimatedHours: string | null;
@@ -95,6 +95,7 @@ function DashboardManager() {
 
   // Endpoint Tickets
   const [tickets, setTickets] = useState<Ticketx[]>([]);
+  const [ticketView, setTicketView] = useState<"my" | "all">("my");
 
   const fetchTickets = async () => {
     try {
@@ -105,20 +106,14 @@ function DashboardManager() {
         },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch tickets");
-      }
+      if (!response.ok) throw new Error("Failed to fetch my tasks");
 
       const data = await response.json();
       setTickets(data);
     } catch (error) {
-      console.error("Error fetching tickets:", error);
+      console.error("Error fetching my tasks:", error);
     }
   };
-
-  useEffect(() => {
-    fetchTickets();
-  }, []);
 
   const fetchAllTickets = async () => {
     try {
@@ -129,16 +124,18 @@ function DashboardManager() {
         },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch tickets");
-      }
+      if (!response.ok) throw new Error("Failed to fetch all tasks");
 
       const data = await response.json();
       setTickets(data);
     } catch (error) {
-      console.error("Error fetching tickets:", error);
+      console.error("Error fetching all tasks:", error);
     }
   };
+
+  useEffect(() => {
+    ticketView === "my" ? fetchTickets() : fetchAllTickets();
+  }, [ticketView]);
 
   useEffect(() => {
     fetchTickets();
@@ -206,19 +203,52 @@ function DashboardManager() {
               />
             )}
 
+            {/* Clickable Divs to show my-tasks and all tasks */}
+            <div className="flex gap-4 mb-4">
+              {/* My tickets */}
+              <div
+                onClick={() => setTicketView("my")}
+                className={`cursor-pointer px-4 py-2 rounded-md ${
+                  ticketView === "my"
+                    ? "bg-purple-600 text-white"
+                    : "bg-gray-200"
+                }`}
+              >
+                My Tickets
+              </div>
+
+              {/* All Tickets */}
+              <div
+                onClick={() => setTicketView("all")}
+                className={`cursor-pointer px-4 py-2 rounded-md ${
+                  ticketView === "all"
+                    ? "bg-purple-600 text-white"
+                    : "bg-gray-200"
+                }`}
+              >
+                All Tickets
+              </div>
+            </div>
+
             {/* Display Tickets of User */}
-            {tickets.map((ticket, index) => {
-              return (
-                <Ticket
-                  key={index}
-                  taskId={ticket.id}
-                  title={ticket.title}
-                  status={ticket.status as "To-do" | "In Progress" | "Finished"}
-                  priority={ticket.priority as "Low" | "Mid" | "High"}
-                  description={ticket.description}
-                />
-              );
-            })}
+            <div className="gap-4">
+              {tickets.length === 0 ? (
+                <p className="text-gray-500 col-span-full">
+                  No hay tareas disponibles.
+                </p>
+              ) : (
+                tickets.map((ticket, index) => (
+                  <Ticket
+                    key={index}
+                    taskId={ticket.id}
+                    title={ticket.title}
+                    status={ticket.status as "ToDo" | "In Progress" | "Done"}
+                    priority={ticket.priority}
+                    description={ticket.description}
+                  />
+                ))
+              )}
+            </div>
           </div>
         </main>
       </div>

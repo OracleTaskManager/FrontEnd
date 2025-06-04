@@ -7,8 +7,8 @@ interface TicketProps {
   title?: string;
   description?: string;
   epic_id?: number;
-  priority?: string;
-  status?: string;
+  priority: "Low" | "Medium" | "High";
+  status: "ToDo" | "In Progress" | "Done";
   type?: string;
   estimated_deadline?: string;
   real_deadline?: string;
@@ -32,25 +32,26 @@ export default function Ticket({
   estimatedHours,
   realHours,
 }: TicketProps) {
-  const statusColors = {
-    "To-do": "bg-gray-200 text-gray-800",
-    "In Progress": "bg-yellow-200 text-yellow-800",
-    Finished: "bg-green-200 text-green-800",
+  type TicketStatus = "ToDo" | "In Progress" | "Done";
+  type Priority = "Low" | "Medium" | "High";
+
+  const statusColors: Record<TicketStatus, string> = {
+    ToDo: "bg-gray-300",
+    "In Progress": "bg-yellow-300",
+    Done: "bg-green-300",
   };
 
-  const priorityColors = {
-    Low: "text-green-600",
-    Mid: "text-orange-600",
-    High: "text-red-600 font-bold",
+  const priorityColors: Record<Priority, string> = {
+    Low: "text-green-500",
+    Medium: "text-yellow-500",
+    High: "text-red-500",
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [ticketStatus, setTicketStatus] = useState(status);
+  const [ticketStatus, setTicketStatus] = useState<TicketStatus>(status);
   const jwtToken = sessionStorage.getItem("token");
 
-  async function updateTaskStatus(
-    newStatus: "To-do" | "In Progress" | "Finished"
-  ) {
+  async function updateTaskStatus(newStatus: "ToDo" | "In Progress" | "Done") {
     if (!taskId) {
       console.error("No taskId provided for status update");
       return;
@@ -139,10 +140,8 @@ export default function Ticket({
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           title={title ?? ""}
-          status={
-            (ticketStatus ?? "To-do") as "To-do" | "In Progress" | "Finished"
-          }
-          priority={(priority ?? "Low") as "Low" | "Mid" | "High"}
+          status={(ticketStatus ?? "ToDo") as "ToDo" | "In Progress" | "Done"}
+          priority={(priority ?? "Low") as "Low" | "Medium" | "High"}
           description={description ?? ""}
           taskId={taskId}
           onStatusChange={(newStatus) => {
