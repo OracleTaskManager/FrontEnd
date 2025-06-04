@@ -12,17 +12,16 @@ import CreateEpicForm from "../components/CreateEpicForm";
 import SprintModal from "../components/CreateSprintModal";
 
 interface Ticketx {
-  taskId: number;
+  id: number;
   title: string;
   description: string;
   priority: "Low" | "Mid" | "High";
   status: "ToDo" | "InProgress" | "Finished";
-  estimatedDeadline: string;
-  realDeadline: string;
+  estimated_deadline: string;
+  real_deadline: string;
   estimatedHours: string | null;
   realHours: string | null;
   user_points: number;
-  publishedDate: string;
 }
 
 type Team = {
@@ -121,8 +120,29 @@ function DashboardManager() {
     fetchTickets();
   }, []);
 
-  const maxTicketsToShow = 4;
-  const otherTickets = tickets.slice(0, maxTicketsToShow);
+  const fetchAllTickets = async () => {
+    try {
+      const response = await fetch("/api/tasks/tasks/all", {
+        headers: {
+          Authorization: `${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch tickets");
+      }
+
+      const data = await response.json();
+      setTickets(data);
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTickets();
+  }, []);
 
   //console.log("Teams cargados:", teams);
   return (
@@ -187,16 +207,18 @@ function DashboardManager() {
             )}
 
             {/* Display Tickets of User */}
-            {otherTickets.map((ticket, index) => (
-              <Ticket
-                key={index}
-                title={ticket.title}
-                publishedDate={ticket.publishedDate}
-                status={ticket.status as "To-do" | "In Progress" | "Finished"}
-                priority={ticket.priority as "Low" | "Mid" | "High"}
-                description={ticket.description}
-              />
-            ))}
+            {tickets.map((ticket, index) => {
+              return (
+                <Ticket
+                  key={index}
+                  taskId={ticket.id}
+                  title={ticket.title}
+                  status={ticket.status as "To-do" | "In Progress" | "Finished"}
+                  priority={ticket.priority as "Low" | "Mid" | "High"}
+                  description={ticket.description}
+                />
+              );
+            })}
           </div>
         </main>
       </div>

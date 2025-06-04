@@ -4,13 +4,18 @@ interface TicketPopUpProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  publishedDate: string;
-  storyPoints: number;
+  epic_id?: number;
+  type?: string;
+  estimated_deadline?: string;
+  real_deadline?: string;
+  estimatedHours?: number;
+  user_points?: number;
   status: "To-do" | "In Progress" | "Finished";
   priority: "Low" | "Mid" | "High";
   onStatusChange: (newStatus: "To-do" | "In Progress" | "Finished") => void;
   description: string;
   taskId?: number;
+  realHours?: number;
 }
 
 interface FetchedFile {
@@ -23,8 +28,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
   isOpen,
   onClose,
   title,
-  publishedDate,
-  storyPoints,
+  user_points,
   status,
   priority,
   description,
@@ -203,9 +207,8 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
           </div>
         )}
 
-        <p className="text-sm text-black mt-4">{publishedDate}</p>
         <p className="text-sm text-black mb-2">
-          <strong>Story Points: {storyPoints}</strong>
+          <strong>Story Points: {user_points}</strong>
         </p>
         <div className="mt-2">
           <label className="text-sm font-medium text-gray-700">Status:</label>

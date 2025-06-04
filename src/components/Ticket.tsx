@@ -2,37 +2,42 @@ import { useState } from "react";
 import PopUpTicket from "./PopUpTicket";
 
 interface TicketProps {
-  taskId?: number; // Optional, not currently used
-  title: string;
-  publishedDate: string;
-  status: "To-do" | "In Progress" | "Finished";
-  priority: "Low" | "Mid" | "High";
-  description: string;
-  isMain?: boolean; // Optional, only used in one place
-  estimatedTime?: string | null; // Optional, not used in current component
-  realHours?: string | null; // Optional, not used in current component
-  user?: {
-    points: number;
-  };
+  taskId: number;
+  isMain?: boolean;
+  title?: string;
+  description?: string;
+  epic_id?: number;
+  priority?: string;
+  status?: string;
+  type?: string;
+  estimated_deadline?: string;
+  real_deadline?: string;
+  user_points?: number;
+  estimatedHours?: number;
+  realHours?: number;
 }
 
 export default function Ticket({
   taskId,
   title,
-  publishedDate,
   status,
   priority,
   description,
   isMain,
+  epic_id,
+  type,
+  estimated_deadline,
+  real_deadline,
+  user_points,
+  estimatedHours,
+  realHours,
 }: TicketProps) {
-  // Colores condicionales para el estatus
   const statusColors = {
     "To-do": "bg-gray-200 text-gray-800",
     "In Progress": "bg-yellow-200 text-yellow-800",
     Finished: "bg-green-200 text-green-800",
   };
 
-  // Colores condicionales para la prioridad
   const priorityColors = {
     Low: "text-green-600",
     Mid: "text-orange-600",
@@ -40,8 +45,53 @@ export default function Ticket({
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [ticketStatus, setTicketStatus] = useState(status);
+  const jwtToken = sessionStorage.getItem("token");
+
+  async function updateTaskStatus(
+    newStatus: "To-do" | "In Progress" | "Finished"
+  ) {
+    if (!taskId) {
+      console.error("No taskId provided for status update");
+      return;
+    }
+
+    const updatedTask = {
+      title: title,
+      description: description,
+      epic_id: typeof epic_id === "number" ? epic_id : null,
+      priority: typeof priority === "string" ? priority : "Low",
+      status: status ?? "",
+      type: type,
+      estimated_deadline:
+        (estimated_deadline ?? estimated_deadline)?.split("T")[0] ?? "",
+      real_deadline: (real_deadline ?? real_deadline)?.split("T")[0] ?? "",
+      user_points: user_points ?? user_points,
+      estimatedHours: estimatedHours,
+      realHours: realHours,
+    };
+
+    try {
+      const response = await fetch(`/api/tasks/tasks/update-task/${taskId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedTask),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error updating status:", response.status, errorText);
+        return;
+      }
+
+      setTicketStatus(newStatus);
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  }
 
   return (
     <div
@@ -58,13 +108,10 @@ export default function Ticket({
       />
 
       <div className="flex-1">
-        {/* Título */}
         <div className="flex justify-between">
           <h3 className="text-xl font-medium text-black">{title}</h3>
         </div>
-        {/* Etiquetas de estatus, fecha y prioridad */}
         <div className="mt-2 flex gap-3">
-          <span className="text-gray-500 text-sm">{publishedDate}</span>
           <span
             className={`px-3 text-sm rounded-full ${statusColors[ticketStatus]}`}
           >
@@ -75,7 +122,6 @@ export default function Ticket({
           </span>
         </div>
 
-        {/* Descripción */}
         <p className="text-gray-500">{description}</p>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -88,17 +134,27 @@ export default function Ticket({
         >
           Details
         </button>
+
         <PopUpTicket
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title={title}
-          publishedDate={publishedDate}
-          storyPoints={100}
-          status={ticketStatus}
-          priority={priority}
-          description={description}
+          title={title ?? ""}
+          status={
+            (ticketStatus ?? "To-do") as "To-do" | "In Progress" | "Finished"
+          }
+          priority={(priority ?? "Low") as "Low" | "Mid" | "High"}
+          description={description ?? ""}
           taskId={taskId}
-          onStatusChange={(newStatus) => setTicketStatus(newStatus)}
+          onStatusChange={(newStatus) => {
+            updateTaskStatus(newStatus);
+          }}
+          epic_id={epic_id}
+          type={type ?? ""}
+          estimated_deadline={estimated_deadline ?? ""}
+          real_deadline={real_deadline ?? ""}
+          user_points={user_points ?? 0}
+          estimatedHours={estimatedHours ?? 0}
+          realHours={realHours ?? 0}
         />
       </div>
     </div>
