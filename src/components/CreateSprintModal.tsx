@@ -9,7 +9,6 @@ export default function SprintModal() {
     endDate: "",
   });
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState(null);
   const [error, setError] = useState<string | null>(null);
 
   const jwtToken = sessionStorage.getItem("token");
@@ -28,7 +27,6 @@ export default function SprintModal() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setResponse(null);
 
     const payload = {
       ...sprintData,
@@ -54,7 +52,6 @@ export default function SprintModal() {
 
       if (!res.ok) throw new Error(data.message || "Error al crear el sprint");
 
-      setResponse(data);
       alert("Sprint creado exitosamente");
       setIsOpen(false); // Cierra el modal
     } catch (err) {
@@ -109,7 +106,11 @@ export default function SprintModal() {
                 <input
                   type="date"
                   name="startDate"
-                  value={sprintData.startDate.slice(0, 16)}
+                  value={
+                    sprintData.startDate
+                      ? sprintData.startDate.slice(0, 10)
+                      : ""
+                  }
                   onChange={handleChange}
                   className="mt-1 block w-full p-2 border-2 text-black rounded-xl"
                 />
@@ -121,7 +122,9 @@ export default function SprintModal() {
                 <input
                   type="date"
                   name="endDate"
-                  value={sprintData.endDate.slice(0, 16)}
+                  value={
+                    sprintData.endDate ? sprintData.endDate.slice(0, 10) : ""
+                  }
                   onChange={handleChange}
                   className="mt-1 block w-full p-2 border-2 text-black rounded-xl"
                 />

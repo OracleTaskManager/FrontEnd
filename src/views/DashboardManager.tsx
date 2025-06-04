@@ -10,7 +10,6 @@ import AssignTaskToUser from "../components/AssignTaskToUser";
 import EditTaskModal from "../components/EditTaskModal";
 import CreateEpicForm from "../components/CreateEpicForm";
 import SprintModal from "../components/CreateSprintModal";
-import ShowAllSprints from "../components/ShowAllSprints";
 
 interface Ticketx {
   taskId: number;
