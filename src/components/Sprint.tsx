@@ -5,6 +5,16 @@ interface SprintProps {
   name: string;
   startDate: string;
   endDate: string;
+  onDelete?: (sprintId: number) => void;
+}
+
+function formatForDatetimeLocal(isoString: string): string {
+  const date = new Date(isoString);
+  const offset = date.getTimezoneOffset() * 60000; // Ajuste a la zona local
+  const localISOTime = new Date(date.getTime() - offset)
+    .toISOString()
+    .slice(0, 16); // Recorta a "YYYY-MM-DDTHH:MM"
+  return localISOTime;
 }
 
 export default function Sprint({
@@ -12,6 +22,7 @@ export default function Sprint({
   name,
   startDate,
   endDate,
+  onDelete,
 }: SprintProps) {
   const jwtToken = sessionStorage.getItem("token");
 
@@ -29,8 +40,8 @@ export default function Sprint({
   useEffect(() => {
     setFormData({
       name: name ?? "",
-      startDate: startDate ?? "",
-      endDate: endDate ?? "",
+      startDate: startDate ? formatForDatetimeLocal(startDate) : "",
+      endDate: endDate ? formatForDatetimeLocal(endDate) : "",
     });
   }, [name, startDate, endDate]);
 
@@ -123,6 +134,46 @@ export default function Sprint({
     }
   };
 
+  const handleDelete = async () => {
+    if (!sprintId) {
+      console.error("No se proporcionó sprintId");
+      return;
+    }
+
+    const confirmDelete = confirm(
+      `¿Estás seguro de eliminar el sprint "${name}"?`
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`/api/tasks/sprints/?sprintId=${sprintId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error(
+          "Error al eliminar el sprint (status:",
+          response.status,
+          "):",
+          text
+        );
+        return;
+      }
+
+      alert("Sprint eliminado exitosamente");
+      if (onDelete && sprintId) {
+        onDelete(sprintId); // Notifica al padre
+      }
+    } catch (error) {
+      console.error("Error al eliminar sprint:", error);
+    }
+  };
+
   return (
     <div className="border rounded-lg p-4 flex flex-col gap-2 bg-gray-50">
       <p className="text-sm text-gray-500">Sprint ID: {sprintId}</p>
@@ -170,13 +221,24 @@ export default function Sprint({
       ) : (
         <div>
           <h2 className="text-black text-lg font-semibold">{name}</h2>
-          <p className="text-black">StartDate: {startDate}</p>
-          <p className="text-black">EndDate: {endDate}</p>
+          <p className="text-black">
+            StartDate: {new Date(startDate).toLocaleString()}
+          </p>
+          <p className="text-black">
+            EndDate: {new Date(endDate).toLocaleString()}
+          </p>
+
           <button
             onClick={handleEditClick}
             className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Edit
+          </button>
+          <button
+            onClick={handleDelete}
+            className="mt-2 ml-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          >
+            Eliminar
           </button>
         </div>
       )}

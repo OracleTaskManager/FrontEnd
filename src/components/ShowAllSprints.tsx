@@ -22,16 +22,27 @@ const ShowAllSprints: React.FC = () => {
             "Content-Type": "application/json",
           },
         });
+
         if (!response.ok) {
           throw new Error("Failed to fetch tickets");
         }
 
         const data = await response.json();
-        setSprints(data);
+
+        // 🛠️ Normaliza las claves snake_case -> camelCase
+        const normalized = data.map((sprint: any) => ({
+          sprintId: sprint.sprintId,
+          name: sprint.name,
+          startDate: sprint.start_date,
+          endDate: sprint.end_date,
+        }));
+
+        setSprints(normalized);
       } catch (error) {
         console.error("Error fetching tickets:", error);
       }
     };
+
     fetchSprints();
   }, []);
 
@@ -44,6 +55,11 @@ const ShowAllSprints: React.FC = () => {
           startDate={sprint.startDate}
           endDate={sprint.endDate}
           sprintId={sprint.sprintId}
+          onDelete={(id) => {
+            setSprints((prevSprints) =>
+              prevSprints.filter((s) => s.sprintId !== id)
+            );
+          }}
         />
       ))}
     </div>

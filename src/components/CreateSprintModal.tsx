@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ShowAllSprints from "./ShowAllSprints";
 
 export default function SprintModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,19 +74,21 @@ export default function SprintModal() {
         onClick={() => setIsOpen(true)}
         className="px-4 py-2 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700"
       >
-        New Sprint
+        Sprints
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent ">
-          <div className="bg-white p-6 rounded-2xl shadow-xl max-w-md w-full relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent h-screen">
+          <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setIsOpen(false)}
               className="absolute top-3 right-4 text-gray-500 hover:text-black text-xl font-bold"
             >
               &times;
             </button>
-            <h2 className="text-2xl font-bold mb-4 text-black">Crear Sprint</h2>
+            <h2 className="text-2xl font-bold mb-4 text-black">
+              Create Sprint
+            </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-black">
@@ -136,6 +139,7 @@ export default function SprintModal() {
                 Error: {error}
               </div>
             )}
+            <ShowAllSprints />
           </div>
         </div>
       )}
