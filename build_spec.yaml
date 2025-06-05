@@ -138,6 +138,18 @@ steps:
         echo "✅ Default nginx.conf created"
       fi
       
+      echo "Updating .dockerignore to allow dist directory..."
+      # Crear una copia del .dockerignore original
+      cp .dockerignore .dockerignore.backup 2>/dev/null || true
+      
+      # Remover 'dist' del .dockerignore temporalmente
+      if [ -f ".dockerignore" ]; then
+        grep -v "^dist$" .dockerignore > .dockerignore.tmp || true
+        mv .dockerignore.tmp .dockerignore
+        echo "📋 Updated .dockerignore:"
+        cat .dockerignore
+      fi
+      
       echo "Creating optimized production Dockerfile..."
       cat > Dockerfile << 'EOF'
       FROM nginx:alpine
@@ -184,6 +196,12 @@ steps:
       # Exportar variables para el deployment pipeline
       export IMAGE_FULL_NAME="${IMAGE_TAG}"
       export VERSION="${VERSION}"
+      
+      # Restaurar .dockerignore original si existe backup
+      if [ -f ".dockerignore.backup" ]; then
+        mv .dockerignore.backup .dockerignore
+        echo "📋 Restored original .dockerignore"
+      fi
       
       echo "============================================"
       echo "✅ FRONTEND SERVICE BUILD COMPLETED!"
