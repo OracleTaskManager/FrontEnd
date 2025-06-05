@@ -1,0 +1,187 @@
+version: 0.1
+component: build
+timeoutInSeconds: 1200
+shell: bash
+
+env:
+  variables:
+    REGISTRY: "mx-queretaro-1.ocir.io"
+    NAMESPACE: "axfvmmw9g9lu"
+    REPOSITORY: "taskmanager"
+    IMAGE_NAME: "frontend-service"
+
+  exportedVariables:
+    - IMAGE_FULL_NAME
+    - VERSION
+
+steps:
+  - type: Command
+    name: "Install Node.js 18"
+    timeoutInSeconds: 600
+    command: |
+      echo "🔧 Installing Node.js 18..."
+      
+      # Descargar e instalar Node.js 18
+      curl -fsSL https://nodejs.org/dist/v18.20.4/node-v18.20.4-linux-x64.tar.xz -o node-v18.tar.xz
+      
+      if [ -f "node-v18.tar.xz" ]; then
+        echo "✅ Node.js 18 downloaded successfully"
+        tar -xf node-v18.tar.xz -C /opt/
+        NODE_DIR=$(find /opt -maxdepth 1 -name "node-v18*" -type d | head -1)
+        if [ ! -z "$NODE_DIR" ]; then
+          ln -sf "$NODE_DIR" /opt/node18
+          echo "✅ Node.js 18 installed: $NODE_DIR"
+        else
+          echo "❌ Node.js extraction failed!"
+          exit 1
+        fi
+      else
+        echo "❌ Node.js download failed!"
+        exit 1
+      fi
+      
+      echo "✅ Node.js 18 installation completed"
+
+  - type: Command
+    name: "Build Frontend Application"
+    timeoutInSeconds: 900
+    command: |
+      # Configurar Node.js 18
+      export PATH=/opt/node18/bin:$PATH
+      
+      echo "🟢 Verifying Node.js 18 installation:"
+      node --version
+      npm --version
+      
+      echo "📦 Installing dependencies..."
+      npm install --legacy-peer-deps
+      
+      if [ $? -ne 0 ]; then
+        echo "❌ npm install failed!"
+        exit 1
+      fi
+      
+      echo "🚀 Building frontend application..."
+      npm run build
+      
+      if [ $? -ne 0 ]; then
+        echo "❌ Frontend build failed!"
+        exit 1
+      fi
+      
+      echo "📋 Build completed, checking results:"
+      ls -la dist/
+      
+      # Verificar que el build se generó correctamente
+      if [ ! -d "dist" ]; then
+        echo "❌ Expected dist/ directory not found!"
+        echo "📋 Searching for alternative build directories:"
+        ls -la
+        exit 1
+      fi
+      
+      DIST_SIZE=$(du -sh dist/ | cut -f1)
+      echo "📦 Build size: $DIST_SIZE"
+      
+      echo "✅ Frontend build successful!"
+
+  - type: Command
+    name: "Prepare Docker build"
+    timeoutInSeconds: 120
+    command: |
+      echo "📦 Preparing Docker build context..."
+      
+      echo "Build directory contents:"
+      ls -la
+      
+      echo "Dist directory contents:"
+      ls -la dist/
+      
+      echo "Verifying nginx.conf exists..."
+      if [ ! -f "nginx.conf" ]; then
+        echo "⚠️ nginx.conf not found, creating default configuration..."
+        cat > nginx.conf << 'EOF'
+      server {
+          listen 80;
+          server_name localhost;
+          root /usr/share/nginx/html;
+          index index.html;
+          
+          location / {
+              try_files $uri $uri/ /index.html;
+          }
+          
+          # Gzip compression
+          gzip on;
+          gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+      }
+      EOF
+        echo "✅ Default nginx.conf created"
+      fi
+      
+      echo "Creating optimized Dockerfile..."
+      cat > Dockerfile << 'EOF'
+      FROM --platform=linux/amd64 node:18 AS build
+      
+      WORKDIR /FrontEnd-Oracle
+      
+      COPY package*.json ./
+      RUN npm install --legacy-peer-deps
+      
+      COPY . .
+      RUN npm run build
+      
+      FROM --platform=linux/amd64 nginx:alpine
+      
+      COPY --from=build /FrontEnd-Oracle/dist /usr/share/nginx/html
+      
+      COPY nginx.conf /etc/nginx/conf.d/default.conf
+      
+      EXPOSE 80
+      
+      CMD ["nginx", "-g", "daemon off;"]
+      EOF
+      
+      echo "✅ Docker build context prepared (Frontend with Nginx)"
+
+  - type: Command
+    name: "Build Docker image"
+    timeoutInSeconds: 900
+    command: |
+      # Generar versión
+      VERSION="$(date +'%Y%m%d-%H%M%S')"
+      if [ -d ".git" ]; then
+        COMMIT_SHORT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+        VERSION="${VERSION}-${COMMIT_SHORT}"
+      fi
+      
+      IMAGE_TAG="${REGISTRY}/${NAMESPACE}/${REPOSITORY}/${IMAGE_NAME}:${VERSION}"
+      LATEST_TAG="${REGISTRY}/${NAMESPACE}/${REPOSITORY}/${IMAGE_NAME}:latest"
+      
+      echo "🐳 Building Docker image: ${IMAGE_TAG}"
+      
+      echo "🚀 Building Docker image..."
+      docker build --no-cache -t "${IMAGE_TAG}" -t "${LATEST_TAG}" .
+      
+      if [ $? -ne 0 ]; then
+        echo "❌ Docker build failed!"
+        exit 1
+      fi
+      
+      echo "✅ Docker image built successfully!"
+            
+      # Exportar variables para el deployment pipeline
+      export IMAGE_FULL_NAME="${IMAGE_TAG}"
+      export VERSION="${VERSION}"
+      
+      echo "============================================"
+      echo "✅ FRONTEND SERVICE BUILD COMPLETED!"
+      echo "📦 Image: ${IMAGE_FULL_NAME}"
+      echo "🏷️ Version: ${VERSION}"
+      echo "📤 Registry: ${REGISTRY}/${NAMESPACE}/${REPOSITORY}/${IMAGE_NAME}"
+      echo "============================================"
+
+outputArtifacts:
+  - name: frontend-service-image
+    type: DOCKER_IMAGE
+    location: ${IMAGE_FULL_NAME}
