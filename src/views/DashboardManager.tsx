@@ -246,7 +246,7 @@ function DashboardManager() {
                     taskId={ticket.id}
                     epic_id={ticket.epic_id}
                     title={ticket.title}
-                    status={ticket.status as "ToDo" | "In Progress" | "Done"}
+                    status={ticket.status}
                     priority={ticket.priority}
                     description={ticket.description}
                   />

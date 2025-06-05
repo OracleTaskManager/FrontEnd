@@ -10,9 +10,9 @@ interface TicketPopUpProps {
   real_deadline?: string;
   estimatedHours?: number;
   user_points?: number;
-  status: "ToDo" | "In Progress" | "Done";
+  status: "ToDo" | "InProgress" | "Done";
   priority: "Low" | "Medium" | "High";
-  onStatusChange: (newStatus: "ToDo" | "In Progress" | "Done") => void;
+  onStatusChange: (newStatus: "ToDo" | "InProgress" | "Done") => void;
   description: string;
   taskId?: number;
   realHours?: number;
@@ -64,7 +64,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
 
   const statusColors = {
     ToDo: "bg-gray-200 text-gray-800",
-    "In Progress": "bg-yellow-200 text-yellow-800",
+    InProgress: "bg-yellow-200 text-yellow-800",
     Done: "bg-green-200 text-green-800",
   };
 
@@ -217,7 +217,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
             onChange={(e) => {
               const newStatus = e.target.value as
                 | "ToDo"
-                | "In Progress"
+                | "InProgress"
                 | "Done";
               setCurrentStatus(newStatus);
               onStatusChange(newStatus);
@@ -226,7 +226,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
             style={{ backgroundColor: "white", color: "black" }}
           >
             <option value="ToDo">ToDo</option>
-            <option value="In Progress">In Progress</option>
+            <option value="InProgress">In Progress</option>
             <option value="Done">Done</option>
           </select>
         </div>
