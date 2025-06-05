@@ -60,25 +60,39 @@ steps:
         exit 1
       fi
       
-      # Ejecutar el build y extraer el resultado
-      docker run --rm -v "$(pwd)/build-output:/output" frontend-builder sh -c "cp -r /app/dist /output/"
+      # Ejecutar el build y extraer el resultado usando docker cp
+      echo "📦 Extracting build output..."
+      
+      # Crear un contenedor temporal para extraer archivos
+      CONTAINER_ID=$(docker create frontend-builder)
+      
+      if [ -z "$CONTAINER_ID" ]; then
+        echo "❌ Failed to create container!"
+        exit 1
+      fi
+      
+      echo "📋 Container created: $CONTAINER_ID"
+      
+      # Copiar el directorio dist desde el contenedor
+      docker cp "$CONTAINER_ID:/app/dist" ./dist
       
       if [ $? -ne 0 ]; then
         echo "❌ Failed to extract build output!"
+        docker rm "$CONTAINER_ID"
         exit 1
       fi
+      
+      # Limpiar el contenedor temporal
+      docker rm "$CONTAINER_ID"
       
       echo "📋 Build completed, checking results:"
-      ls -la build-output/
+      ls -la dist/
       
       # Verificar que el build se generó correctamente
-      if [ ! -d "build-output/dist" ]; then
-        echo "❌ Expected build-output/dist/ directory not found!"
+      if [ ! -d "dist" ]; then
+        echo "❌ Expected dist/ directory not found!"
         exit 1
       fi
-      
-      # Mover dist al lugar correcto
-      mv build-output/dist ./dist
       
       DIST_SIZE=$(du -sh dist/ | cut -f1)
       echo "📦 Build size: $DIST_SIZE"
@@ -87,7 +101,6 @@ steps:
       
       # Limpiar archivos temporales
       rm -f Dockerfile.build
-      rm -rf build-output
       
       echo "✅ Frontend build successful using Docker!"
 
