@@ -16,115 +16,80 @@ env:
 
 steps:
   - type: Command
-    name: "Install Node.js 18 via NVM"
-    timeoutInSeconds: 600
-    command: |
-      echo "🔧 Installing Node.js 18 via NVM (compatible with older GLIBC)..."
-      
-      # Verificar versión del sistema
-      echo "📋 System info:"
-      cat /etc/os-release 2>/dev/null || echo "OS info not available"
-      ldd --version 2>/dev/null || echo "GLIBC info not available"
-      
-      # Instalar NVM
-      echo "📦 Installing NVM..."
-      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-      
-      # Cargar NVM
-      export NVM_DIR="$HOME/.nvm"
-      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-      
-      if ! command -v nvm &> /dev/null; then
-        echo "⚠️ NVM installation failed, trying alternative approach..."
-        
-        # Alternativa: usar Node.js precompilado más compatible
-        echo "🔄 Trying Node.js 16 (better GLIBC compatibility)..."
-        curl -fsSL https://nodejs.org/dist/v16.20.2/node-v16.20.2-linux-x64.tar.xz -o node-v16.tar.xz
-        
-        if [ -f "node-v16.tar.xz" ]; then
-          tar -xf node-v16.tar.xz -C /opt/
-          NODE_DIR=$(find /opt -maxdepth 1 -name "node-v16*" -type d | head -1)
-          if [ ! -z "$NODE_DIR" ]; then
-            ln -sf "$NODE_DIR" /opt/node
-            export PATH=/opt/node/bin:$PATH
-            echo "✅ Node.js 16 installed as fallback: $NODE_DIR"
-          else
-            echo "❌ Node.js extraction failed!"
-            exit 1
-          fi
-        else
-          echo "❌ Node.js download failed!"
-          exit 1
-        fi
-      else
-        echo "✅ NVM installed successfully"
-        
-        # Instalar Node.js 18 via NVM
-        echo "📦 Installing Node.js 18..."
-        nvm install 18
-        nvm use 18
-        nvm alias default 18
-      fi
-      
-      echo "✅ Node.js installation completed"
-
-  - type: Command
-    name: "Build Frontend Application"
+    name: "Use Docker for Node.js Build"
     timeoutInSeconds: 900
     command: |
-      # Cargar NVM si está disponible
-      export NVM_DIR="$HOME/.nvm"
-      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+      echo "🐳 Building frontend using Docker (bypassing GLIBC issues)..."
       
-      # Si NVM está disponible, usar Node 18, sino usar el PATH configurado
-      if command -v nvm &> /dev/null; then
-        nvm use 18
-      else
-        export PATH=/opt/node/bin:$PATH
-      fi
+      echo "📋 System info:"
+      cat /etc/os-release 2>/dev/null || echo "OS info not available"
+      docker --version
       
-      echo "🟢 Verifying Node.js installation:"
-      node --version
-      npm --version
+      echo "Creating temporary Dockerfile for build..."
+      cat > Dockerfile.build << 'EOF'
+      FROM node:20.12.1-alpine
       
-      if ! command -v node &> /dev/null; then
-        echo "❌ Node.js not found in PATH!"
+      WORKDIR /app
+      
+      # Copiar package files
+      COPY package*.json ./
+      
+      # Instalar dependencias
+      RUN npm install --legacy-peer-deps
+      
+      # Copiar código fuente
+      COPY . .
+      
+      # Build de la aplicación
+      RUN npm run build
+      
+      # Comando para copiar el resultado
+      CMD ["cp", "-r", "/app/dist", "/output/"]
+      EOF
+      
+      echo "🚀 Building with Docker..."
+      
+      # Crear directorio para output
+      mkdir -p ./build-output
+      
+      # Build de la imagen temporal
+      docker build -f Dockerfile.build -t frontend-builder .
+      
+      if [ $? -ne 0 ]; then
+        echo "❌ Docker build failed!"
         exit 1
       fi
       
-      echo "📦 Installing dependencies..."
-      npm install --legacy-peer-deps
+      # Ejecutar el build y extraer el resultado
+      docker run --rm -v "$(pwd)/build-output:/output" frontend-builder sh -c "cp -r /app/dist /output/"
       
       if [ $? -ne 0 ]; then
-        echo "❌ npm install failed!"
-        exit 1
-      fi
-      
-      echo "🚀 Building frontend application..."
-      npm run build
-      
-      if [ $? -ne 0 ]; then
-        echo "❌ Frontend build failed!"
+        echo "❌ Failed to extract build output!"
         exit 1
       fi
       
       echo "📋 Build completed, checking results:"
-      ls -la dist/
+      ls -la build-output/
       
       # Verificar que el build se generó correctamente
-      if [ ! -d "dist" ]; then
-        echo "❌ Expected dist/ directory not found!"
-        echo "📋 Searching for alternative build directories:"
-        ls -la
+      if [ ! -d "build-output/dist" ]; then
+        echo "❌ Expected build-output/dist/ directory not found!"
         exit 1
       fi
       
+      # Mover dist al lugar correcto
+      mv build-output/dist ./dist
+      
       DIST_SIZE=$(du -sh dist/ | cut -f1)
       echo "📦 Build size: $DIST_SIZE"
+      echo "📋 Dist contents:"
+      ls -la dist/
       
-      echo "✅ Frontend build successful!"
+      # Limpiar archivos temporales
+      rm -f Dockerfile.build
+      rm -rf build-output
+      
+      echo "✅ Frontend build successful using Docker!"
 
   - type: Command
     name: "Prepare Docker build"
@@ -160,22 +125,14 @@ steps:
         echo "✅ Default nginx.conf created"
       fi
       
-      echo "Creating optimized Dockerfile..."
+      echo "Creating optimized production Dockerfile..."
       cat > Dockerfile << 'EOF'
-      FROM --platform=linux/amd64 node:18 AS build
+      FROM nginx:alpine
       
-      WORKDIR /FrontEnd-Oracle
+      # Copiar archivos build al nginx
+      COPY dist/ /usr/share/nginx/html/
       
-      COPY package*.json ./
-      RUN npm install --legacy-peer-deps
-      
-      COPY . .
-      RUN npm run build
-      
-      FROM --platform=linux/amd64 nginx:alpine
-      
-      COPY --from=build /FrontEnd-Oracle/dist /usr/share/nginx/html
-      
+      # Copiar configuración de nginx si existe
       COPY nginx.conf /etc/nginx/conf.d/default.conf
       
       EXPOSE 80
