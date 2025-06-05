@@ -112,6 +112,8 @@ export default function Ticket({
         <div className="flex justify-between">
           <h3 className="text-xl font-medium text-black">{title}</h3>
         </div>
+        <p className="text-black">Task id: {taskId}</p>
+        <p className="text-black">Epic id: {epic_id}</p>
         <div className="mt-2 flex gap-3">
           <span
             className={`px-3 text-sm rounded-full ${statusColors[ticketStatus]}`}
@@ -141,7 +143,7 @@ export default function Ticket({
           onClose={() => setIsModalOpen(false)}
           title={title ?? ""}
           status={(ticketStatus ?? "ToDo") as "ToDo" | "In Progress" | "Done"}
-          priority={(priority ?? "Low") as "Low" | "Medium" | "High"}
+          priority={priority}
           description={description ?? ""}
           taskId={taskId}
           onStatusChange={(newStatus) => {

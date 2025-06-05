@@ -224,7 +224,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                 </option>
                 <option value="ToDo">To-do</option>
                 <option value="InProgress">In Progress</option>
-                <option value="Done">Finished</option>
+                <option value="Done">Done</option>
               </select>
             </div>
 

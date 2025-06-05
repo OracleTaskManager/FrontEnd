@@ -15,6 +15,7 @@ export interface Ticketx {
   id: number;
   title: string;
   description: string;
+  epic_id?: number;
   priority: "Low" | "Medium" | "High";
   status: "ToDo" | "InProgress" | "Done";
   estimated_deadline: string;
@@ -127,6 +128,8 @@ function DashboardManager() {
       if (!response.ok) throw new Error("Failed to fetch all tasks");
 
       const data = await response.json();
+
+      //Obtener el taskId y convertirlo en id para que se despliegue en el front
       setTickets(data);
     } catch (error) {
       console.error("Error fetching all tasks:", error);
@@ -241,6 +244,7 @@ function DashboardManager() {
                   <Ticket
                     key={index}
                     taskId={ticket.id}
+                    epic_id={ticket.epic_id}
                     title={ticket.title}
                     status={ticket.status as "ToDo" | "In Progress" | "Done"}
                     priority={ticket.priority}
