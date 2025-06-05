@@ -208,7 +208,7 @@ steps:
       echo "📦 Image: ${IMAGE_FULL_NAME}"
       echo "🏷️ Version: ${VERSION}"
       echo "📤 Registry: ${REGISTRY}/${NAMESPACE}/${REPOSITORY}/${IMAGE_NAME}"
-      echo "============================================"
+      echo "=============================================="
 
 outputArtifacts:
   - name: frontend-service-image
