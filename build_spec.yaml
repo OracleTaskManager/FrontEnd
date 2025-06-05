@@ -16,42 +16,83 @@ env:
 
 steps:
   - type: Command
-    name: "Install Node.js 18"
+    name: "Install Node.js 18 via NVM"
     timeoutInSeconds: 600
     command: |
-      echo "🔧 Installing Node.js 18..."
+      echo "🔧 Installing Node.js 18 via NVM (compatible with older GLIBC)..."
       
-      # Descargar e instalar Node.js 18
-      curl -fsSL https://nodejs.org/dist/v18.20.4/node-v18.20.4-linux-x64.tar.xz -o node-v18.tar.xz
+      # Verificar versión del sistema
+      echo "📋 System info:"
+      cat /etc/os-release 2>/dev/null || echo "OS info not available"
+      ldd --version 2>/dev/null || echo "GLIBC info not available"
       
-      if [ -f "node-v18.tar.xz" ]; then
-        echo "✅ Node.js 18 downloaded successfully"
-        tar -xf node-v18.tar.xz -C /opt/
-        NODE_DIR=$(find /opt -maxdepth 1 -name "node-v18*" -type d | head -1)
-        if [ ! -z "$NODE_DIR" ]; then
-          ln -sf "$NODE_DIR" /opt/node18
-          echo "✅ Node.js 18 installed: $NODE_DIR"
+      # Instalar NVM
+      echo "📦 Installing NVM..."
+      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+      
+      # Cargar NVM
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+      
+      if ! command -v nvm &> /dev/null; then
+        echo "⚠️ NVM installation failed, trying alternative approach..."
+        
+        # Alternativa: usar Node.js precompilado más compatible
+        echo "🔄 Trying Node.js 16 (better GLIBC compatibility)..."
+        curl -fsSL https://nodejs.org/dist/v16.20.2/node-v16.20.2-linux-x64.tar.xz -o node-v16.tar.xz
+        
+        if [ -f "node-v16.tar.xz" ]; then
+          tar -xf node-v16.tar.xz -C /opt/
+          NODE_DIR=$(find /opt -maxdepth 1 -name "node-v16*" -type d | head -1)
+          if [ ! -z "$NODE_DIR" ]; then
+            ln -sf "$NODE_DIR" /opt/node
+            export PATH=/opt/node/bin:$PATH
+            echo "✅ Node.js 16 installed as fallback: $NODE_DIR"
+          else
+            echo "❌ Node.js extraction failed!"
+            exit 1
+          fi
         else
-          echo "❌ Node.js extraction failed!"
+          echo "❌ Node.js download failed!"
           exit 1
         fi
       else
-        echo "❌ Node.js download failed!"
-        exit 1
+        echo "✅ NVM installed successfully"
+        
+        # Instalar Node.js 18 via NVM
+        echo "📦 Installing Node.js 18..."
+        nvm install 18
+        nvm use 18
+        nvm alias default 18
       fi
       
-      echo "✅ Node.js 18 installation completed"
+      echo "✅ Node.js installation completed"
 
   - type: Command
     name: "Build Frontend Application"
     timeoutInSeconds: 900
     command: |
-      # Configurar Node.js 18
-      export PATH=/opt/node18/bin:$PATH
+      # Cargar NVM si está disponible
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
       
-      echo "🟢 Verifying Node.js 18 installation:"
+      # Si NVM está disponible, usar Node 18, sino usar el PATH configurado
+      if command -v nvm &> /dev/null; then
+        nvm use 18
+      else
+        export PATH=/opt/node/bin:$PATH
+      fi
+      
+      echo "🟢 Verifying Node.js installation:"
       node --version
       npm --version
+      
+      if ! command -v node &> /dev/null; then
+        echo "❌ Node.js not found in PATH!"
+        exit 1
+      fi
       
       echo "📦 Installing dependencies..."
       npm install --legacy-peer-deps
