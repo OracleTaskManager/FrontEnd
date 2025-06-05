@@ -10,6 +10,7 @@ import AssignTaskToUser from "../components/AssignTaskToUser";
 import EditTaskModal from "../components/EditTaskModal";
 import CreateEpicForm from "../components/CreateEpicForm";
 import SprintModal from "../components/CreateSprintModal";
+import { UNSAFE_createClientRoutesWithHMRRevalidationOptOut } from "react-router-dom";
 
 export interface Ticketx {
   id: number;
@@ -110,6 +111,7 @@ function DashboardManager() {
       if (!response.ok) throw new Error("Failed to fetch my tasks");
 
       const data = await response.json();
+      console.log(data);
       setTickets(data);
     } catch (error) {
       console.error("Error fetching my tasks:", error);
@@ -128,9 +130,12 @@ function DashboardManager() {
       if (!response.ok) throw new Error("Failed to fetch all tasks");
 
       const data = await response.json();
-
       //Obtener el taskId y convertirlo en id para que se despliegue en el front
-      setTickets(data);
+      const transformedData = data.map((task: any) => ({
+        ...task,
+        id: task.taskId,
+      }));
+      setTickets(transformedData);
     } catch (error) {
       console.error("Error fetching all tasks:", error);
     }

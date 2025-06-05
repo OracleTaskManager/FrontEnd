@@ -141,6 +141,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         <div className="flex gap-2 mb-4">
           <input
             type="number"
+            min={0}
             value={taskId}
             onChange={(e) =>
               setTaskId(e.target.value === "" ? "" : +e.target.value)
@@ -162,7 +163,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                 name="title"
                 value={formData.title ?? ""}
                 onChange={handleChange}
-                placeholder="Título"
+                placeholder="Title"
                 className="input input-bordered rounded border-1 w-full"
                 required
               />
@@ -173,7 +174,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
                 name="description"
                 value={formData.description ?? ""}
                 onChange={handleChange}
-                placeholder="Descripción"
+                placeholder="Description"
                 className="textarea textarea-bordered rounded border-1 w-full"
                 rows={3}
                 required
@@ -183,6 +184,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
               <label>EpicId</label>
               <input
                 name="epicId"
+                min="1"
                 type="number"
                 value={
                   formData.epicId !== undefined && formData.epicId !== null
@@ -271,6 +273,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
               <input
                 name="user_points"
                 type="number"
+                min="1"
                 value={formData.user_points ?? ""}
                 onChange={handleChange}
                 placeholder="User Points"
@@ -282,6 +285,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
               <input
                 name="estimatedHours"
                 type="number"
+                min="1"
                 value={formData.estimatedHours ?? ""}
                 onChange={handleChange}
                 placeholder="Estimated Hours"
@@ -293,6 +297,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
               <input
                 name="realHours"
                 type="number"
+                min="1"
                 value={formData.realHours ?? ""}
                 onChange={handleChange}
                 placeholder="Real Hours"
