@@ -18,9 +18,16 @@ interface TicketPopUpProps {
   realHours?: number;
 }
 
+interface RawFetchedFile {
+  attachmentId: number;
+  fileUrl: string;
+  taskId: number;
+  uploadedBy: number;
+}
+
 interface FetchedFile {
-  name: string;
   url: string;
+  name: string;
   type: string;
 }
 
@@ -43,13 +50,8 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
   const jwtToken = sessionStorage.getItem("token");
 
   useEffect(() => {
-    console.log("useEffect triggered. isOpen:", isOpen, "taskId:", taskId);
     if (isOpen) {
-      console.log(
-        "Fetching files from:",
-        `/api/files/attachments/?taskId=${taskId}`
-      );
-      fetch(`/api/files/attachments/?taskId=${taskId}`, {
+      fetch(`/api/files/attachments/${taskId}`, {
         method: "GET",
         headers: {
           Authorization: `${jwtToken}`,
@@ -60,29 +62,35 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
           if (!res.ok) throw new Error("Failed to fetch attachments");
           return res.json();
         })
-        .then((data) => {
-          console.log("Fetched data:", data);
-          const transformedFiles = data.map((file: any) => {
-            const fileUrl = file.file_url;
-            const fileName = fileUrl.split("/").pop() || "attachment";
-            const extension = fileName.split(".").pop()?.toLowerCase() || "";
+        .then((data: RawFetchedFile[]) => {
+          const transformedFiles: FetchedFile[] = data
+            .map((file, index) => {
+              const fileUrl = file.fileUrl;
+              if (!fileUrl) {
+                console.warn(`Archivo sin URL en el índice ${index}`, file);
+                return null;
+              }
 
-            // Deducción rápida del tipo MIME básico
-            const type = extension.match(/(png|jpeg|gif|bmp|webp)/)
-              ? `image/${extension === "jpg" ? "jpeg" : extension}`
-              : extension.match(/(mp4|mov|avi|webm)/)
-              ? `video/${extension}`
-              : "application/octet-stream";
+              const fileName = fileUrl.split("/").pop() || "attachment";
+              const extension = fileName.split(".").pop()?.toLowerCase() || "";
 
-            return {
-              url: fileUrl,
-              name: fileName,
-              type: type,
-            };
-          });
-          console.log("Transformed files:", transformedFiles);
+              const type = extension.match(/(png|jpeg|jpg|gif|bmp|webp)/)
+                ? `image/${extension === "jpg" ? "jpeg" : extension}`
+                : extension.match(/(mp4|mov|avi|webm)/)
+                ? `video/${extension}`
+                : "application/octet-stream";
+
+              return {
+                url: fileUrl,
+                name: fileName,
+                type: type,
+              };
+            })
+            .filter((file): file is FetchedFile => file !== null);
+
           setFetchedFiles(transformedFiles);
         })
+
         .catch((error) => {
           console.error("Error fetching attachments:", error);
         });
