@@ -33,20 +33,55 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
   priority,
   description,
   onStatusChange,
-  // taskId,
+  taskId,
 }) => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [fetchedFiles, setFetchedFiles] = useState<FetchedFile[]>([]);
   // const [uploading, setUploading] = useState(false);
   const [uploading] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(status);
+  const jwtToken = sessionStorage.getItem("token");
 
   useEffect(() => {
+    console.log("useEffect triggered. isOpen:", isOpen, "taskId:", taskId);
     if (isOpen) {
-      fetch("/api/files/attachments/")
-        .then((res) => res.json())
+      console.log(
+        "Fetching files from:",
+        `/api/files/attachments/?taskId=${taskId}`
+      );
+      fetch(`/api/files/attachments/?taskId=${taskId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to fetch attachments");
+          return res.json();
+        })
         .then((data) => {
-          setFetchedFiles(data);
+          console.log("Fetched data:", data);
+          const transformedFiles = data.map((file: any) => {
+            const fileUrl = file.file_url;
+            const fileName = fileUrl.split("/").pop() || "attachment";
+            const extension = fileName.split(".").pop()?.toLowerCase() || "";
+
+            // Deducción rápida del tipo MIME básico
+            const type = extension.match(/(png|jpeg|gif|bmp|webp)/)
+              ? `image/${extension === "jpg" ? "jpeg" : extension}`
+              : extension.match(/(mp4|mov|avi|webm)/)
+              ? `video/${extension}`
+              : "application/octet-stream";
+
+            return {
+              url: fileUrl,
+              name: fileName,
+              type: type,
+            };
+          });
+          console.log("Transformed files:", transformedFiles);
+          setFetchedFiles(transformedFiles);
         })
         .catch((error) => {
           console.error("Error fetching attachments:", error);

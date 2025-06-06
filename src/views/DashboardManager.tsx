@@ -111,7 +111,6 @@ function DashboardManager() {
       if (!response.ok) throw new Error("Failed to fetch my tasks");
 
       const data = await response.json();
-      console.log(data);
       setTickets(data);
     } catch (error) {
       console.error("Error fetching my tasks:", error);

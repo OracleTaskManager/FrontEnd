@@ -71,7 +71,6 @@ export default function Ticket({
       estimatedHours: estimatedHours,
       realHours: realHours,
     };
-    console.log(updatedTask);
 
     try {
       const response = await fetch(`/api/tasks/tasks/update-task/${taskId}`, {
