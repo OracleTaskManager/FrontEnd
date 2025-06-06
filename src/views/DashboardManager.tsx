@@ -12,6 +12,7 @@ import CreateEpicForm from "../components/CreateEpicForm";
 import SprintModal from "../components/CreateSprintModal";
 
 export interface Ticketx {
+  taskId?: number;
   id: number;
   title: string;
   description: string;
@@ -129,7 +130,7 @@ function DashboardManager() {
 
       const data = await response.json();
       //Obtener el taskId y convertirlo en id para que se despliegue en el front
-      const transformedData = data.map((task: any) => ({
+      const transformedData = data.map((task: Ticketx) => ({
         ...task,
         id: task.taskId,
       }));
