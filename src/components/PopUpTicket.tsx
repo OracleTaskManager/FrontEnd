@@ -26,6 +26,7 @@ interface RawFetchedFile {
 }
 
 interface FetchedFile {
+  attachmentId: number;
   url: string;
   name: string;
   type: string;
@@ -48,6 +49,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
   const [currentStatus, setCurrentStatus] = useState(status);
   const jwtToken = sessionStorage.getItem("token");
 
+  // Metodo para obtener los attachments del back
   const fetchAttachments = () => {
     fetch(`/api/files/attachments/${taskId}`, {
       method: "GET",
@@ -79,6 +81,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
               : "application/octet-stream";
 
             return {
+              attachmentId: file.attachmentId, // ✅ aquí lo añadimos
               url: fileUrl,
               name: fileName,
               type: type,
@@ -151,8 +154,33 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
       const filesArray = Array.from(event.target.files);
       setAttachedFiles(filesArray);
       if (filesArray.length > 0) {
-        handleUpload(filesArray); // <- Aquí haces el fetch al backend
+        handleUpload(filesArray);
       }
+    }
+  };
+
+  // Eliminar archivos de la tarea
+  const handleDeleteAttachment = async (attachmentId: string) => {
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de que deseas eliminar este archivo?"
+    );
+    if (!confirmDelete) return;
+    try {
+      const res = await fetch(`/api/files/attachments/${attachmentId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) throw new Error("Error al eliminar el archivo");
+
+      alert("Deleted file correctly.");
+      fetchAttachments();
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      alert("An error occurred deleting the file.");
     }
   };
 
@@ -184,6 +212,32 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
             className="text-sm text-gray-600 file:mr-4 file:py-1 file:px-4 file:border file:rounded-md file:bg-[#64548f] file:text-white"
             disabled={uploading}
           />
+          {/* Boton para eliminar attachments */}
+          {fetchedFiles.length > 0 && (
+            <div className="mt-3 text-black">
+              <label className="block text-sm font-medium text-black mb-1">
+                Delete file:
+              </label>
+              <select
+                onChange={(e) => {
+                  if (e.target.value !== "") {
+                    handleDeleteAttachment(e.target.value);
+                  }
+                }}
+                className="block w-full rounded px-2 py-1 text-sm border border-gray-300"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select a file
+                </option>
+                {fetchedFiles.map((file, idx) => (
+                  <option key={`delete-${idx}`} value={file.attachmentId}>
+                    {file.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         {(fetchedFiles.length > 0 || attachedFiles.length > 0) && (
