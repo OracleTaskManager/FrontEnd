@@ -7,69 +7,69 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/auth/teams": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
       "/api/auth/users": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
       "/api/auth/userteams": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
 
       //Apartado de tickets
       "/api/tasks/sprints": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
       "/api/tasks/epics/": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
       "/api/tasks/tasksprint/": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
       "/api/tasks/": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
       "/api/tasks/tasks": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
       "/api/tasks/taskassignments": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
       "/api/tasks/task_dependencies": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
       "/api/files/attachments/": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
       "/api/files/attachments/upload": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
       "/api/auth/userteams/remove": {
-        target: "http://oraclekairo.com",
+        target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
       },
