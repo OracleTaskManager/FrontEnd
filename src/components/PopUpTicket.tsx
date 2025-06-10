@@ -10,17 +10,25 @@ interface TicketPopUpProps {
   real_deadline?: string;
   estimatedHours?: number;
   user_points?: number;
-  status: "ToDo" | "In Progress" | "Done";
+  status: "ToDo" | "InProgress" | "Done";
   priority: "Low" | "Medium" | "High";
-  onStatusChange: (newStatus: "ToDo" | "In Progress" | "Done") => void;
+  onStatusChange: (newStatus: "ToDo" | "InProgress" | "Done") => void;
   description: string;
-  taskId?: number;
+  taskId: number;
   realHours?: number;
 }
 
+interface RawFetchedFile {
+  attachmentId: number;
+  fileUrl: string;
+  taskId: number;
+  uploadedBy: number;
+}
+
 interface FetchedFile {
-  name: string;
+  attachmentId: number;
   url: string;
+  name: string;
   type: string;
 }
 
@@ -33,24 +41,64 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
   priority,
   description,
   onStatusChange,
-  // taskId,
+  taskId,
 }) => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [fetchedFiles, setFetchedFiles] = useState<FetchedFile[]>([]);
-  // const [uploading, setUploading] = useState(false);
-  const [uploading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(status);
+  const jwtToken = sessionStorage.getItem("token");
+
+  // Metodo para obtener los attachments del back
+  const fetchAttachments = () => {
+    fetch(`/api/files/attachments/${taskId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `${jwtToken}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch attachments");
+        return res.json();
+      })
+      .then((data: RawFetchedFile[]) => {
+        const transformedFiles: FetchedFile[] = data
+          .map((file, index) => {
+            const fileUrl = file.fileUrl;
+            if (!fileUrl) {
+              console.warn(`Archivo sin URL en el índice ${index}`, file);
+              return null;
+            }
+
+            const fileName = fileUrl.split("/").pop() || "attachment";
+            const extension = fileName.split(".").pop()?.toLowerCase() || "";
+
+            const type = extension.match(/(png|jpeg|jpg|gif|bmp|webp)/)
+              ? `image/${extension === "jpg" ? "jpeg" : extension}`
+              : extension.match(/(mp4|mov|avi|webm)/)
+              ? `video/${extension}`
+              : "application/octet-stream";
+
+            return {
+              attachmentId: file.attachmentId, // ✅ aquí lo añadimos
+              url: fileUrl,
+              name: fileName,
+              type: type,
+            };
+          })
+          .filter((file): file is FetchedFile => file !== null);
+
+        setFetchedFiles(transformedFiles);
+      })
+      .catch((error) => {
+        console.error("Error fetching attachments:", error);
+      });
+  };
 
   useEffect(() => {
     if (isOpen) {
-      fetch("/api/files/attachments/")
-        .then((res) => res.json())
-        .then((data) => {
-          setFetchedFiles(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching attachments:", error);
-        });
+      fetchAttachments();
     }
   }, [isOpen]);
 
@@ -64,52 +112,81 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
 
   const statusColors = {
     ToDo: "bg-gray-200 text-gray-800",
-    "In Progress": "bg-yellow-200 text-yellow-800",
+    InProgress: "bg-yellow-200 text-yellow-800",
     Done: "bg-green-200 text-green-800",
   };
 
   // Aquí el método para subir archivos automáticamente
-  // const handleUpload = async (files: File[]) => {
-  //   setUploading(true);
-  //   try {
-  //     for (const file of files) {
-  //       const formData = new FormData();
-  //       formData.append("fileUrl", file);
-  //       formData.append("taskId", taskId.toString());
+  const handleUpload = async (files: File[]) => {
+    setUploading(true);
+    try {
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("taskId", taskId.toString());
 
-  //       const response = await fetch("/api/files/attachments/upload", {
-  //         method: "POST",
-  //         body: formData,
-  //       });
+        const response = await fetch("/api/files/attachments/upload", {
+          method: "POST",
+          headers: {
+            Authorization: `${jwtToken}`,
+          },
+          body: formData,
+        });
 
-  //       if (!response.ok) {
-  //         throw new Error("Error al subir el archivo");
-  //       }
-  //     }
+        if (!response.ok) {
+          throw new Error("Error al subir el archivo");
+        }
+      }
 
-  //     alert("Archivos subidos correctamente.");
-  //     setAttachedFiles([]);
-  //   } catch (error) {
-  //     console.error("Error al subir archivos:", error);
-  //     alert("Hubo un error al subir los archivos.");
-  //   } finally {
-  //     setUploading(false);
-  //   }
-  // };
+      alert("Archivos subidos correctamente.");
+      setAttachedFiles([]);
+      fetchAttachments();
+    } catch (error) {
+      console.error("Error al subir archivos:", error);
+      alert("Hubo un error al subir los archivos.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const filesArray = Array.from(event.target.files);
       setAttachedFiles(filesArray);
-      // if (filesArray.length > 0) {
-      //   handleUpload(filesArray);
-      // }
+      if (filesArray.length > 0) {
+        handleUpload(filesArray);
+      }
+    }
+  };
+
+  // Eliminar archivos de la tarea
+  const handleDeleteAttachment = async (attachmentId: string) => {
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de que deseas eliminar este archivo?"
+    );
+    if (!confirmDelete) return;
+    try {
+      const res = await fetch(`/api/files/attachments/${attachmentId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) throw new Error("Error al eliminar el archivo");
+
+      alert("Deleted file correctly.");
+      fetchAttachments();
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      alert("An error occurred deleting the file.");
     }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-40 bg-transparent">
-      <div className="bg-neutral-100 rounded-lg shadow-lg p-6 max-w-md w-full relative">
+      <div className="bg-neutral-200 rounded-lg shadow-lg p-6 max-w-md w-full relative">
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-lg"
@@ -135,6 +212,32 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
             className="text-sm text-gray-600 file:mr-4 file:py-1 file:px-4 file:border file:rounded-md file:bg-[#64548f] file:text-white"
             disabled={uploading}
           />
+          {/* Boton para eliminar attachments */}
+          {fetchedFiles.length > 0 && (
+            <div className="mt-3 text-black">
+              <label className="block text-sm font-medium text-black mb-1">
+                Delete file:
+              </label>
+              <select
+                onChange={(e) => {
+                  if (e.target.value !== "") {
+                    handleDeleteAttachment(e.target.value);
+                  }
+                }}
+                className="block w-full rounded px-2 py-1 text-sm border border-gray-300"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select a file
+                </option>
+                {fetchedFiles.map((file, idx) => (
+                  <option key={`delete-${idx}`} value={file.attachmentId}>
+                    {file.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         {(fetchedFiles.length > 0 || attachedFiles.length > 0) && (
@@ -167,7 +270,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
                       href={file.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-blue-700 underline"
+                      className="text-sm text-blue-700 underline max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap block"
                     >
                       📄 {file.name}
                     </a>
@@ -217,7 +320,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
             onChange={(e) => {
               const newStatus = e.target.value as
                 | "ToDo"
-                | "In Progress"
+                | "InProgress"
                 | "Done";
               setCurrentStatus(newStatus);
               onStatusChange(newStatus);
@@ -226,7 +329,7 @@ const PopUpTicket: React.FC<TicketPopUpProps> = ({
             style={{ backgroundColor: "white", color: "black" }}
           >
             <option value="ToDo">ToDo</option>
-            <option value="In Progress">In Progress</option>
+            <option value="InProgress">In Progress</option>
             <option value="Done">Done</option>
           </select>
         </div>

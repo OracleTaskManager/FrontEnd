@@ -12,6 +12,7 @@ import CreateEpicForm from "../components/CreateEpicForm";
 import SprintModal from "../components/CreateSprintModal";
 
 export interface Ticketx {
+  taskId?: number;
   id: number;
   title: string;
   description: string;
@@ -128,9 +129,12 @@ function DashboardManager() {
       if (!response.ok) throw new Error("Failed to fetch all tasks");
 
       const data = await response.json();
-
       //Obtener el taskId y convertirlo en id para que se despliegue en el front
-      setTickets(data);
+      const transformedData = data.map((task: Ticketx) => ({
+        ...task,
+        id: task.taskId,
+      }));
+      setTickets(transformedData);
     } catch (error) {
       console.error("Error fetching all tasks:", error);
     }
@@ -246,7 +250,7 @@ function DashboardManager() {
                     taskId={ticket.id}
                     epic_id={ticket.epic_id}
                     title={ticket.title}
-                    status={ticket.status as "ToDo" | "In Progress" | "Done"}
+                    status={ticket.status}
                     priority={ticket.priority}
                     description={ticket.description}
                   />

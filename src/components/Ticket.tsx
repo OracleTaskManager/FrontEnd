@@ -8,7 +8,7 @@ interface TicketProps {
   description?: string;
   epic_id?: number;
   priority: "Low" | "Medium" | "High";
-  status: "ToDo" | "In Progress" | "Done";
+  status: "ToDo" | "InProgress" | "Done";
   type?: string;
   estimated_deadline?: string;
   real_deadline?: string;
@@ -32,12 +32,12 @@ export default function Ticket({
   estimatedHours,
   realHours,
 }: TicketProps) {
-  type TicketStatus = "ToDo" | "In Progress" | "Done";
+  type TicketStatus = "ToDo" | "InProgress" | "Done";
   type Priority = "Low" | "Medium" | "High";
 
   const statusColors: Record<TicketStatus, string> = {
     ToDo: "bg-gray-300",
-    "In Progress": "bg-yellow-300",
+    InProgress: "bg-yellow-300",
     Done: "bg-green-300",
   };
 
@@ -51,7 +51,7 @@ export default function Ticket({
   const [ticketStatus, setTicketStatus] = useState<TicketStatus>(status);
   const jwtToken = sessionStorage.getItem("token");
 
-  async function updateTaskStatus(newStatus: "ToDo" | "In Progress" | "Done") {
+  async function updateTaskStatus(newStatus: "ToDo" | "InProgress" | "Done") {
     if (!taskId) {
       console.error("No taskId provided for status update");
       return;
@@ -60,7 +60,7 @@ export default function Ticket({
     const updatedTask = {
       title: title,
       description: description,
-      epic_id: typeof epic_id === "number" ? epic_id : null,
+      epic_id: epic_id,
       priority: typeof priority === "string" ? priority : "Low",
       status: newStatus,
       type: type,
@@ -142,7 +142,7 @@ export default function Ticket({
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           title={title ?? ""}
-          status={(ticketStatus ?? "ToDo") as "ToDo" | "In Progress" | "Done"}
+          status={ticketStatus}
           priority={priority}
           description={description ?? ""}
           taskId={taskId}
@@ -150,12 +150,12 @@ export default function Ticket({
             updateTaskStatus(newStatus);
           }}
           epic_id={epic_id}
-          type={type ?? ""}
-          estimated_deadline={estimated_deadline ?? ""}
-          real_deadline={real_deadline ?? ""}
-          user_points={user_points ?? 0}
-          estimatedHours={estimatedHours ?? 0}
-          realHours={realHours ?? 0}
+          type={type}
+          estimated_deadline={estimated_deadline}
+          real_deadline={real_deadline}
+          user_points={user_points}
+          estimatedHours={estimatedHours}
+          realHours={realHours}
         />
       </div>
     </div>

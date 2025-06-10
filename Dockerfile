@@ -3,7 +3,8 @@ FROM --platform=linux/amd64 node:18 AS build
 WORKDIR /FrontEnd-Oracle
 
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install gantt-task-react --legacy-peer-deps \
+  && npm install
 
 COPY . .
 RUN npm run build

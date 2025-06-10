@@ -9,7 +9,7 @@ interface Ticketx {
   title: string;
   description: string;
   priority: "Low" | "Medium" | "High";
-  status: "ToDo" | "InProgress" | "Don";
+  status: "ToDo" | "InProgress" | "Done";
   estimated_deadline?: string;
   real_deadline?: string;
   estimatedHours: string | null;
@@ -55,12 +55,12 @@ function DashboardDev() {
   const mainTicket = tickets[0];
   const otherTickets = tickets.slice(1, maxTicketsToShow);
 
-  const mapStatus = (status: string): "ToDo" | "In Progress" | "Done" => {
+  const mapStatus = (status: string): "ToDo" | "InProgress" | "Done" => {
     switch (status) {
       case "ToDo":
         return "ToDo";
       case "InProgress":
-        return "In Progress";
+        return "InProgress";
       case "Finished":
         return "Done";
       default:
