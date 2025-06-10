@@ -62,7 +62,7 @@ export default function Ticket({
       description: description,
       epic_id: typeof epic_id === "number" ? epic_id : null,
       priority: typeof priority === "string" ? priority : "Low",
-      status: status ?? "",
+      status: newStatus,
       type: type,
       estimated_deadline:
         (estimated_deadline ?? estimated_deadline)?.split("T")[0] ?? "",
