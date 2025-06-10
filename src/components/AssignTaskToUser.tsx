@@ -83,6 +83,38 @@ const AssignTaskToUser: React.FC<AssignTaskToUserProps> = ({
     }
   };
 
+  const handleDeleteAssignedTask = async () => {
+    if (!selectedTaskId || !selectedUserId) {
+      alert("Select a user and a task");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/tasks/taskassignments/remove", {
+        method: "DELETE",
+        headers: {
+          Authorization: `${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: selectedUserId,
+          taskId: selectedTaskId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      alert("Tarea desasignada exitosamente");
+      onTaskAssigned(); // Recargar vista o tareas actualizadas
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error al desasignar la tarea:", error);
+      alert("Error al desasignar la tarea");
+    }
+  };
+
   return (
     <>
       <div className="">
@@ -90,7 +122,7 @@ const AssignTaskToUser: React.FC<AssignTaskToUserProps> = ({
           onClick={() => setShowModal(true)}
           className="text-white px-4 py-2 rounded-lg transition h-12"
         >
-          Assing Task
+          Assign/Unassign Task
         </button>
       </div>
 
@@ -143,6 +175,12 @@ const AssignTaskToUser: React.FC<AssignTaskToUserProps> = ({
               className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition"
             >
               Assign Task
+            </button>
+            <button
+              onClick={handleDeleteAssignedTask}
+              className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 mt-2 transition"
+            >
+              Unassign Task
             </button>
           </div>
         </div>
