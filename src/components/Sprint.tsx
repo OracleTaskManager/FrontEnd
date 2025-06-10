@@ -26,6 +26,9 @@ export default function Sprint({
 }: SprintProps) {
   const jwtToken = sessionStorage.getItem("token");
 
+  // To assign/unassign tasks to sprint
+  const [tasks, setTasks] = useState<any[]>([]);
+
   // Estado para alternar entre “ver” y “editar”
   const [isEditing, setIsEditing] = useState(false);
 

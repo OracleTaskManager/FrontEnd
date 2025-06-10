@@ -83,9 +83,41 @@ const AssignTaskToUser: React.FC<AssignTaskToUserProps> = ({
     }
   };
 
+  const checkIfTaskIsAssigned = async (userId: number, taskId: number) => {
+    try {
+      const response = await fetch(`/api/tasks/taskassignments/`, {
+        headers: {
+          Authorization: `${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) throw new Error("No se pudo obtener asignaciones");
+
+      const assignments = await response.json(); // Suponemos que es un array
+      return assignments.some(
+        (assignment: any) =>
+          assignment.taskId === taskId && assignment.userId === userId
+      );
+    } catch (error) {
+      console.error("Error verificando asignación:", error);
+      return false;
+    }
+  };
+
   const handleDeleteAssignedTask = async () => {
     if (!selectedTaskId || !selectedUserId) {
       alert("Select a user and a task");
+      return;
+    }
+
+    const isAssigned = await checkIfTaskIsAssigned(
+      selectedUserId,
+      selectedTaskId
+    );
+
+    if (!isAssigned) {
+      alert("Esta tarea no está asignada a ese usuario.");
       return;
     }
 
@@ -106,7 +138,7 @@ const AssignTaskToUser: React.FC<AssignTaskToUserProps> = ({
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      alert("Tarea desasignada exitosamente");
+      alert("Task unassigned correctly!");
       onTaskAssigned(); // Recargar vista o tareas actualizadas
       setShowModal(false);
     } catch (error) {
@@ -137,7 +169,7 @@ const AssignTaskToUser: React.FC<AssignTaskToUserProps> = ({
             </button>
 
             <h2 className="text-xl font-bold text-gray-800 mb-4">
-              Assign a Task to a User
+              Assign/Unassign a Task to a User
             </h2>
 
             <div className="mb-4 text-gray-800">
