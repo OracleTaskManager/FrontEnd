@@ -10,6 +10,7 @@ import AssignTaskToUser from "../components/AssignTaskToUser";
 import EditTaskModal from "../components/EditTaskModal";
 import CreateEpicForm from "../components/CreateEpicForm";
 import SprintModal from "../components/CreateSprintModal";
+import AddTaskDependencyButton from "../components/AddTaskDependencyButton";
 
 export interface Ticketx {
   taskId?: number;
@@ -200,6 +201,7 @@ function DashboardManager() {
               </button>
 
               <SprintModal />
+              <AddTaskDependencyButton onDependencyAdded={fetchTickets} />
             </div>
 
             {isEditModalOpen && (

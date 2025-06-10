@@ -3,6 +3,7 @@ import "gantt-task-react/dist/index.css";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
+import SprintTasksTable from "../components/SprintTasksTable";
 
 const Calendar = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -118,6 +119,9 @@ const Calendar = () => {
               )}
             </div>
           </div>
+
+          {/* Tabla de tareas por sprint debajo del calendario */}
+          <SprintTasksTable />
         </main>
       </div>
     </div>
