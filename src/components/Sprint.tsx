@@ -284,7 +284,7 @@ export default function Sprint({
   };
 
   return (
-    <div className="border rounded-lg p-4 flex flex-col gap-2 bg-gray-50">
+    <div className="border rounded-lg p-4 flex flex-col gap-2 bg-gray-50 mb-1.5 mt-1.5">
       <p className="text-sm text-gray-500">Sprint ID: {sprintId}</p>
 
       {isEditing ? (
@@ -358,7 +358,7 @@ export default function Sprint({
         <select
           // value={selectedTaskToAssign}
           onChange={(e) => setSelectedTaskToAssign(Number(e.target.value))}
-          className="border rounded px-2 py-1 text-black"
+          className=" w-72 border rounded px-2 py-1 text-black"
         >
           <option value="">Select a task</option>
           {unassignedTasks.map((task) => (
@@ -396,7 +396,7 @@ export default function Sprint({
         <select
           value={selectedTaskToRemove ?? ""}
           onChange={(e) => setSelectedTaskToRemove(Number(e.target.value))}
-          className="border rounded px-2 py-1 text-black"
+          className="w-72 border rounded px-2 py-1 text-black"
         >
           <option value="">Select a task</option>
           {assignedTasks.map((task) => (
