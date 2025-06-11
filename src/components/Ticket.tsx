@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PopUpTicket from "./PopUpTicket";
+import { isTaskBlocked } from "../fetchEndpoints/isTaskBlocked";
 
 interface TicketProps {
   taskId: number;
@@ -51,6 +52,10 @@ export default function Ticket({
   const [ticketStatus, setTicketStatus] = useState<TicketStatus>(status);
   const [users, setUsers] = useState<any[]>([]);
   const [assignedTaskToUser, setAssignedTaskToUser] = useState<any[]>([]);
+  const [blockedInfo, setBlockedInfo] = useState<
+    { blocked: boolean; blockers: any[] } | null
+  >(null);
+  const [checkingBlocked, setCheckingBlocked] = useState(false);
   const jwtToken = sessionStorage.getItem("token");
 
   async function updateTaskStatus(newStatus: "ToDo" | "InProgress" | "Done") {
@@ -133,6 +138,15 @@ export default function Ticket({
     fetchAssignedTaskToUser();
   }, []);
 
+  useEffect(() => {
+    if (!taskId || !jwtToken) return;
+    setCheckingBlocked(true);
+    isTaskBlocked(taskId, jwtToken)
+      .then(setBlockedInfo)
+      .catch(() => setBlockedInfo(null))
+      .finally(() => setCheckingBlocked(false));
+  }, [taskId, jwtToken]);
+
   const getAssignedUserName = () => {
     const assignment = assignedTaskToUser.find(
       (assignment) => assignment.taskId === taskId
@@ -177,6 +191,24 @@ export default function Ticket({
             {priority} Priority
           </span>
         </div>
+        {checkingBlocked ? (
+          <p className="text-yellow-600 text-sm mt-2">
+            Verificando dependencias...
+          </p>
+        ) : blockedInfo?.blocked ? (
+          <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-2 mt-2 rounded">
+            <strong>Advertencia:</strong> Esta tarea está bloqueada por:
+            <ul className="list-disc ml-6">
+              {blockedInfo.blockers.map((b, idx) => (
+                <li key={idx}>
+                  {b.blockedByTaskId?.title ||
+                    `Tarea ${b.blockedByTaskId?.taskId}`} (Estado:{" "}
+                  {b.blockedByTaskId?.status})
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
 
         <p className="text-gray-500">{description}</p>
         <button
@@ -187,6 +219,7 @@ export default function Ticket({
             padding: "8px 16px",
             fontSize: "14px",
           }}
+          disabled={blockedInfo?.blocked}
         >
           Details
         </button>
