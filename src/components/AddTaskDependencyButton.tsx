@@ -21,21 +21,26 @@ const AddTaskDependencyButton: React.FC<AddTaskDependencyButtonProps> = ({ onDep
   const [success, setSuccess] = useState(false);
   const [dependencies, setDependencies] = useState<TaskDependency[]>([]);
   const [deleteId, setDeleteId] = useState("");
+  const [tasks, setTasks] = useState<{ taskId: number; title: string }[]>([]);
   const jwtToken = sessionStorage.getItem("token");
 
   // Cargar dependencias existentes para eliminar
   useEffect(() => {
+    if (showModal && mode === "add") {
+      fetchTasks();
+    }
     if (showModal && mode === "delete") {
       fetchDependencies();
     }
     // eslint-disable-next-line
   }, [showModal, mode]);
+  
 
   const fetchDependencies = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/tasks/task_dependencies/all", {
+      const res = await fetch("/api/tasks/taskdependencies/all", {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
           "Content-Type": "application/json",
@@ -51,13 +56,28 @@ const AddTaskDependencyButton: React.FC<AddTaskDependencyButtonProps> = ({ onDep
     }
   };
 
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch("/api/tasks/tasks/all", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setTasks(Array.isArray(data) ? data.map((t: { taskId: number; title: string }) => ({ taskId: t.taskId, title: t.title })) : []);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
+
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setSuccess(false);
     try {
-      const response = await fetch("/api/tasks/task_dependencies/", {
+      const response = await fetch("/api/tasks/taskdependencies/", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -91,7 +111,7 @@ const AddTaskDependencyButton: React.FC<AddTaskDependencyButtonProps> = ({ onDep
     setError(null);
     setSuccess(false);
     try {
-      const response = await fetch("/api/tasks/task_dependencies/", {
+      const response = await fetch("/api/tasks/taskdependencies/", {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -159,39 +179,49 @@ const AddTaskDependencyButton: React.FC<AddTaskDependencyButtonProps> = ({ onDep
             </button>
             {mode === "add" ? (
               <>
-                <h2 className="text-xl font-bold mb-4 text-black">Agregar dependencia de tarea</h2>
+                <h2 className="text-xl font-bold mb-4 text-black">Add task dependency</h2>
                 <form onSubmit={handleAdd} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold mb-1 text-black">ID de la tarea principal</label>
-                    <input
-                      type="number"
-                      min="1"
+                    <label className="block text-sm font-semibold mb-1 text-black">Main task</label>
+                    <select
                       value={taskId}
                       onChange={e => setTaskId(e.target.value)}
                       className="w-full p-2 border rounded bg-gray-100 text-black"
                       required
-                    />
+                    >
+                      <option value="">-- Select a task --</option>
+                      {tasks.map(task => (
+                        <option key={task.taskId} value={task.taskId}>
+                          {task.title} (ID: {task.taskId})
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-1 text-black">ID de la tarea bloqueadora</label>
-                    <input
-                      type="number"
-                      min="1"
+                    <label className="block text-sm font-semibold mb-1 text-black">Blocking task</label>
+                    <select
                       value={blockedByTaskId}
                       onChange={e => setBlockedByTaskId(e.target.value)}
                       className="w-full p-2 border rounded bg-gray-100 text-black"
                       required
-                    />
+                    >
+                      <option value="">-- Select a task --</option>
+                      {tasks.map(task => (
+                        <option key={task.taskId} value={task.taskId}>
+                          {task.title} (ID: {task.taskId})
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <button
                     type="submit"
                     className="w-full bg-purple-700 text-white py-2 px-4 rounded hover:bg-purple-900 transition font-semibold"
                     disabled={loading}
                   >
-                    {loading ? "Creando..." : "Crear dependencia"}
+                    {loading ? "Creating..." : "Create dependency"}
                   </button>
                   {error && <p className="text-red-600 mt-2">{error}</p>}
-                  {success && <p className="text-green-600 mt-2">¡Dependencia creada!</p>}
+                  {success && <p className="text-green-600 mt-2">Dependency created!</p>}
                 </form>
               </>
             ) : (
