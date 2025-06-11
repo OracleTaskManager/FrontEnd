@@ -356,7 +356,7 @@ export default function Sprint({
       <div className="mt-4">
         <label className="block mb-1 text-black">Assign task to sprint:</label>
         <select
-          value={selectedTaskToAssign}
+          // value={selectedTaskToAssign}
           onChange={(e) => setSelectedTaskToAssign(Number(e.target.value))}
           className="border rounded px-2 py-1 text-black"
         >
