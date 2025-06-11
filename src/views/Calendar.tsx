@@ -7,6 +7,8 @@ import SprintTasksTable from "../components/SprintTasksTable";
 
 const Calendar = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [blockedTasks, setBlockedTasks] = useState<any[]>([]);
+  const [loadingBlockedTasks, setLoadingBlockedTasks] = useState(false);
   const jwtToken = sessionStorage.getItem("token");
 
   useEffect(() => {
@@ -82,6 +84,24 @@ const Calendar = () => {
     fetchTasks();
   }, [jwtToken]);
 
+  useEffect(() => {
+    if (!jwtToken) return;
+    setLoadingBlockedTasks(true);
+    import("../fetchEndpoints/fetchTasksBlockedBy").then(({ fetchTasksBlockedBy }) => {
+      Promise.all(tasks.map(async (task: any) => {
+        try {
+          const blocked = await fetchTasksBlockedBy(task.id, jwtToken);
+          return { taskId: task.id, blocked };
+        } catch {
+          return { taskId: task.id, blocked: [] };
+        }
+      })).then(results => {
+        setBlockedTasks(results.filter(r => r.blocked.length > 0));
+        setLoadingBlockedTasks(false);
+      });
+    });
+  }, [tasks, jwtToken]);
+
   return (
     <div className="flex flex-col min-h-screen w-screen bg-white">
       <Navbar pageTitle="Calendar" />
@@ -115,6 +135,28 @@ const Calendar = () => {
                     barBackgroundSelectedColor="#609cc2"
                     barProgressSelectedColor="#004a99"
                   />
+                  {/* Mostrar tareas que este usuario está bloqueando */}
+                  <div className="mt-4">
+                    <h3 className="text-lg font-semibold text-purple-800">Tareas que estás bloqueando</h3>
+                    {loadingBlockedTasks ? (
+                      <p className="text-yellow-600">Cargando...</p>
+                    ) : blockedTasks.length === 0 ? (
+                      <p className="text-gray-500">No estás bloqueando ninguna tarea actualmente.</p>
+                    ) : (
+                      <ul className="list-disc ml-6">
+                        {blockedTasks.map(({ taskId, blocked }) => (
+                          <li key={taskId}>
+                            <span className="font-bold">{tasks.find(t => t.id === taskId)?.name || `Tarea ${taskId}`}</span> está bloqueando:
+                            <ul className="ml-4">
+                              {blocked.map((t: any) => (
+                                <li key={t.taskId}>{t.title} (Estado: {t.status})</li>
+                              ))}
+                            </ul>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </>
               )}
             </div>

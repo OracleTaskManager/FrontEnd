@@ -53,7 +53,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      "/api/tasks/task_dependencies": {
+      "/api/tasks/taskdependencies": {
         target: "https://oraclekairo.com",
         changeOrigin: true,
         secure: false,
