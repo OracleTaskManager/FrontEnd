@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PopUpTicket from "./PopUpTicket";
 
 interface TicketProps {
@@ -49,6 +49,8 @@ export default function Ticket({
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ticketStatus, setTicketStatus] = useState<TicketStatus>(status);
+  const [users, setUsers] = useState<any[]>([]);
+  const [assignedTaskToUser, setAssignedTaskToUser] = useState<any[]>([]);
   const jwtToken = sessionStorage.getItem("token");
 
   async function updateTaskStatus(newStatus: "ToDo" | "InProgress" | "Done") {
@@ -94,6 +96,53 @@ export default function Ticket({
     }
   }
 
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("/api/auth/users", {
+        headers: {
+          Authorization: `${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) throw new Error("Failed to fetch users");
+      const data = await response.json();
+      setUsers(data);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    }
+  };
+
+  const fetchAssignedTaskToUser = async () => {
+    try {
+      const response = await fetch("/api/tasks/taskassignments/", {
+        headers: {
+          Authorization: `${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) throw new Error("Failed to fetch users");
+      const data = await response.json();
+      setAssignedTaskToUser(data);
+    } catch (err) {
+      console.error("Error fetching assigned task to user:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    fetchAssignedTaskToUser();
+  }, []);
+
+  const getAssignedUserName = () => {
+    const assignment = assignedTaskToUser.find(
+      (assignment) => assignment.taskId === taskId
+    );
+    if (!assignment) return "Unassigned";
+
+    const user = users.find((user) => user.userId === assignment.userId);
+    return user ? user.name : "Unknown user";
+  };
+
   return (
     <div
       className={`mx-auto flex max-w items-center gap-x-4 rounded-xl bg-neutral-100 p-6 shadow-lg border ${
@@ -114,6 +163,10 @@ export default function Ticket({
         </div>
         <p className="text-black">Task id: {taskId}</p>
         <p className="text-black">Epic id: {epic_id}</p>
+        <p className="text-gray-700">
+          Assigned to: <strong>{getAssignedUserName()}</strong>
+        </p>
+
         <div className="mt-2 flex gap-3">
           <span
             className={`px-3 text-sm rounded-full ${statusColors[ticketStatus]}`}

@@ -85,8 +85,8 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
       }
 
       const data = await response.json();
-      console.log("Ticket creado:", data);
-      alert("Ticket creado exitosamente");
+      console.log("Task created:", data);
+      alert("Task created correctly");
       onClose(); // Cierra el modal al finalizar
     } catch (error) {
       console.error("Error al crear el ticket:", error);
@@ -105,9 +105,7 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
         </button>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-gray-800">
-          <h2 className="text-2xl font-bold text-gray-800">
-            Create New Ticket
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-800">Create New Task</h2>
 
           <input
             name="title"
@@ -237,7 +235,7 @@ const CreateTicketForm = ({ onClose }: { onClose: () => void }) => {
             type="submit"
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
           >
-            Create Ticket
+            Create Task
           </button>
         </form>
       </div>
@@ -254,7 +252,7 @@ const TicketPopup = () => {
         onClick={() => setShowModal(true)}
         className="text-white px-6 py-2 rounded-lg transition"
       >
-        Create Ticket
+        Create Task
       </button>
 
       {showModal && <CreateTicketForm onClose={() => setShowModal(false)} />}

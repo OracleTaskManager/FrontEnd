@@ -26,6 +26,23 @@ export default function Sprint({
 }: SprintProps) {
   const jwtToken = sessionStorage.getItem("token");
 
+  // To assign/unassign tasks to sprint
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasksAssigned, setTasksAssigned] = useState<any[]>([]);
+  const [tasksUnassigned, setTasksUnassigned] = useState<any[]>([]);
+  const [selectedTaskToAssign, setSelectedTaskToAssign] = useState<
+    number | null
+  >(null);
+  const [selectedTaskToRemove, setSelectedTaskToRemove] = useState<
+    number | null
+  >(null);
+  const [assignedTasks, setAssignedTasks] = useState<any[]>([]);
+
+  // Tareas filtradas para mostrar a la hora de agregar al sprint
+  const unassignedTasks = tasks.filter(
+    (task) => !assignedTasks.some((t) => t.id === task.id)
+  );
+
   // Estado para alternar entre “ver” y “editar”
   const [isEditing, setIsEditing] = useState(false);
 
@@ -35,6 +52,98 @@ export default function Sprint({
     startDate: startDate ?? "",
     endDate: endDate ?? "",
   });
+
+  // Obtener Tareas
+  useEffect(() => {
+    if (!sprintId) return;
+
+    const fetchAllTasks = async () => {
+      try {
+        const res = await fetch("/api/tasks/tasks/all", {
+          headers: { Authorization: `Bearer ${jwtToken}` },
+        });
+        const all = await res.json();
+        setTasks(all);
+      } catch (error) {
+        console.error("Error al obtener todas las tareas:", error);
+      }
+    };
+
+    const fetchSprintTasks = async () => {
+      try {
+        const res = await fetch(`/api/tasks/tasksprint/${sprintId}/tasks`, {
+          headers: { Authorization: `Bearer ${jwtToken}` },
+        });
+        const sprintTasks = await res.json();
+        setAssignedTasks(sprintTasks);
+      } catch (error) {
+        console.error("Error al obtener tareas del sprint:", error);
+      }
+    };
+
+    fetchAllTasks();
+    fetchSprintTasks();
+  }, [sprintId]);
+
+  const assignTaskToSprint = async (taskId: number) => {
+    try {
+      const response = await fetch("/api/tasks/tasksprint/add", {
+        method: "POST",
+        headers: {
+          Authorization: `${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ taskId, sprintId }),
+      });
+
+      if (!response.ok) throw new Error("Error al asignar la tarea");
+
+      const assignedTask = tasksUnassigned.find((t) => t.id === taskId);
+      if (assignedTask) {
+        setTasksAssigned((prev) => [...prev, { ...assignedTask, sprintId }]);
+        setTasksUnassigned((prev) => prev.filter((t) => t.id !== taskId));
+      }
+
+      setSelectedTaskToAssign(null);
+    } catch (error) {
+      console.error("Error al asignar tarea al sprint:", error);
+    }
+  };
+
+  const removeTaskFromSprint = async (taskId: number) => {
+    try {
+      const response = await fetch("/api/tasks/tasksprint/remove", {
+        method: "DELETE",
+        headers: {
+          Authorization: `${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ taskId, sprintId }),
+      });
+
+      if (!response.ok) throw new Error("Error al eliminar la tarea");
+
+      const removedTask = tasksAssigned.find((t) => t.id === taskId);
+      if (removedTask) {
+        setTasksAssigned((prev) => prev.filter((t) => t.id !== taskId));
+        setTasksUnassigned((prev) => [
+          ...prev,
+          { ...removedTask, sprintId: null },
+        ]);
+      }
+
+      setSelectedTaskToRemove(null);
+    } catch (error) {
+      console.error("Error al eliminar tarea del sprint:", error);
+    }
+  };
+
+  // Cuando el componente carga o cambia el sprintId
+  useEffect(() => {
+    if (sprintId) {
+      // fetchAssignedTasks();
+    }
+  }, [sprintId]);
 
   // Evita que en algún render inicial los inputs reciban un value undefined.
   useEffect(() => {
@@ -175,7 +284,7 @@ export default function Sprint({
   };
 
   return (
-    <div className="border rounded-lg p-4 flex flex-col gap-2 bg-gray-50">
+    <div className="border rounded-lg p-4 flex flex-col gap-2 bg-gray-50 mb-1.5 mt-1.5">
       <p className="text-sm text-gray-500">Sprint ID: {sprintId}</p>
 
       {isEditing ? (
@@ -208,18 +317,18 @@ export default function Sprint({
               onClick={handleSave}
               className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
             >
-              Guardar
+              Save
             </button>
             <button
               onClick={handleCancel}
               className="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500"
             >
-              Cancelar
+              Cancel
             </button>
           </div>
         </div>
       ) : (
-        <div>
+        <div className="">
           <h2 className="text-black text-lg font-semibold">{name}</h2>
           <p className="text-black">
             StartDate: {new Date(startDate).toLocaleString()}
@@ -238,10 +347,85 @@ export default function Sprint({
             onClick={handleDelete}
             className="mt-2 ml-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >
-            Eliminar
+            Delete
           </button>
         </div>
       )}
+
+      {/* Asignar / Eliminar tareas del sprint */}
+      <div className="mt-4">
+        <label className="block mb-1 text-black">Assign task to sprint:</label>
+        <select
+          // value={selectedTaskToAssign}
+          onChange={(e) => setSelectedTaskToAssign(Number(e.target.value))}
+          className=" w-72 border rounded px-2 py-1 text-black"
+        >
+          <option value="">Select a task</option>
+          {unassignedTasks.map((task) => (
+            <option key={task.taskId} value={task.taskId}>
+              {task.title}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={() => {
+            if (selectedTaskToAssign != null) {
+              assignTaskToSprint(selectedTaskToAssign).then(() => {
+                // Refrescamos tareas del sprint después de asignar
+                setSelectedTaskToAssign(null);
+                if (sprintId) {
+                  fetch(`/api/tasks/tasksprint/${sprintId}/tasks`, {
+                    headers: { Authorization: `Bearer ${jwtToken}` },
+                  })
+                    .then((res) => res.json())
+                    .then(setAssignedTasks);
+                }
+              });
+            }
+          }}
+          className="ml-2 bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+        >
+          Assign to Sprint
+        </button>
+      </div>
+
+      <div className="mt-4">
+        <label className="block mb-1 text-black">
+          Remove task from sprint:
+        </label>
+        <select
+          value={selectedTaskToRemove ?? ""}
+          onChange={(e) => setSelectedTaskToRemove(Number(e.target.value))}
+          className="w-72 border rounded px-2 py-1 text-black"
+        >
+          <option value="">Select a task</option>
+          {assignedTasks.map((task) => (
+            <option key={task.id} value={task.id}>
+              {task.title}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={() => {
+            if (selectedTaskToRemove != null) {
+              removeTaskFromSprint(selectedTaskToRemove).then(() => {
+                // Refrescamos tareas del sprint después de eliminar
+                setSelectedTaskToRemove(null);
+                if (sprintId) {
+                  fetch(`/api/tasks/tasksprint/${sprintId}/tasks`, {
+                    headers: { Authorization: `Bearer ${jwtToken}` },
+                  })
+                    .then((res) => res.json())
+                    .then(setAssignedTasks);
+                }
+              });
+            }
+          }}
+          className="ml-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+        >
+          Eliminar
+        </button>
+      </div>
     </div>
   );
 }

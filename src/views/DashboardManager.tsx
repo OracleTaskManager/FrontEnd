@@ -223,7 +223,7 @@ function DashboardManager() {
                     : "bg-gray-200"
                 }`}
               >
-                My Tickets
+                My Tasks
               </div>
 
               {/* All Tickets */}
@@ -235,7 +235,7 @@ function DashboardManager() {
                     : "bg-gray-200"
                 }`}
               >
-                All Tickets
+                All Tasks
               </div>
             </div>
 
