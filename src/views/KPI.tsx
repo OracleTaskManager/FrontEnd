@@ -162,13 +162,13 @@ function KPI() {
             </div>
             <div>
               <BarChartMulti
-                title="Horas trabajadas por miembro"
+                title="Hours worked by developer"
                 fetchData={fetchHoursByUserPerSprint}
               />
             </div>
             <div>
               <BarChartMulti
-                title="Tareas completadas por miembro"
+                title="Tasks completed by developer"
                 fetchData={fetchTasksCompletedByUserPerSprint}
               />
             </div>

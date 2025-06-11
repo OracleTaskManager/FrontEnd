@@ -65,7 +65,7 @@ export default function Sprint({
         const all = await res.json();
         setTasks(all);
       } catch (error) {
-        console.error("Error al obtener todas las tareas:", error);
+        console.error("Error fetching tasks:", error);
       }
     };
 
@@ -77,7 +77,7 @@ export default function Sprint({
         const sprintTasks = await res.json();
         setAssignedTasks(sprintTasks);
       } catch (error) {
-        console.error("Error al obtener tareas del sprint:", error);
+        console.error("Error fetching tasks for sprint:", error);
       }
     };
 
@@ -96,7 +96,7 @@ export default function Sprint({
         body: JSON.stringify({ taskId, sprintId }),
       });
 
-      if (!response.ok) throw new Error("Error al asignar la tarea");
+      if (!response.ok) throw new Error("Error assigning task");
 
       const assignedTask = tasksUnassigned.find((t) => t.id === taskId);
       if (assignedTask) {
@@ -106,7 +106,7 @@ export default function Sprint({
 
       setSelectedTaskToAssign(null);
     } catch (error) {
-      console.error("Error al asignar tarea al sprint:", error);
+      console.error("Error assigning task to sprint:", error);
     }
   };
 
@@ -121,7 +121,7 @@ export default function Sprint({
         body: JSON.stringify({ taskId, sprintId }),
       });
 
-      if (!response.ok) throw new Error("Error al eliminar la tarea");
+      if (!response.ok) throw new Error("Error deleting task");
 
       const removedTask = tasksAssigned.find((t) => t.id === taskId);
       if (removedTask) {
@@ -134,7 +134,7 @@ export default function Sprint({
 
       setSelectedTaskToRemove(null);
     } catch (error) {
-      console.error("Error al eliminar tarea del sprint:", error);
+      console.error("Error deleting task from sprint:", error);
     }
   };
 
@@ -177,7 +177,7 @@ export default function Sprint({
 
   const handleSave = async () => {
     if (!sprintId) {
-      console.error("No se proporcionó sprintId");
+      console.error("There is no sprintId");
       return;
     }
 
@@ -220,7 +220,7 @@ export default function Sprint({
       if (!response.ok) {
         const text = await response.text();
         console.error(
-          "Error al actualizar sprint (status:",
+          "Error updating sprint (status:",
           response.status,
           "):",
           text
@@ -231,27 +231,25 @@ export default function Sprint({
       // Si el servidor responde con 204 No Content, evitamos hacer response.json()
       if (response.status !== 204) {
         const updatedSprint = await response.json();
-        console.log("Sprint actualizado:", updatedSprint);
+        console.log("Sprint updated:", updatedSprint);
       } else {
-        console.log("Sprint actualizado (204 No Content).");
+        console.log("Sprint updated (204 No Content).");
       }
 
       // Cerramos el modo edición
       setIsEditing(false);
     } catch (error) {
-      console.error("Error en fetch PUT:", error);
+      console.error("Error on fetch PUT:", error);
     }
   };
 
   const handleDelete = async () => {
     if (!sprintId) {
-      console.error("No se proporcionó sprintId");
+      console.error("There is no sprintId");
       return;
     }
 
-    const confirmDelete = confirm(
-      `¿Estás seguro de eliminar el sprint "${name}"?`
-    );
+    const confirmDelete = confirm(`Are you sure you want to delete "${name}"?`);
     if (!confirmDelete) return;
 
     try {
@@ -266,7 +264,7 @@ export default function Sprint({
       if (!response.ok) {
         const text = await response.text();
         console.error(
-          "Error al eliminar el sprint (status:",
+          "Error deleting sprint (status:",
           response.status,
           "):",
           text
@@ -274,12 +272,12 @@ export default function Sprint({
         return;
       }
 
-      alert("Sprint eliminado exitosamente");
+      alert("Sprint deleted succesfully!");
       if (onDelete && sprintId) {
         onDelete(sprintId); // Notifica al padre
       }
     } catch (error) {
-      console.error("Error al eliminar sprint:", error);
+      console.error("Error deleting sprint:", error);
     }
   };
 
@@ -423,7 +421,7 @@ export default function Sprint({
           }}
           className="ml-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
         >
-          Eliminar
+          Delete
         </button>
       </div>
     </div>
