@@ -4,14 +4,16 @@ import Sidebar from "../components/Sidebar";
 import Ticket from "../components/Ticket";
 // import CircularProgress from "../components/CircularProgress";
 
-interface Ticketx {
-  taskId: number;
+export interface Ticketx {
+  taskId?: number;
+  id: number;
   title: string;
   description: string;
+  epic_id?: number;
   priority: "Low" | "Medium" | "High";
   status: "ToDo" | "InProgress" | "Done";
-  estimated_deadline?: string;
-  real_deadline?: string;
+  estimated_deadline: string;
+  real_deadline: string;
   estimatedHours: string | null;
   realHours: string | null;
   user_points: number;
@@ -76,7 +78,7 @@ function DashboardDev() {
         <main className="flex-1 p-6 overflow-auto bg-white">
           {mainTicket && (
             <Ticket
-              taskId={mainTicket.taskId}
+              taskId={mainTicket.id}
               title={mainTicket.title}
               estimated_deadline={mainTicket.estimated_deadline}
               status={mapStatus(mainTicket.status)}
@@ -93,11 +95,11 @@ function DashboardDev() {
               </h2>
               {otherTickets.map((ticket, index) => (
                 <Ticket
-                  taskId={ticket.taskId}
                   key={index}
+                  taskId={ticket.id}
+                  epic_id={ticket.epic_id}
                   title={ticket.title}
-                  estimated_deadline={ticket.estimated_deadline}
-                  status={mapStatus(ticket.status)}
+                  status={ticket.status}
                   priority={ticket.priority}
                   description={ticket.description}
                 />
