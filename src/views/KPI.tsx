@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import BarChartMulti from "../components/BarChartMulti";
 import BarChartSprint from "../components/BarChartSprint";
-import TaskTable from "../components/TaskTable";
+import SprintUserTaskViewer from "../components/SprintUserTable";
 
 const fetchAndFormatHoursBySprint = async (token: string) => {
   const res = await fetch("/api/tasks/reports/hours/sprints/users", {
@@ -122,29 +122,6 @@ function KPI() {
     loadHours();
   }, [jwtToken]);
 
-  const mockTasks = [
-    {
-      id: 1,
-      name: "Diseñar login",
-      assignedTo: "Carlos",
-      sprint: "Sprint 1",
-      status: "Completado",
-      developer: "Carlos",
-      estimated: 5,
-      actual: 4,
-    },
-    {
-      id: 2,
-      name: "Implementar dashboard",
-      assignedTo: "María",
-      sprint: "Sprint 2",
-      status: "En progreso",
-      developer: "María",
-      estimated: 8,
-      actual: 3,
-    },
-  ];
-
   return (
     <div className="flex flex-col min-h-screen w-screen bg-white">
       {/* Navbar fijo arriba */}
@@ -173,7 +150,7 @@ function KPI() {
               />
             </div>
             <div className="w-full">
-              <TaskTable tasks={mockTasks} />
+              <SprintUserTaskViewer jwtToken={jwtToken!} />
             </div>
           </div>
         </main>

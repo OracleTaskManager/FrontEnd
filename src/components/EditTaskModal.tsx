@@ -71,6 +71,35 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     }
   };
 
+  const [tickets, setTickets] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchAllTickets = async () => {
+      try {
+        const response = await fetch("/api/tasks/tasks/all", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch all tasks");
+
+        const data = await response.json();
+
+        const transformedData = data.map((task: any) => ({
+          ...task,
+          id: task.taskId,
+        }));
+        setTickets(transformedData);
+      } catch (error) {
+        console.error("Error fetching all tasks:", error);
+      }
+    };
+
+    fetchAllTickets();
+  }, []);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -126,6 +155,34 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     }
   };
 
+  const handleDelete = async () => {
+    if (!taskId) {
+      alert("Primero busca una tarea válida para eliminar");
+      return;
+    }
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de que deseas eliminar esta tarea?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`/api/tasks/tasks/?task_id=${taskId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) throw new Error("Error al eliminar la tarea");
+
+      alert("Tarea eliminada exitosamente");
+      onUpdated(); // Para refrescar lista de tareas
+      onClose(); // Cierra el modal
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo eliminar la tarea");
+    }
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-lg relative">
@@ -135,22 +192,30 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
         >
           ✕
         </button>
-        <h2 className="text-xl font-bold mb-4 text-black">Editar Tarea</h2>
+        <h2 className="text-xl font-bold mb-4 text-black">Edit/Delete Task</h2>
 
         {/* Solo campo para ingresar ID manualmente */}
         <div className="flex gap-2 mb-4">
-          <input
-            type="number"
-            min={0}
+          <select
             value={taskId}
-            onChange={(e) =>
-              setTaskId(e.target.value === "" ? "" : +e.target.value)
-            }
-            placeholder="Task ID"
-            className="input input-bordered border-2 rounded flex-1 text-black"
-          />
+            onChange={(e) => setTaskId(Number(e.target.value))}
+            className="select select-bordered w-full text-black border rounded-lg"
+          >
+            <option value="">Select Task</option>
+            {tickets.map((task) => (
+              <option key={task.taskId} value={task.taskId}>
+                {task.title || `Tarea ${task.taskId}`}
+              </option>
+            ))}
+          </select>
           <button onClick={handleSearch} className="btn btn-secondary">
             Search
+          </button>
+          <button
+            onClick={handleDelete}
+            className="btn btn-error w-full text-white"
+          >
+            Delete Task
           </button>
         </div>
 
