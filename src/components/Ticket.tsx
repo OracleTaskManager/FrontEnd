@@ -223,7 +223,6 @@ export default function Ticket({
         >
           Details
         </button>
-
         <PopUpTicket
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
