@@ -13,7 +13,7 @@ import SprintModal from "../components/CreateSprintModal";
 import AddTaskDependencyButton from "../components/AddTaskDependencyButton";
 
 export interface Ticketx {
-  taskId?: number;
+  taskId: number;
   id: number;
   title: string;
   description: string;
@@ -112,7 +112,12 @@ function DashboardManager() {
       if (!response.ok) throw new Error("Failed to fetch my tasks");
 
       const data = await response.json();
-      setTickets(data);
+      //Obtener el taskId y convertirlo en id para que se despliegue en el front
+      const transformedData = data.map((task: Ticketx) => ({
+        ...task,
+        id: task.taskId,
+      }));
+      setTickets(transformedData);
     } catch (error) {
       console.error("Error fetching my tasks:", error);
     }
@@ -249,7 +254,7 @@ function DashboardManager() {
                 tickets.map((ticket, index) => (
                   <Ticket
                     key={index}
-                    taskId={ticket.id}
+                    taskId={ticket.taskId}
                     epic_id={ticket.epic_id}
                     title={ticket.title}
                     status={ticket.status}

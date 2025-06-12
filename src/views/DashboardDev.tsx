@@ -5,7 +5,7 @@ import Ticket from "../components/Ticket";
 // import CircularProgress from "../components/CircularProgress";
 
 export interface Ticketx {
-  taskId?: number;
+  taskId: number;
   id: number;
   title: string;
   description: string;
@@ -44,7 +44,12 @@ function DashboardDev() {
         }
 
         const data = await response.json();
-        setTickets(data);
+        //Obtener el taskId y convertirlo en id para que se despliegue en el front
+        const transformedData = data.map((task: Ticketx) => ({
+          ...task,
+          id: task.taskId,
+        }));
+        setTickets(transformedData);
       } catch (error) {
         console.error("Error fetching tickets:", error);
       }
@@ -78,7 +83,7 @@ function DashboardDev() {
         <main className="flex-1 p-6 overflow-auto bg-white">
           {mainTicket && (
             <Ticket
-              taskId={mainTicket.id}
+              taskId={mainTicket.taskId}
               title={mainTicket.title}
               estimated_deadline={mainTicket.estimated_deadline}
               status={mapStatus(mainTicket.status)}
@@ -96,7 +101,7 @@ function DashboardDev() {
               {otherTickets.map((ticket, index) => (
                 <Ticket
                   key={index}
-                  taskId={ticket.id}
+                  taskId={ticket.taskId}
                   epic_id={ticket.epic_id}
                   title={ticket.title}
                   status={ticket.status}
