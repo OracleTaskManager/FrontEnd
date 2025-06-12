@@ -199,10 +199,10 @@ function DashboardManager() {
               <AssignTaskToUser onTaskAssigned={fetchTickets} />
 
               <button
-                className=" h-12 bg-blue-600 text-white rounded hover:bg-blue-700"
+                className=" bg-blue-600 text-white rounded hover:bg-blue-700"
                 onClick={() => setIsEditModalOpen(true)}
               >
-                Edit Tasks
+                Edit/Delete Tasks
               </button>
 
               <SprintModal />
