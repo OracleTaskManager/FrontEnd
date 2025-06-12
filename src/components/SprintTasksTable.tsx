@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 interface SprintTask {
-  id: number;
+  taskId: number;
   title: string;
   description: string;
   epic_id: number;
@@ -120,8 +120,8 @@ const SprintTasksTable: React.FC = () => {
                     </tr>
                   ) : (
                     tasksBySprint[selectedSprintId]?.map(task => (
-                      <tr key={task.id}>
-                        <td className="px-4 py-2 border text-black">{task.id}</td>
+                      <tr key={task.taskId}>
+                        <td className="px-4 py-2 border text-black">{task.taskId}</td>
                         <td className="px-4 py-2 border text-black">{task.title}</td>
                         <td className="px-4 py-2 border text-black">{task.description}</td>
                         <td className="px-4 py-2 border text-black">{task.priority}</td>
