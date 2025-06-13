@@ -133,17 +133,17 @@ function KPI() {
 
         <main className="flex-1">
           <h2 className="text-2xl font-semibold text-black p-5">KPIs</h2>
-          <div className="flex flex-wrap items-center justify-center p-4 gap-4">
-            <div>
+          <div className="flex flex-col items-center justify-center p-4 gap-4">
+            <div className="">
               <BarChartSprint data={hoursData} />
             </div>
-            <div>
+            <div className="w-full max-w-4xl pt-4">
               <BarChartMulti
                 title="Hours worked by developer"
                 fetchData={fetchHoursByUserPerSprint}
               />
             </div>
-            <div>
+            <div className="w-full max-w-4xl pt-4">
               <BarChartMulti
                 title="Tasks completed by developer"
                 fetchData={fetchTasksCompletedByUserPerSprint}
