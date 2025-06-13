@@ -50,7 +50,7 @@ export default function Navbar({ pageTitle }: { pageTitle: string }) {
 
         {/* ------------------------- RETURN BUTTON ------------------------- */}
         {/* If we are currently in HOME, we don't need the return button */}
-        {pageTitle !== "Home" && (
+        {/* {pageTitle !== "Home" && (
           <div className="w-10 h-10 bg-[#c74634] rounded-full flex items-center justify-center">
             <svg viewBox="0 0 24 24" className="w-6 h-6 text-white">
               <path
@@ -61,7 +61,7 @@ export default function Navbar({ pageTitle }: { pageTitle: string }) {
               />
             </svg>
           </div>
-        )}
+        )} */}
 
         {/* ------------------------- PAGE TITLE ------------------------- */}
         <span className="text-lg font-semibold">{pageTitle}</span>
