@@ -40,7 +40,7 @@ export default function Sprint({
 
   // Tareas filtradas para mostrar a la hora de agregar al sprint
   const unassignedTasks = tasks.filter(
-    (task) => !assignedTasks.some((t) => t.id === task.id)
+    (task) => !assignedTasks.some((t) => t.taskId === task.taskId)
   );
 
   // Estado para alternar entre “ver” y “editar”
