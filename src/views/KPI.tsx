@@ -55,6 +55,7 @@ function KPI() {
   const [hoursData, setHoursData] = useState<
     { sprint: string; hours: number }[]
   >([]);
+  const [balance, setBalance] = useState<number | null>(null);
   const jwtToken = sessionStorage.getItem("token");
   const fetchTasksCompletedByUserPerSprint = async () => {
     const res = await fetch(
@@ -107,14 +108,33 @@ function KPI() {
     );
   };
 
+  const fetchBalance = async () => {
+    const res = await fetch("/api/tasks/tasks/balance", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch balance");
+
+    const data = await res.json();
+    return data.balance;
+  };
+
   useEffect(() => {
     const loadHours = async () => {
       if (!jwtToken) {
         return;
       }
       try {
-        const formatted = await fetchAndFormatHoursBySprint(jwtToken);
-        setHoursData(formatted);
+        const [formattedHours, fetchedBalance] = await Promise.all([
+          fetchAndFormatHoursBySprint(jwtToken),
+          fetchBalance(),
+        ]);
+        setHoursData(formattedHours);
+        setBalance(fetchedBalance);
       } catch (err) {
         console.error("Error loading hours data", err);
       }
@@ -134,6 +154,12 @@ function KPI() {
         <main className="flex-1">
           <h2 className="text-2xl font-semibold text-black p-5">KPIs</h2>
           <div className="flex flex-col items-center justify-center p-4 gap-4">
+            <div>
+              <h1 className="text-black">
+                This is the amount of money we have saved:{" "}
+                {balance !== null ? `$${balance.toFixed(2)}` : "Loading..."}
+              </h1>
+            </div>
             <div className="">
               <BarChartSprint data={hoursData} />
             </div>
