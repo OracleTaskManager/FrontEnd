@@ -208,7 +208,7 @@ export default function Sprint({
     };
 
     try {
-      const response = await fetch(`/api/tasks/sprints/`, {
+      const response = await fetch(`/api/tasks/sprints/${sprintId}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${jwtToken}`,
