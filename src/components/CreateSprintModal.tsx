@@ -56,6 +56,7 @@ export default function SprintModal() {
       setIsOpen(false); // Cierra el modal
     } catch (err) {
       if (err instanceof Error) {
+        console.log(err.message);
         setError(err.message);
       } else {
         setError("Unknown error");
@@ -106,11 +107,8 @@ export default function SprintModal() {
                 <input
                   type="date"
                   name="startDate"
-                  value={
-                    sprintData.startDate
-                      ? sprintData.startDate.slice(0, 10)
-                      : ""
-                  }
+                  min={new Date().toISOString().split("T")[0]}
+                  value={sprintData.startDate}
                   onChange={handleChange}
                   className="mt-1 block w-full p-2 border-2 text-black rounded-xl"
                 />
@@ -122,9 +120,8 @@ export default function SprintModal() {
                 <input
                   type="date"
                   name="endDate"
-                  value={
-                    sprintData.endDate ? sprintData.endDate.slice(0, 10) : ""
-                  }
+                  min={new Date().toISOString().split("T")[0]}
+                  value={sprintData.endDate}
                   onChange={handleChange}
                   className="mt-1 block w-full p-2 border-2 text-black rounded-xl"
                 />
