@@ -40,7 +40,7 @@ export default function Sprint({
 
   // Tareas filtradas para mostrar a la hora de agregar al sprint
   const unassignedTasks = tasks.filter(
-    (task) => !assignedTasks.some((t) => t.taskId === task.taskId)
+    (task) => !assignedTasks.some((t) => t.id === task.id)
   );
 
   // Estado para alternar entre “ver” y “editar”
@@ -208,7 +208,7 @@ export default function Sprint({
     };
 
     try {
-      const response = await fetch(`/api/tasks/sprints/${sprintId}`, {
+      const response = await fetch(`/api/tasks/sprints/`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -398,7 +398,7 @@ export default function Sprint({
         >
           <option value="">Select a task</option>
           {assignedTasks.map((task) => (
-            <option key={task.taskId} value={task.taskId}>
+            <option key={task.id} value={task.id}>
               {task.title}
             </option>
           ))}
