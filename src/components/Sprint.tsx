@@ -40,7 +40,7 @@ export default function Sprint({
 
   // Tareas filtradas para mostrar a la hora de agregar al sprint
   const unassignedTasks = tasks.filter(
-    (task) => !assignedTasks.some((t) => t.id === task.id)
+    (task) => !assignedTasks.some((t) => t.taskId === task.taskId)
   );
 
   // Estado para alternar entre “ver” y “editar”
@@ -354,7 +354,7 @@ export default function Sprint({
       <div className="mt-4">
         <label className="block mb-1 text-black">Assign task to sprint:</label>
         <select
-          // value={selectedTaskToAssign}
+          value={selectedTaskToAssign!}
           onChange={(e) => setSelectedTaskToAssign(Number(e.target.value))}
           className=" w-72 border rounded px-2 py-1 text-black"
         >
@@ -392,7 +392,7 @@ export default function Sprint({
           Remove task from sprint:
         </label>
         <select
-          value={selectedTaskToRemove ?? ""}
+          value={selectedTaskToRemove!}
           onChange={(e) => setSelectedTaskToRemove(Number(e.target.value))}
           className="w-72 border rounded px-2 py-1 text-black"
         >
