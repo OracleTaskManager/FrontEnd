@@ -97,7 +97,7 @@ const SprintUserTaskViewer: React.FC<Props> = ({ jwtToken }) => {
   return (
     <div className="p-4 max-w-3xl mx-auto">
       <h2 className="text-xl font-semibold mb-4 text-black">
-        Tareas por Sprint y Usuario
+        Tasks by Sprint and User
       </h2>
 
       <div className="flex gap-4 mb-6">
@@ -133,9 +133,9 @@ const SprintUserTaskViewer: React.FC<Props> = ({ jwtToken }) => {
           <thead className="bg-black">
             <tr>
               <th className="border p-2 text-left">ID</th>
-              <th className="border p-2 text-left">Título</th>
-              <th className="border p-2 text-left">Horas Reales</th>
-              <th className="border p-2 text-left">Estado</th>
+              <th className="border p-2 text-left">Title</th>
+              <th className="border p-2 text-left">Real Hours</th>
+              <th className="border p-2 text-left">Status</th>
             </tr>
           </thead>
           <tbody>
