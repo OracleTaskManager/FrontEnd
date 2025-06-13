@@ -84,6 +84,7 @@ function DashboardDev() {
           {mainTicket && (
             <Ticket
               taskId={mainTicket.taskId}
+              epic_id={mainTicket.epic_id}
               title={mainTicket.title}
               estimated_deadline={mainTicket.estimated_deadline}
               status={mapStatus(mainTicket.status)}

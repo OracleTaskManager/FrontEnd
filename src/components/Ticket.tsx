@@ -52,9 +52,10 @@ export default function Ticket({
   const [ticketStatus, setTicketStatus] = useState<TicketStatus>(status);
   const [users, setUsers] = useState<any[]>([]);
   const [assignedTaskToUser, setAssignedTaskToUser] = useState<any[]>([]);
-  const [blockedInfo, setBlockedInfo] = useState<
-    { blocked: boolean; blockers: any[] } | null
-  >(null);
+  const [blockedInfo, setBlockedInfo] = useState<{
+    blocked: boolean;
+    blockers: any[];
+  } | null>(null);
   const [checkingBlocked, setCheckingBlocked] = useState(false);
   const jwtToken = sessionStorage.getItem("token");
 
@@ -154,7 +155,7 @@ export default function Ticket({
     if (!assignment) return "Unassigned";
 
     const user = users.find((user) => user.userId === assignment.userId);
-    return user ? user.name : "Unknown user";
+    return user ? user.name : "Me";
   };
 
   return (
@@ -202,8 +203,8 @@ export default function Ticket({
               {blockedInfo.blockers.map((b, idx) => (
                 <li key={idx}>
                   {b.blockedByTaskId?.title ||
-                    `Tarea ${b.blockedByTaskId?.taskId}`} (Estado:{" "}
-                  {b.blockedByTaskId?.status})
+                    `Tarea ${b.blockedByTaskId?.taskId}`}{" "}
+                  (Estado: {b.blockedByTaskId?.status})
                 </li>
               ))}
             </ul>
