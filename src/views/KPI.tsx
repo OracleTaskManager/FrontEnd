@@ -45,10 +45,16 @@ const fetchAndFormatHoursBySprint = async (token: string) => {
     }
   );
 
-  return Object.entries(hoursPerSprintMap).map(([sprint, hours]) => ({
-    sprint,
-    hours,
-  }));
+  return Object.entries(hoursPerSprintMap)
+    .map(([sprint, hours]) => ({
+      sprint,
+      hours,
+    }))
+    .sort((a, b) => {
+      const aNum = parseInt(a.sprint.match(/\d+/)?.[0] || "0");
+      const bNum = parseInt(b.sprint.match(/\d+/)?.[0] || "0");
+      return aNum - bNum;
+    });
 };
 
 function KPI() {
@@ -95,17 +101,23 @@ function KPI() {
 
     const data = await res.json();
 
-    return data.map(
-      (entry: {
-        userName: string;
-        sprintName: string;
-        totalHours: number;
-      }) => ({
-        userName: entry.userName,
-        sprintName: entry.sprintName,
-        total: entry.totalHours,
-      })
-    );
+    return data
+      .map(
+        (entry: {
+          userName: string;
+          sprintName: string;
+          totalHours: number;
+        }) => ({
+          userName: entry.userName,
+          sprintName: entry.sprintName,
+          total: entry.totalHours,
+        })
+      )
+      .sort((a, b) => {
+        const aNum = parseInt(a.sprintName.match(/\d+/)?.[0] || "0");
+        const bNum = parseInt(b.sprintName.match(/\d+/)?.[0] || "0");
+        return aNum - bNum;
+      });
   };
 
   const fetchBalance = async () => {
