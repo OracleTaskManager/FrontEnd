@@ -58,6 +58,11 @@ const fetchAndFormatHoursBySprint = async (token: string) => {
 };
 
 function KPI() {
+  interface SprintUserData {
+    userName: string;
+    sprintName: string;
+    total: number;
+  }
   const [hoursData, setHoursData] = useState<
     { sprint: string; hours: number }[]
   >([]);
@@ -77,17 +82,23 @@ function KPI() {
 
     const data = await res.json();
 
-    return data.map(
-      (entry: {
-        userName: string;
-        sprintName: string;
-        totalTasksCompleted: number;
-      }) => ({
-        userName: entry.userName,
-        sprintName: entry.sprintName,
-        total: entry.totalTasksCompleted,
-      })
-    );
+    return data
+      .map(
+        (entry: {
+          userName: string;
+          sprintName: string;
+          totalTasksCompleted: number;
+        }) => ({
+          userName: entry.userName,
+          sprintName: entry.sprintName,
+          total: entry.totalTasksCompleted,
+        })
+      )
+      .sort((a: SprintUserData, b: SprintUserData) => {
+        const aNum = parseInt(a.sprintName.match(/\d+/)?.[0] || "0");
+        const bNum = parseInt(b.sprintName.match(/\d+/)?.[0] || "0");
+        return aNum - bNum;
+      });
   };
 
   const fetchHoursByUserPerSprint = async () => {
@@ -113,7 +124,7 @@ function KPI() {
           total: entry.totalHours,
         })
       )
-      .sort((a, b) => {
+      .sort((a: SprintUserData, b: SprintUserData) => {
         const aNum = parseInt(a.sprintName.match(/\d+/)?.[0] || "0");
         const bNum = parseInt(b.sprintName.match(/\d+/)?.[0] || "0");
         return aNum - bNum;
